@@ -1,0 +1,45 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user this notification is for"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "like",
+        "comment",
+        "follow",
+        "mention",
+        "community"
+      ],
+      "description": "Type of notification"
+    },
+    "actor_name": {
+      "type": "string",
+      "description": "Name of the person who triggered the notification"
+    },
+    "actor_avatar": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string",
+      "description": "Notification message"
+    },
+    "post_id": {
+      "type": "string",
+      "description": "Related post ID if applicable"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_email",
+    "type",
+    "message"
+  ]
+}

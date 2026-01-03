@@ -1,0 +1,33 @@
+{
+  "name": "Comment",
+  "type": "object",
+  "properties": {
+    "post_id": {
+      "type": "string",
+      "description": "ID of the post this comment belongs to"
+    },
+    "content": {
+      "type": "string",
+      "description": "Comment text"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_handle": {
+      "type": "string"
+    },
+    "author_avatar": {
+      "type": "string"
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "post_id",
+    "content",
+    "author_name",
+    "author_handle"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "name": "Post",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string",
+      "description": "The post text content"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Optional image URL for the post"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Display name of the post author"
+    },
+    "author_handle": {
+      "type": "string",
+      "description": "Username handle of the author"
+    },
+    "author_avatar": {
+      "type": "string",
+      "description": "Avatar URL of the author"
+    },
+    "author_verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the author is verified"
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comments_count": {
+      "type": "number",
+      "default": 0
+    },
+    "shares_count": {
+      "type": "number",
+      "default": 0
+    },
+    "liked_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Array of user emails who liked this post"
+    }
+  },
+  "required": [
+    "content",
+    "author_name",
+    "author_handle"
+  ]
+}
