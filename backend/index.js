@@ -1,16 +1,23 @@
 import express from 'express'
-import dotenv from 'dotenv'
+import 'dotenv/config'
 import cors from 'cors'
-import pool from './config/db.js'
-dotenv.config()
+import authRoutes from './routes/auth.routes.js'
+import userRoutes from './routes/user.routes.js'
 const app = express()
 const port = process.env.PORT
 
+
 // middlewares
 app.use(express.json())
-app.use(cors)
+app.use(cors())
 
 // routes
+app.use('/api/auth/', authRoutes)
+app.use('/api/user/', userRoutes)
+
+
+// TESTING DB CONNECTION
+
 
 
 // error handling

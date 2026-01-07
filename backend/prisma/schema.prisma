@@ -1,0 +1,151 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum FollowStatus {
+  ACCEPTED
+  REFUSED
+  PENDING
+}
+
+enum NotificationType {
+  NEW_FOLLOW
+  ACCEPTED_FOLLOW
+  COMMENT
+  LIKE
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum AccountType {
+  PRIVATE
+  PUBLIC
+}
+
+// --- Tables ---
+
+model User {
+  id           Int      @id @default(autoincrement())
+  firstName    String   @db.VarChar(50)
+  lastName     String   @db.VarChar(50)
+  username     String   @unique @db.VarChar(255)
+  email        String   @unique @db.VarChar(100)
+  type         AccountType  @default(PUBLIC)
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  // Relations
+  profile       Profile?
+  threads       Thread[]
+  comments      Comment[]
+  reactions     Reaction[]
+  notifications Notification[]
+  media         Media[]
+  settings      Setting[]
+
+  // Self-relation for Followers/Following
+  following Follow[] @relation("UserFollowing")
+  followers Follow[] @relation("UserFollowers")
+}
+
+model Profile {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique @map("user_id")
+  bio        String?  @db.Text
+  photoUrl   String?  @map("photo_url") @db.VarChar(255)
+  public     Boolean  @default(true)
+  lastUpdate DateTime @updatedAt @map("last_update")
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Thread {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User       @relation(fields: [userId], references: [id])
+  comments  Comment[]
+  reactions Reaction[]
+  media     Media[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  threadId  Int      @map("thread_id")
+  userId    Int      @map("user_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  thread Thread @relation(fields: [threadId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  threadId  Int      @map("thread_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id])
+  thread Thread @relation(fields: [threadId], references: [id])
+}
+
+model Follow {
+  id         Int          @id @default(autoincrement())
+  followerId Int          @map("follower_id")
+  followedId Int          @map("followed_id")
+  status     FollowStatus @default(ACCEPTED)
+  createdAt  DateTime     @default(now()) @map("created_at")
+
+  follower User @relation("UserFollowing", fields: [followerId], references: [id])
+  followed User @relation("UserFollowers", fields: [followedId], references: [id])
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    Int              @map("user_id")
+  type      NotificationType
+  message   String           @db.VarChar(255)
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Media {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @map("user_id")
+  threadId   Int?      @map("thread_id")
+  type       MediaType
+  url        String    @db.VarChar(255)
+  size       Int       @map("size") // Size in KB
+  uploadedAt DateTime  @default(now()) @map("uploaded_at")
+
+  user   User    @relation(fields: [userId], references: [id])
+  thread Thread? @relation(fields: [threadId], references: [id])
+}
+
+model Setting {
+  id                   Int      @id @default(autoincrement())
+  userId               Int      @map("user_id")
+  notificationsEnabled Boolean  @default(true) @map("notifications_enabled")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id])
+}
