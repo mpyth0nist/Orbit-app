@@ -5,16 +5,16 @@ import jwt from 'jsonwebtoken'
 
 const prisma = new PrismaClient()
 
-async function register(req, res){
+async function register(req, res) {
 
-    const {firstName, lastName, username, email, password} = req.body;
+    const { firstName, lastName, username, email, password } = req.body;
     const userExists = await prisma.user.findFirst({
         where: {
             OR: [{ username }, { email }]
         }
     })
-    if(userExists){
-        return res.status(400).json({ message : "User already exists "} )
+    if (userExists) {
+        return res.status(400).json({ message: "User already exists " })
     } else {
 
         try {
@@ -22,20 +22,30 @@ async function register(req, res){
             const saltRounds = 10;
             const hashedPassword = await bcrypt.hash(password, saltRounds)
             const newUser = await prisma.user.create({
-                data : {firstName, lastName, username, email, passwordHash: hashedPassword}
+                data: {
+                    username,
+                    email,
+                    passwordHash: hashedPassword,
+                    profile: {
+                        create: {
+                            firstName,
+                            lastName
+                        }
+                    }
+                }
             })
 
-            return res.status(201).json({ message : "User Registered Successfully" })
+            return res.status(201).json({ message: "User Registered Successfully" })
 
-        }catch(err){
+        } catch (err) {
             return res.status(500).json({ message: err.message })
         }
 
     }
-    
+
 }
 
-async function login(req, res){
+async function login(req, res) {
 
     const { email, password } = req.body;
 
@@ -43,18 +53,18 @@ async function login(req, res){
         where: { email }
     })
 
-    if(!user){
+    if (!user) {
 
-        return res.status(404).json({ message : "Invalid email or password" });
+        return res.status(404).json({ message: "Invalid email or password" });
 
-    }else {
+    } else {
 
         const isValid = await bcrypt.compare(password, user.passwordHash)
-        if(isValid){
+        if (isValid) {
             const payload = {
-                userId : user.id,
+                userId: user.id,
                 email,
-                generatedBy : "typing"
+                generatedBy: "typing"
             }
 
             const secretKey = process.env.JWT_SECRET
@@ -63,16 +73,17 @@ async function login(req, res){
                 expiresIn: "1h"
             })
 
-            return res.status(200).json({ message : "Logged In.",
-                token : token
-             })
+            return res.status(200).json({
+                message: "Logged In.",
+                token: token
+            })
 
-        }else{
-            
-            return res.status(400).json({ message : "Invalid email or password"})
+        } else {
+
+            return res.status(400).json({ message: "Invalid email or password" })
         }
     }
 
 }
 
-export {login, register};
+export { login, register };

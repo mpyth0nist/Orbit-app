@@ -20,6 +20,7 @@ enum FollowStatus {
 }
 
 enum NotificationType {
+  FOLLOW_REQUEST
   NEW_FOLLOW
   ACCEPTED_FOLLOW
   COMMENT
@@ -36,74 +37,118 @@ enum AccountType {
   PUBLIC
 }
 
+enum EntityType {
+  COMMENT
+  THREAD
+  USER
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
 // --- Tables ---
 
 model User {
-  id           Int      @id @default(autoincrement())
-  firstName    String   @db.VarChar(50)
-  lastName     String   @db.VarChar(50)
-  username     String   @unique @db.VarChar(255)
-  email        String   @unique @db.VarChar(100)
-  type         AccountType  @default(PUBLIC)
-  passwordHash String   @map("password_hash")
-  createdAt    DateTime @default(now()) @map("created_at")
+  id           Int         @id @default(autoincrement())
+  username     String      @unique @db.VarChar(255)
+  email        String      @unique @db.VarChar(100)
+  type         AccountType @default(PUBLIC)
+  passwordHash String      @map("password_hash")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @default(now()) @updatedAt @map("updated_at")
 
   // Relations
-  profile       Profile?
-  threads       Thread[]
-  comments      Comment[]
-  reactions     Reaction[]
-  notifications Notification[]
-  media         Media[]
-  settings      Setting[]
+  profile   Profile?
+  threads   Thread[]
+  comments  Comment[]
+  reactions Reaction[]
+  media     Media[]
 
   // Self-relation for Followers/Following
   following Follow[] @relation("UserFollowing")
   followers Follow[] @relation("UserFollowers")
+
+  notificationsSent     Notification[] @relation("NotificationActor")
+  notificationsReceived Notification[] @relation("NotificationReceiver")
+
+  @@index([email])
+  @@index([username])
 }
 
 model Profile {
-  id         Int      @id @default(autoincrement())
-  userId     Int      @unique @map("user_id")
-  bio        String?  @db.Text
-  photoUrl   String?  @map("photo_url") @db.VarChar(255)
-  public     Boolean  @default(true)
-  lastUpdate DateTime @updatedAt @map("last_update")
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique @map("user_id")
+  firstName String   @map("first_name") @db.VarChar(100)
+  lastName  String   @map("last_name") @db.VarChar(100)
+  bio       String?  @db.Text
+  gender    Gender   @default(MALE)
+  photoUrl  String?  @map("photo_url") @db.VarChar(255)
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Thread {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  content   String   @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  content       String   @db.Text
+  likesCount    Int      @default(0) @map("likes_count")
+  commentsCount Int      @default(0) @map("comments_count")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments  Comment[]
   reactions Reaction[]
   media     Media[]
+
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
 }
 
 model Comment {
   id        Int      @id @default(autoincrement())
+  parentId  Int?     @map("parent_id")
   threadId  Int      @map("thread_id")
   userId    Int      @map("user_id")
   content   String   @db.Text
   createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  thread Thread @relation(fields: [threadId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
+  thread Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+
+  reactions Reaction[]
+  comments  Comment[]  @relation("CommentReplies")
+
+  @@index([threadId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([threadId, createdAt(sort: Desc)])
 }
 
 model Reaction {
   id        Int      @id @default(autoincrement())
   userId    Int      @map("user_id")
-  threadId  Int      @map("thread_id")
+  threadId  Int?     @map("thread_id")
+  commentId Int?     @map("comment_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  user   User   @relation(fields: [userId], references: [id])
-  thread Thread @relation(fields: [threadId], references: [id])
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  thread  Thread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, threadId], name: "unique_user_thread_reaction")
+  @@unique([userId, commentId], name: "unique_user_comment_reaction")
+  @@index([userId])
+  @@index([threadId])
+  @@index([commentId])
 }
 
 model Follow {
@@ -112,20 +157,35 @@ model Follow {
   followedId Int          @map("followed_id")
   status     FollowStatus @default(ACCEPTED)
   createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at")
 
-  follower User @relation("UserFollowing", fields: [followerId], references: [id])
-  followed User @relation("UserFollowers", fields: [followedId], references: [id])
+  follower User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  followed User @relation("UserFollowers", fields: [followedId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followedId])
+  @@index([followerId])
+  @@index([followedId])
+  @@index([followerId, status])
+  @@index([followedId, status])
 }
 
 model Notification {
-  id        Int              @id @default(autoincrement())
-  userId    Int              @map("user_id")
-  type      NotificationType
-  message   String           @db.VarChar(255)
-  isRead    Boolean          @default(false) @map("is_read")
-  createdAt DateTime         @default(now()) @map("created_at")
+  id         Int              @id @default(autoincrement())
+  actorId    Int              @map("actor_id")
+  receiverId Int              @map("receiver_id")
+  entityId   Int?             @map("entity_id")
+  entityType EntityType?      @map("entity_type")
+  type       NotificationType
+  isRead     Boolean          @default(false) @map("is_read")
+  createdAt  DateTime         @default(now()) @map("created_at")
 
-  user User @relation(fields: [userId], references: [id])
+  actor    User @relation("NotificationActor", fields: [actorId], references: [id], onDelete: Cascade)
+  receiver User @relation("NotificationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([receiverId])
+  @@index([actorId])
+  @@index([receiverId, isRead])
+  @@index([receiverId, createdAt(sort: Desc)])
 }
 
 model Media {
@@ -133,19 +193,14 @@ model Media {
   userId     Int       @map("user_id")
   threadId   Int?      @map("thread_id")
   type       MediaType
-  url        String    @db.VarChar(255)
-  size       Int       @map("size") // Size in KB
+  url        String    @db.VarChar(500)
+  size       Int // Size in bytes
   uploadedAt DateTime  @default(now()) @map("uploaded_at")
 
-  user   User    @relation(fields: [userId], references: [id])
-  thread Thread? @relation(fields: [threadId], references: [id])
-}
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  thread Thread? @relation(fields: [threadId], references: [id], onDelete: Cascade)
 
-model Setting {
-  id                   Int      @id @default(autoincrement())
-  userId               Int      @map("user_id")
-  notificationsEnabled Boolean  @default(true) @map("notifications_enabled")
-  updatedAt            DateTime @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id])
+  @@index([userId])
+  @@index([threadId])
+  @@index([uploadedAt(sort: Desc)])
 }
