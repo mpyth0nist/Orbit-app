@@ -324,11 +324,10 @@ export const updateThread = asyncHandler(async (req, res) => {
     const threadId = parseInt(req.params.id);
     const { content, media } = req.body;
 
+    // Check if thread exists
     const thread = await prisma.thread.findUnique({
-        where: {
-            id: threadId
-        }
-    })
+        where: { id: threadId }
+    });
 
     if (!thread) {
         return res.status(404).json({ message: 'Thread not found' });
@@ -343,14 +342,16 @@ export const updateThread = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'Content is required' });
     }
 
+    let updatedThread;
 
+    // Case 1: Adding media to thread
     if (!!media) {
         const mediaUrl = media.url;
         const size = media.size;
         const type = media.type;
 
-        const updatedThread = await prisma.$transaction(async (tx) => {
-            const threadMedia = await tx.media.create({
+        updatedThread = await prisma.$transaction(async (tx) => {
+            await tx.media.create({
                 data: {
                     userId,
                     threadId,
@@ -358,9 +359,9 @@ export const updateThread = asyncHandler(async (req, res) => {
                     size,
                     type
                 }
-            })
+            });
 
-            const thread = await tx.thread.update({
+            return await tx.thread.update({
                 where: { id: threadId },
                 data: { content },
                 include: {
@@ -385,75 +386,38 @@ export const updateThread = asyncHandler(async (req, res) => {
                         }
                     }
                 }
-            })
-            return thread
-        })
-    } else {
-        if (thread.media) {
-            const updatedThread = await prisma.$transaction(async (tx) => {
-                const threadMedia = await tx.media.delete({
-                    where: { id: thread.media.id }
-                })
-                const thread = await tx.thread.update({
-                    where: { id: threadId },
-                    data: { content },
-                    include: {
-                        user: {
-                            select: {
-                                id: true,
-                                username: true,
-                                profile: {
-                                    select: {
-                                        firstName: true,
-                                        lastName: true,
-                                        photoUrl: true
-                                    }
-                                }
-                            }
-                        },
-                        media: {
-                            select: {
-                                id: true,
-                                type: true,
-                                url: true
-                            }
-                        }
-                    }
-                })
-                return thread
-            })
-        }
+            });
+        });
     }
-
-
-    // Update the thread
-
-    const updatedThread = await prisma.thread.update({
-        where: { id: threadId },
-        data: { content },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    username: true,
-                    profile: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                            photoUrl: true
+    // Case 2: No media provided, but thread has existing media - update content only
+    else {
+        updatedThread = await prisma.thread.update({
+            where: { id: threadId },
+            data: { content },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        profile: {
+                            select: {
+                                firstName: true,
+                                lastName: true,
+                                photoUrl: true
+                            }
                         }
                     }
-                }
-            },
-            media: {
-                select: {
-                    id: true,
-                    type: true,
-                    url: true
+                },
+                media: {
+                    select: {
+                        id: true,
+                        type: true,
+                        url: true
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 
     logger.info('Thread updated', { userId, threadId });
 

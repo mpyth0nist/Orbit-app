@@ -8,11 +8,42 @@
  */
 
 import express from 'express';
-import { getFeed, createThread } from '../controllers/threads.controller.js';
+import {
+    getFeed,
+    getMostLikedAccountsThreads,
+    createThread,
+    updateThread,
+    deleteThread
+} from '../controllers/threads.controller.js';
 import protect from '../middleware/protect.js';
-import { validatePagination, validateCreateThread } from '../middleware/validation.js';
+import {
+    validatePagination,
+    validateCreateThread,
+    validateUpdateThread,
+    validateIdParam
+} from '../middleware/validation.js';
 
 const router = express.Router();
+
+/**
+ * @route   GET /api/threads/feed
+ * @desc    Get personalized news feed from followed users
+ * @access  Private
+ * @query   page - Page number (default: 1)
+ * @query   limit - Items per page (default: 20, max: 100)
+ * 
+ * @example GET /api/threads/feed?page=1&limit=20
+ */
+router.get('/feed', protect, validatePagination, getFeed);
+
+/**
+ * @route   GET /api/threads/most-liked
+ * @desc    Get threads from accounts the user interacts with most
+ * @access  Private
+ * 
+ * @example GET /api/threads/most-liked
+ */
+router.get('/most-liked', protect, getMostLikedAccountsThreads);
 
 /**
  * @route   POST /api/threads
@@ -27,14 +58,25 @@ const router = express.Router();
 router.post('/', protect, validateCreateThread, createThread);
 
 /**
- * @route   GET /api/threads/feed
- * @desc    Get personalized news feed from followed users
- * @access  Private
- * @query   page - Page number (default: 1)
- * @query   limit - Items per page (default: 20, max: 100)
+ * @route   PATCH /api/threads/:id
+ * @desc    Update an existing thread
+ * @access  Private (Owner only)
+ * @param   id - Thread ID
+ * @body    content - Updated thread content (1-500 characters, required)
  * 
- * @example GET /api/threads/feed?page=1&limit=20
+ * @example PATCH /api/threads/123
+ * Body: { "content": "Updated content" }
  */
-router.get('/feed', protect, validatePagination, getFeed);
+router.patch('/:id', protect, validateIdParam, validateUpdateThread, updateThread);
+
+/**
+ * @route   DELETE /api/threads/:id
+ * @desc    Delete a thread
+ * @access  Private (Owner only)
+ * @param   id - Thread ID
+ * 
+ * @example DELETE /api/threads/123
+ */
+router.delete('/:id', protect, validateIdParam, deleteThread);
 
 export default router;
