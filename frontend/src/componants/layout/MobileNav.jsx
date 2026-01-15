@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FeedIcon, SearchIcon, PlusIcon, BellIcon, UserIcon } from '../ui/Icons';
 
 const MobileNavBtn = ({ icon: Icon, active, onClick, badge, isCreate }) => (
@@ -33,34 +34,41 @@ const MobileNavBtn = ({ icon: Icon, active, onClick, badge, isCreate }) => (
 );
 
 export default function MobileNav({ activeTab, setActiveTab, unreadNotifications }) {
+  const navigate = useNavigate();
+
+  const handleNavigation = (path, tabId) => {
+    navigate(path);
+    setActiveTab(tabId);
+  };
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/90 backdrop-blur-xl border-t border-gray-100 safe-area-bottom">
       <div className="flex items-center justify-around px-2">
         <MobileNavBtn
           icon={FeedIcon}
           active={activeTab === 'feed'}
-          onClick={() => setActiveTab('feed')}
+          onClick={() => handleNavigation('/', 'feed')}
         />
         <MobileNavBtn
           icon={SearchIcon}
           active={activeTab === 'search'}
-          onClick={() => setActiveTab('search')}
+          onClick={() => handleNavigation('/search', 'search')}
         />
         <MobileNavBtn
           icon={PlusIcon}
           isCreate
-          onClick={() => setActiveTab('create')}
+          onClick={() => handleNavigation('/create', 'create')}
         />
         <MobileNavBtn
           icon={BellIcon}
           active={activeTab === 'notifications'}
           badge={unreadNotifications}
-          onClick={() => setActiveTab('notifications')}
+          onClick={() => handleNavigation('/notifications', 'notifications')}
         />
         <MobileNavBtn
           icon={UserIcon}
           active={activeTab === 'profile'}
-          onClick={() => setActiveTab('profile')}
+          onClick={() => handleNavigation('/profile', 'profile')}
         />
       </div>
     </nav>

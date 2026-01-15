@@ -1,82 +1,131 @@
 import React from 'react';
-import { UserIcon, BellIcon, CogIcon, ChevronRightIcon, LogOutIcon } from '../ui/Icons';
-import * as base44  from '@/api/base44Client';
+import { UserIcon, BellIcon, CogIcon, ChevronRightIcon, LogOutIcon, MoonIcon, SunIcon, GlobeIcon } from '../ui/Icons';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useAuth } from '../../contexts/AuthContext';
+import api from '../../api/apiClient';
 
-const SettingsSection = ({ title, children }) => (
+const SettingsSection = ({ title, children, isDarkMode }) => (
   <div className="mb-6">
-    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3 px-1">
+    <h3 className={`text-sm font-semibold uppercase tracking-wide mb-3 px-1 ${
+      isDarkMode ? 'text-gray-400' : 'text-gray-500'
+    }`}>
       {title}
     </h3>
-    <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+    <div className={`rounded-2xl overflow-hidden shadow-sm border ${
+      isDarkMode 
+        ? 'bg-gray-800 border-gray-700' 
+        : 'bg-white border-gray-100'
+    }`}>
       {children}
     </div>
   </div>
 );
 
-const SettingsItem = ({ icon: Icon, label, description, onClick, danger, toggle, checked }) => (
+const SettingsItem = ({ icon: Icon, label, description, onClick, danger, toggle, checked, isDarkMode, showLanguageOptions, currentLanguage, language }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${
-      danger ? 'text-rose-600' : 'text-gray-900'
+    className={`w-full flex items-center gap-4 p-4 transition-colors border-b last:border-b-0 ${
+      isDarkMode 
+        ? 'hover:bg-gray-700 border-gray-700' 
+        : 'hover:bg-gray-50 border-gray-100'
+    } ${
+      danger ? 'text-rose-600' : isDarkMode ? 'text-gray-100' : 'text-gray-900'
     }`}
   >
     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-      danger ? 'bg-rose-100' : 'bg-indigo-100'
+      danger ? 'bg-rose-100' : isDarkMode ? 'bg-indigo-900' : 'bg-indigo-100'
     }`}>
       <Icon className={`w-5 h-5 ${danger ? 'text-rose-600' : 'text-indigo-600'}`} />
     </div>
     <div className="flex-1 text-left">
       <p className="font-medium">{label}</p>
       {description && (
-        <p className="text-sm text-gray-500">{description}</p>
+        <p className={`text-sm ${
+          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+        }`}>{description}</p>
       )}
     </div>
-    {toggle ? (
+    {showLanguageOptions ? (
+      <div className="flex items-center gap-2">
+        <span className={`text-sm font-medium ${
+          isDarkMode ? 'text-gray-300' : 'text-gray-600'
+        }`}>
+          {language === 'english' ? 'EN' : language === 'french' ? 'FR' : 'AR'}
+        </span>
+        <ChevronRightIcon className={`w-4 h-4 ${
+          isDarkMode ? 'text-gray-500' : 'text-gray-400'
+        }`} />
+      </div>
+    ) : toggle ? (
       <div className={`w-12 h-7 rounded-full p-1 transition-colors ${
-        checked ? 'bg-indigo-600' : 'bg-gray-200'
+        checked ? 'bg-indigo-600' : isDarkMode ? 'bg-gray-600' : 'bg-gray-200'
       }`}>
         <div className={`w-5 h-5 bg-white rounded-full shadow transition-transform ${
           checked ? 'translate-x-5' : 'translate-x-0'
         }`} />
       </div>
     ) : (
-      <ChevronRightIcon className="w-5 h-5 text-gray-400" />
+      <ChevronRightIcon className={`w-5 h-5 ${
+        isDarkMode ? 'text-gray-500' : 'text-gray-400'
+      }`} />
     )}
   </button>
 );
 
 export default function SettingsView({ user, onEditProfile }) {
   const [notifications, setNotifications] = React.useState(true);
-  const [darkMode, setDarkMode] = React.useState(false);
+  const { isDarkMode, toggleTheme } = useTheme();
+  const { language, changeLanguage, t } = useLanguage();
   const [privateAccount, setPrivateAccount] = React.useState(false);
 
   const handleLogout = () => {
-    base44.auth.logout();
+    logout();
   };
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className={`max-w-xl mx-auto ${
+      isDarkMode ? 'text-gray-100' : 'text-gray-900'
+    }`}>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-500 mt-1">Manage your account preferences</p>
+        <h1 className={`text-2xl font-bold ${
+          isDarkMode ? 'text-gray-100' : 'text-gray-900'
+        }`}>{t('settings')}</h1>
+        <p className={`mt-1 ${
+          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+        }`}>{t('manageAccount')}</p>
       </div>
 
       {/* Profile Card */}
-      <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 mb-8">
+      <div className={`rounded-3xl p-6 shadow-sm border mb-8 ${
+        isDarkMode 
+          ? 'bg-gray-800 border-gray-700' 
+          : 'bg-white border-gray-100'
+      }`}>
         <div className="flex items-center gap-4">
           <img
             src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.full_name || 'User')}&background=6366f1&color=fff`}
             alt={user?.full_name}
-            className="w-16 h-16 rounded-full object-cover ring-4 ring-indigo-100"
+            className={`w-16 h-16 rounded-full object-cover ring-4 ${
+              isDarkMode ? 'ring-indigo-900' : 'ring-indigo-100'
+            }`}
           />
           <div className="flex-1">
-            <h2 className="text-lg font-bold text-gray-900">{user?.full_name || 'User'}</h2>
-            <p className="text-gray-500">@{user?.handle || user?.email?.split('@')[0]}</p>
+            <h2 className={`text-lg font-bold ${
+              isDarkMode ? 'text-gray-100' : 'text-gray-900'
+            }`}>{user?.full_name || 'User'}</h2>
+            <p className={`${
+              isDarkMode ? 'text-gray-400' : 'text-gray-500'
+            }`}>@{user?.handle || user?.email?.split('@')[0]}</p>
           </div>
           <button
             onClick={onEditProfile}
-            className="px-4 py-2 border-2 border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+            className={`px-4 py-2 border-2 font-semibold rounded-xl transition-colors ${
+              isDarkMode 
+                ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
+                : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+            }`}
           >
             Edit
           </button>
@@ -84,31 +133,34 @@ export default function SettingsView({ user, onEditProfile }) {
       </div>
 
       {/* Account Settings */}
-      <SettingsSection title="Account">
+      <SettingsSection title="Account" isDarkMode={isDarkMode}>
         <SettingsItem
           icon={UserIcon}
-          label="Edit Profile"
+          label={t('editProfile')}
           description="Update your name, bio, and photo"
           onClick={onEditProfile}
+          isDarkMode={isDarkMode}
         />
         <SettingsItem
           icon={() => <span className="text-lg">🔒</span>}
-          label="Privacy"
+          label={t('privacy')}
           description="Manage who can see your content"
           toggle
           checked={privateAccount}
           onClick={() => setPrivateAccount(!privateAccount)}
+          isDarkMode={isDarkMode}
         />
         <SettingsItem
           icon={() => <span className="text-lg">🔐</span>}
-          label="Security"
+          label={t('security')}
           description="Password, two-factor authentication"
           onClick={() => {}}
+          isDarkMode={isDarkMode}
         />
       </SettingsSection>
 
       {/* Preferences */}
-      <SettingsSection title="Preferences">
+      <SettingsSection title="Preferences" isDarkMode={isDarkMode}>
         <SettingsItem
           icon={BellIcon}
           label="Notifications"
@@ -116,65 +168,78 @@ export default function SettingsView({ user, onEditProfile }) {
           toggle
           checked={notifications}
           onClick={() => setNotifications(!notifications)}
+          isDarkMode={isDarkMode}
         />
         <SettingsItem
-          icon={() => <span className="text-lg">🌙</span>}
-          label="Dark Mode"
-          description="Switch between light and dark themes"
+          icon={isDarkMode ? MoonIcon : SunIcon}
+          label={t('darkMode')}
+          description={t('darkModeDesc')}
           toggle
-          checked={darkMode}
-          onClick={() => setDarkMode(!darkMode)}
+          checked={isDarkMode}
+          onClick={toggleTheme}
+          isDarkMode={isDarkMode}
         />
         <SettingsItem
-          icon={() => <span className="text-lg">🌐</span>}
-          label="Language"
-          description="English (US)"
-          onClick={() => {}}
+          icon={GlobeIcon}
+          label={t('language')}
+          description={t('languageDesc')}
+          showLanguageOptions
+          currentLanguage={language}
+          language={language}
+          onClick={() => {
+            if (language === 'english') {
+              changeLanguage('french');
+            } else if (language === 'french') {
+              changeLanguage('arabic');
+            } else {
+              changeLanguage('english');
+            }
+          }}
+          isDarkMode={isDarkMode}
         />
       </SettingsSection>
 
       {/* Support */}
-      <SettingsSection title="Support">
+      <SettingsSection title="Support" isDarkMode={isDarkMode}>
         <SettingsItem
           icon={() => <span className="text-lg">❓</span>}
-          label="Help Center"
+          label={t('helpCenter')}
           description="Get help with your account"
           onClick={() => {}}
+          isDarkMode={isDarkMode}
         />
         <SettingsItem
           icon={() => <span className="text-lg">📝</span>}
-          label="Send Feedback"
-          description="Help us improve the app"
+          label={t('sendFeedback')}
+          description="Help us improve app"
           onClick={() => {}}
+          isDarkMode={isDarkMode}
         />
         <SettingsItem
           icon={() => <span className="text-lg">📋</span>}
-          label="Terms of Service"
+          label={t('termsOfService')}
           onClick={() => {}}
+          isDarkMode={isDarkMode}
         />
         <SettingsItem
           icon={() => <span className="text-lg">🔏</span>}
-          label="Privacy Policy"
+          label={t('privacyPolicy')}
           onClick={() => {}}
+          isDarkMode={isDarkMode}
         />
       </SettingsSection>
 
       {/* Danger Zone */}
-      <SettingsSection title="Danger Zone">
+      <SettingsSection title="Danger Zone" isDarkMode={isDarkMode}>
         <SettingsItem
           icon={LogOutIcon}
-          label="Log Out"
+          label={t('logout')}
           description="Sign out of your account"
           danger
           onClick={handleLogout}
+          isDarkMode={isDarkMode}
         />
       </SettingsSection>
-
-      {/* App Version */}
-      <div className="text-center py-6">
-        <p className="text-sm text-gray-400">Nexus v1.0.0</p>
-        <p className="text-xs text-gray-300 mt-1">Made with ❤️</p>
-      </div>
     </div>
   );
 }

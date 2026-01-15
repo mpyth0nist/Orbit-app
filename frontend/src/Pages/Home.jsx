@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import * as base44 from '../api/base44Client';
+import { useNavigate } from 'react-router-dom';
+import api from '../api/apiClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../contexts/AuthContext';
 
 import Sidebar from '../componants/layout/Sidebar';
 import Header from '../componants/layout/Header';
@@ -17,44 +19,58 @@ import SettingsView from '../componants/views/SettingsView';
 import { XMarkIcon } from '../componants/ui/Icons';
 
 export default function Home() {
+  const navigate = useNavigate();
+  const { user, isLoading, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState('feed');
   const [selectedPost, setSelectedPost] = useState(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  const [user, setUser] = useState(null);
 
   const queryClient = useQueryClient();
 
-  // Load current user
+  // Redirect to login if not authenticated
   useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const userData = await base44.auth.me();
-        setUser(userData);
-      } catch (error) {
-        console.error('Failed to load user:', error);
-      }
-    };
-    loadUser();
-  }, []);
+    if (!isLoading && !isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isLoading, isAuthenticated, navigate]);
+
+  // Show loading screen while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-violet-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl shadow-lg shadow-indigo-500/30 mb-4">
+            <span className="text-white font-bold text-2xl">O</span>
+          </div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render anything if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   // Fetch posts
   const { data: posts = [], isLoading: postsLoading } = useQuery({
     queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 50),
+    queryFn: () => api.posts.getAll(50),
   });
 
   // Fetch notifications count
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', user?.email],
-    queryFn: () => base44.entities.Notification.filter({ user_email: user?.email, is_read: false }),
+    queryFn: () => api.notifications.getUserNotifications(user?.email),
     enabled: !!user?.email,
   });
 
   // Create post mutation
   const createPostMutation = useMutation({
     mutationFn: async (postData) => {
-      return base44.entities.Post.create({
+      return api.posts.create({
         ...postData,
         author_name: user?.full_name || 'User',
         author_handle: user?.handle || user?.email?.split('@')[0],
@@ -75,14 +91,12 @@ export default function Home() {
   const likePostMutation = useMutation({
     mutationFn: async (post) => {
       const isLiked = post.liked_by?.includes(user?.email);
-      const newLikedBy = isLiked
-        ? post.liked_by.filter(email => email !== user?.email)
-        : [...(post.liked_by || []), user?.email];
       
-      return base44.entities.Post.update(post.id, {
-        liked_by: newLikedBy,
-        likes_count: isLiked ? (post.likes_count || 1) - 1 : (post.likes_count || 0) + 1,
-      });
+      if (isLiked) {
+        return api.posts.unlike(post.id, user?.email);
+      } else {
+        return api.posts.like(post.id, user?.email);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });

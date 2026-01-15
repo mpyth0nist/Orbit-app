@@ -1,6 +1,18 @@
 import React from 'react';
-import { FeedIcon, SearchIcon, BellIcon, UsersIcon, UserIcon, CogIcon, PlusIcon, LogOutIcon } from '../ui/Icons';
-import * as base44 from '@/api/base44Client';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { 
+  FeedIcon, 
+  SearchIcon, 
+  BellIcon, 
+  UsersIcon, 
+  UserIcon, 
+  CogIcon, 
+  PlusIcon, 
+  LogOutIcon 
+} from '../ui/Icons';
 
 const SidebarBtn = ({ icon: Icon, label, active, onClick, badge }) => (
   <button
@@ -22,21 +34,39 @@ const SidebarBtn = ({ icon: Icon, label, active, onClick, badge }) => (
 );
 
 export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, onClose, user }) {
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const { isDarkMode } = useTheme();
+
   const navItems = [
-    { id: 'feed', icon: FeedIcon, label: 'Feed' },
-    { id: 'search', icon: SearchIcon, label: 'Search' },
-    { id: 'notifications', icon: BellIcon, label: 'Notifications', badge: unreadNotifications },
-    { id: 'communities', icon: UsersIcon, label: 'Communities' },
-    { id: 'profile', icon: UserIcon, label: 'Profile' },
-    { id: 'settings', icon: CogIcon, label: 'Settings' },
+    { id: 'feed', icon: FeedIcon, label: t('feed'), path: '/' },
+    { id: 'search', icon: SearchIcon, label: t('search'), path: '/search' },
+    { id: 'notifications', icon: BellIcon, label: t('notifications'), badge: unreadNotifications, path: '/notifications' },
+    { id: 'communities', icon: UsersIcon, label: t('communities'), path: '/communities' },
+    { id: 'profile', icon: UserIcon, label: t('profile'), path: '/profile' },
+    { id: 'settings', icon: CogIcon, label: t('settings'), path: '/settings' },
   ];
 
+  const handleNavigation = (path, tabId) => {
+    navigate(path);
+    if (onClose) onClose();
+  };
+
+  const handleCreatePost = () => {
+    navigate('/create');
+    if (onClose) onClose();
+  };
+
   const handleLogout = () => {
-    base44.auth.logout();
+    logout();
+    navigate('/login');
   };
 
   return (
-    <div className="h-full flex flex-col bg-white/80 backdrop-blur-xl">
+    <div className={`h-full flex flex-col ${
+      isDarkMode ? 'bg-gray-900' : 'bg-white/80'
+    } backdrop-blur-xl`}>
       {/* Logo */}
       <div className="p-6 pb-4">
         <div className="flex items-center gap-3">
@@ -47,7 +77,9 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
             <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
               Orbit
             </h1>
-            <p className="text-xs text-gray-400">Social Connect</p>
+            <p className={`text-xs ${
+              isDarkMode ? 'text-gray-400' : 'text-gray-400'
+            }`}>Social Connect</p>
           </div>
         </div>
       </div>
@@ -60,49 +92,56 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
             icon={item.icon}
             label={item.label}
             active={activeTab === item.id}
+            onClick={() => handleNavigation(item.path, item.id)}
             badge={item.badge}
-            onClick={() => {
-              setActiveTab(item.id);
-              onClose?.();
-            }}
           />
         ))}
       </nav>
 
       {/* Create Post Button */}
-      <div className="px-4 py-2">
-        <button
-          onClick={() => {
-            setActiveTab('create');
-            onClose?.();
-          }}
-          className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white py-3.5 rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all duration-300 hover:scale-[1.02]"
-        >
-          <PlusIcon className="w-5 h-5" />
-          Create Post
-        </button>
+      <div className="px-4 pb-4">
+        <SidebarBtn
+          icon={PlusIcon}
+          label={t('createPost')}
+          active={activeTab === 'create'}
+          onClick={handleCreatePost}
+        />
       </div>
 
-      {/* User Profile */}
-      <div className="p-4 border-t border-gray-100">
-        <div className="flex items-center gap-3">
-          <img
-            src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.full_name || 'User')}&background=6366f1&color=fff`}
-            alt="Profile"
-            className="w-11 h-11 rounded-full object-cover ring-2 ring-indigo-100"
-          />
-          <div className="flex-1 min-w-0">
-            <p className="font-semibold text-gray-900 truncate">{user?.full_name || 'User'}</p>
-            <p className="text-sm text-gray-500 truncate">@{user?.handle || user?.email?.split('@')[0]}</p>
+      {/* User Section */}
+      <div className={`p-4 border-t ${
+        isDarkMode ? 'border-gray-700' : 'border-gray-200/50'
+      }`}>
+        <div className="flex items-center gap-4 justify-between">
+        <div className="flex items-center gap-3 mb-1">
+          <div className={`w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center text-white font-semibold shadow-lg`}>
+            {user?.full_name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
           </div>
-          <button
-            onClick={handleLogout}
-            className="p-2 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
-            title="Logout"
-          >
-            <LogOutIcon className="w-5 h-5" />
-          </button>
+          <div className="flex-1 min-w-0">
+            <p className={`font-semibold truncate ${
+              isDarkMode ? 'text-gray-100' : 'text-gray-900'
+            }`}>
+              {user?.full_name || 'User'}
+            </p>
+            <p className={`text-sm truncate ${
+              isDarkMode ? 'text-gray-400' : 'text-gray-500'
+            }`}>
+              @{user?.handle || user?.email?.split('@')[0]}
+            </p>
+          </div>
         </div>
+        <button
+          onClick={handleLogout}
+          className={`p-2 text-gray-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-colors ${
+            isDarkMode 
+              ? 'text-red-400 hover:bg-red-900/20' 
+              : 'text-red-500 hover:bg-red-50/80'
+          }`}
+        >
+          <LogOutIcon className="w-5 h-5" />
+          {/* <span className="font-medium text-[15px]">{t('logout')}</span> */}
+        </button>
+</div>
       </div>
     </div>
   );
