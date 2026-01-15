@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { SearchIcon, UsersIcon, CheckBadgeIcon } from '../ui/Icons';
-import * as base44 from '@/api/base44Client';
+import api from '../../api/apiClient';
 import { Loader2 } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export default function CommunitiesView({ currentUserEmail }) {
   const [communities, setCommunities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+  const { t, isDarkMode } = useLanguage();
+  const { isDarkMode: themeDarkMode } = useTheme();
 
   const categories = ['all', 'Technology', 'Design', 'Gaming', 'Music', 'Sports', 'Art'];
 
@@ -18,12 +22,13 @@ export default function CommunitiesView({ currentUserEmail }) {
   const loadCommunities = async () => {
     setIsLoading(true);
     try {
-      const data = await base44.entities.Community.list('-members_count', 50);
+      // Try to load real communities
+      const data = await []; // TODO: Replace with api.communities.getAll() when endpoint is ready
       
+      // If no communities, use sample data
       if (!data?.length) {
-        // Sample communities
         setCommunities([
-          { id: '1', name: 'Tech Innovators', description: 'Discuss the latest in technology and innovation', cover_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400', icon: '🚀', members_count: 12500, category: 'Technology', member_emails: [] },
+          { id: '1', name: 'Tech Innovators', description: t('discoverCommunities'), cover_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400', icon: '🚀', members_count: 12500, category: 'Technology', member_emails: [] },
           { id: '2', name: 'Design Masters', description: 'A community for UI/UX designers and creatives', cover_image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400', icon: '🎨', members_count: 8400, category: 'Design', member_emails: [] },
           { id: '3', name: 'Gaming Zone', description: 'Connect with gamers worldwide', cover_image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400', icon: '🎮', members_count: 25600, category: 'Gaming', member_emails: [] },
           { id: '4', name: 'Music Lovers', description: 'Share and discover new music', cover_image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400', icon: '🎵', members_count: 15200, category: 'Music', member_emails: [] },
@@ -35,6 +40,10 @@ export default function CommunitiesView({ currentUserEmail }) {
       }
     } catch (error) {
       console.error('Failed to load communities:', error);
+      // Set sample communities on error
+      setCommunities([
+        { id: '1', name: 'Tech Innovators', description: t('discoverCommunities'), cover_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400', icon: '🚀', members_count: 12500, category: 'Technology', member_emails: [] },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -68,19 +77,29 @@ export default function CommunitiesView({ currentUserEmail }) {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Communities</h1>
-        <p className="text-gray-500">Discover and join communities that interest you</p>
+        <h1 className={`text-2xl font-bold mb-2 ${
+          isDarkMode ? 'text-gray-100' : 'text-gray-900'
+        }`}>{t('communities')}</h1>
+        <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
+          {t('discoverCommunities')}
+        </p>
       </div>
 
       {/* Search */}
       <div className="relative mb-6">
-        <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <SearchIcon className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
+          isDarkMode ? 'text-gray-400' : 'text-gray-400'
+        }`} />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search communities..."
-          className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-2xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
+          placeholder={t('searchPlaceholder')}
+          className={`w-full pl-12 pr-4 py-3 rounded-2xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm ${
+            isDarkMode 
+              ? 'bg-gray-800 border-gray-700' 
+              : 'bg-white border-gray-200'
+          }`}
         />
       </div>
 
@@ -93,10 +112,12 @@ export default function CommunitiesView({ currentUserEmail }) {
             className={`px-4 py-2 rounded-full text-sm font-medium capitalize whitespace-nowrap transition-colors ${
               activeCategory === category
                 ? 'bg-indigo-600 text-white'
-                : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                : isDarkMode 
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
             }`}
           >
-            {category}
+            {category === 'all' ? t('all') : t(category)}
           </button>
         ))}
       </div>
@@ -107,12 +128,22 @@ export default function CommunitiesView({ currentUserEmail }) {
           <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
         </div>
       ) : filteredCommunities.length === 0 ? (
-        <div className="bg-white rounded-3xl p-12 text-center">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <UsersIcon className="w-8 h-8 text-gray-400" />
+        <div className={`rounded-3xl p-12 text-center ${
+          isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-600'
+        }`}>
+          <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
+            isDarkMode ? 'bg-gray-700' : 'bg-gray-100'
+          }`}>
+            <UsersIcon className={`w-8 h-8 ${
+              isDarkMode ? 'text-gray-500' : 'text-gray-400'
+            }`} />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1">No communities found</h3>
-          <p className="text-gray-500">Try adjusting your search or filters</p>
+          <h3 className={`text-lg font-semibold mb-1 ${
+            isDarkMode ? 'text-gray-100' : 'text-gray-900'
+          }`}>{t('noResults')}</h3>
+          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
+            {t('loading')}...
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -122,7 +153,9 @@ export default function CommunitiesView({ currentUserEmail }) {
             return (
               <div
                 key={community.id}
-                className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-all"
+                className={`bg-white rounded-3xl overflow-hidden shadow-sm border hover:shadow-md transition-all ${
+                  isDarkMode ? 'border-gray-700' : 'border-gray-100'
+                }`}
               >
                 {/* Cover */}
                 <div className="relative h-32">
@@ -141,29 +174,35 @@ export default function CommunitiesView({ currentUserEmail }) {
                         <h3 className="font-bold">{community.name}</h3>
                         <CheckBadgeIcon className="w-4 h-4 text-indigo-400" />
                       </div>
-                      <p className="text-xs text-white/80">{community.members_count?.toLocaleString()} members</p>
+                      <p className="text-xs text-white/80">{community.members_count?.toLocaleString()} {t('followers')}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-4">
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  <p className={`text-sm mb-4 line-clamp-2 ${
+                    isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                  }`}>
                     {community.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                    <span className={`text-xs ${
+                      isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                    } bg-gray-100 px-3 py-1 rounded-full`}>
                       {community.category}
                     </span>
                     <button
                       onClick={() => handleJoin(community.id)}
                       className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
                         isMember
-                          ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? isDarkMode
+                            ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                           : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30'
                       }`}
                     >
-                      {isMember ? 'Joined' : 'Join'}
+                      {isMember ? t('following') : t('follow')}
                     </button>
                   </div>
                 </div>

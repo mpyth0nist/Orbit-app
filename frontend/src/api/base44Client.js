@@ -34,7 +34,48 @@ class Base44Client {
   auth = {
     me: async () => {
       return this.request('/auth/me');
-    }
+    },
+    login: async (email, password) => {
+      return this.request('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      });
+    },
+    register: async (userData) => {
+      return this.request('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(userData),
+      });
+    },
+    googleAuth: async (googleToken) => {
+      return this.request('/auth/google', {
+        method: 'POST',
+        body: JSON.stringify({ token: googleToken }),
+      });
+    },
+    logout: async () => {
+      return this.request('/auth/logout', {
+        method: 'POST',
+      });
+    },
+    refreshToken: async (refreshToken) => {
+      return this.request('/auth/refresh', {
+        method: 'POST',
+        body: JSON.stringify({ refreshToken }),
+      });
+    },
+    forgotPassword: async (email) => {
+      return this.request('/auth/forgot-password', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      });
+    },
+    resetPassword: async (token, newPassword) => {
+      return this.request('/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify({ token, newPassword }),
+      });
+    },
   };
 
   // Generic entity methods
