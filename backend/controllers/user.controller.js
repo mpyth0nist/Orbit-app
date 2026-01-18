@@ -10,6 +10,13 @@
 import { prisma, selectUser, selectPublicUser, selectThreadWithUser } from '../utils/prisma.js';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { logger, logDatabaseError } from '../utils/logger.js';
+import {
+    successResponse,
+    errorResponse,
+    paginatedResponse,
+    createdResponse,
+    deletedResponse
+} from '../utils/response.js';
 
 /**
  * @desc    Get current user's information
@@ -26,27 +33,20 @@ export const getMyInfo = asyncHandler(async (req, res) => {
 
     if (!user) {
         logger.warn(`User not found during getMyInfo`, { userId });
-        return res.status(404).json({
-            success: false,
-            message: 'User not found'
-        });
+        return errorResponse(res, 'User not found', 404);
     }
 
-    return res.status(200).json({
-        success: true,
-        data: {
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            type: user.type,
-            firstName: user.profile?.firstName,
-            lastName: user.profile?.lastName,
-            bio: user.profile?.bio,
-            photoUrl: user.profile?.photoUrl,
-            gender: user.profile?.gender
-        },
-        message: 'User information retrieved successfully'
-    });
+    return successResponse(res, {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        type: user.type,
+        firstName: user.profile?.firstName,
+        lastName: user.profile?.lastName,
+        bio: user.profile?.bio,
+        photoUrl: user.profile?.photoUrl,
+        gender: user.profile?.gender
+    }, 'User information retrieved successfully');
 });
 
 /**
@@ -76,11 +76,7 @@ export const updateMyInfo = asyncHandler(async (req, res) => {
         typeChanged: type !== undefined
     });
 
-    return res.status(200).json({
-        success: true,
-        data: { user },
-        message: 'User account updated successfully'
-    });
+    return successResponse(res, { user }, 'User account updated successfully');
 });
 
 /**
@@ -93,10 +89,7 @@ export const getUser = asyncHandler(async (req, res) => {
 
     // Additional validation (middleware should handle this, but double-check)
     if (!userId || isNaN(userId)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid user ID'
-        });
+        return errorResponse(res, 'Invalid user ID', 400);
     }
 
     const user = await prisma.user.findUnique({
@@ -105,17 +98,10 @@ export const getUser = asyncHandler(async (req, res) => {
     });
 
     if (!user) {
-        return res.status(404).json({
-            success: false,
-            message: 'User not found'
-        });
+        return errorResponse(res, 'User not found', 404);
     }
 
-    return res.status(200).json({
-        success: true,
-        data: { user },
-        message: 'User retrieved successfully'
-    });
+    return successResponse(res, { user }, 'User retrieved successfully');
 });
 
 /**
@@ -158,22 +144,14 @@ export const getFollowers = asyncHandler(async (req, res) => {
 
     const followersData = followers.map(f => f.follower);
 
-    return res.status(200).json({
-        success: true,
-        data: {
-            followers: followersData,
-            pagination: {
-                page,
-                limit,
-                total: totalCount,
-                totalPages: Math.ceil(totalCount / limit),
-                hasMore: skip + followersData.length < totalCount
-            }
-        },
-        message: followersData.length === 0
+    return paginatedResponse(
+        res,
+        followersData,
+        { page, limit, total: totalCount },
+        followersData.length === 0
             ? 'You have no followers yet'
             : `Retrieved ${followersData.length} followers`
-    });
+    );
 });
 
 /**
@@ -216,22 +194,14 @@ export const getFollowed = asyncHandler(async (req, res) => {
 
     const followedAccounts = followedRecords.map(f => f.followed);
 
-    return res.status(200).json({
-        success: true,
-        data: {
-            following: followedAccounts,
-            pagination: {
-                page,
-                limit,
-                total: totalCount,
-                totalPages: Math.ceil(totalCount / limit),
-                hasMore: skip + followedAccounts.length < totalCount
-            }
-        },
-        message: followedAccounts.length === 0
+    return paginatedResponse(
+        res,
+        followedAccounts,
+        { page, limit, total: totalCount },
+        followedAccounts.length === 0
             ? 'You are not following any accounts'
             : `Retrieved ${followedAccounts.length} accounts`
-    });
+    );
 });
 
 /**
@@ -245,18 +215,12 @@ export const follow = asyncHandler(async (req, res) => {
 
     // Validation
     if (!followedId || isNaN(followedId)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid user ID'
-        });
+        return errorResponse(res, 'Invalid user ID', 400);
     }
 
     // Prevent self-follow
     if (followerId === followedId) {
-        return res.status(400).json({
-            success: false,
-            message: 'You cannot follow yourself'
-        });
+        return errorResponse(res, 'You cannot follow yourself', 400);
     }
 
     // Check if followed user exists and get their account type
@@ -270,10 +234,7 @@ export const follow = asyncHandler(async (req, res) => {
     });
 
     if (!followedUser) {
-        return res.status(404).json({
-            success: false,
-            message: 'User not found'
-        });
+        return errorResponse(res, 'User not found', 404);
     }
 
     // Check if already following
@@ -287,10 +248,7 @@ export const follow = asyncHandler(async (req, res) => {
     });
 
     if (existingFollow) {
-        return res.status(400).json({
-            success: false,
-            message: 'You are already following this user'
-        });
+        return errorResponse(res, 'You are already following this user', 400);
     }
 
     const accountType = followedUser.type;
@@ -312,19 +270,19 @@ export const follow = asyncHandler(async (req, res) => {
         status: followStatus
     });
 
-    return res.status(201).json({
-        success: true,
-        data: {
+    return createdResponse(
+        res,
+        {
             followedUser: {
                 id: followedUser.id,
                 username: followedUser.username
             },
             status: followStatus
         },
-        message: accountType === 'PRIVATE'
+        accountType === 'PRIVATE'
             ? 'Follow request sent to user'
             : 'Successfully followed user'
-    });
+    );
 });
 
 /**
@@ -338,10 +296,7 @@ export const unfollow = asyncHandler(async (req, res) => {
 
     // Validation
     if (!followedId || isNaN(followedId)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid user ID'
-        });
+        return errorResponse(res, 'Invalid user ID', 400);
     }
 
     await prisma.follow.delete({
@@ -355,10 +310,7 @@ export const unfollow = asyncHandler(async (req, res) => {
 
     logger.info('User unfollowed', { followerId, followedId });
 
-    return res.status(200).json({
-        success: true,
-        message: 'Successfully unfollowed user'
-    });
+    return deletedResponse(res, 'Successfully unfollowed user');
 });
 
 /**
@@ -372,10 +324,7 @@ export const removeFollower = asyncHandler(async (req, res) => {
 
     // Validation
     if (!followerId || isNaN(followerId)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid user ID'
-        });
+        return errorResponse(res, 'Invalid user ID', 400);
     }
 
     await prisma.follow.delete({
@@ -389,10 +338,7 @@ export const removeFollower = asyncHandler(async (req, res) => {
 
     logger.info('Follower removed', { followerId, followedId });
 
-    return res.status(200).json({
-        success: true,
-        message: 'Successfully removed follower'
-    });
+    return deletedResponse(res, 'Successfully removed follower');
 });
 
 /**
@@ -407,17 +353,11 @@ export const updateRequest = asyncHandler(async (req, res) => {
 
     // Validation
     if (!followerId || isNaN(followerId)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid user ID'
-        });
+        return errorResponse(res, 'Invalid user ID', 400);
     }
 
     if (typeof isAccepted !== 'boolean') {
-        return res.status(400).json({
-            success: false,
-            message: 'isAccepted must be a boolean value'
-        });
+        return errorResponse(res, 'isAccepted must be a boolean value', 400);
     }
 
     const newStatus = isAccepted ? 'ACCEPTED' : 'REFUSED';
@@ -438,13 +378,11 @@ export const updateRequest = asyncHandler(async (req, res) => {
         status: newStatus
     });
 
-    return res.status(200).json({
-        success: true,
-        data: { status: newStatus },
-        message: isAccepted
-            ? 'Follow request accepted'
-            : 'Follow request rejected'
-    });
+    return successResponse(
+        res,
+        { status: newStatus },
+        isAccepted ? 'Follow request accepted' : 'Follow request rejected'
+    );
 });
 
 /**
@@ -475,20 +413,12 @@ export const getMyThreads = asyncHandler(async (req, res) => {
         })
     ]);
 
-    return res.status(200).json({
-        success: true,
-        data: {
-            threads,
-            pagination: {
-                page,
-                limit,
-                total: totalCount,
-                totalPages: Math.ceil(totalCount / limit),
-                hasMore: skip + threads.length < totalCount
-            }
-        },
-        message: `Retrieved ${threads.length} threads`
-    });
+    return paginatedResponse(
+        res,
+        threads,
+        { page, limit, total: totalCount },
+        `Retrieved ${threads.length} threads`
+    );
 });
 
 /**
@@ -514,11 +444,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
 
     logger.info('Profile updated', { userId });
 
-    return res.status(200).json({
-        success: true,
-        data: { profile: updatedProfile },
-        message: 'Profile updated successfully'
-    });
+    return successResponse(res, { profile: updatedProfile }, 'Profile updated successfully');
 });
 
 /**
@@ -537,11 +463,7 @@ export const updateProfilePicture = asyncHandler(async (req, res) => {
 
     logger.info('Profile picture updated', { userId });
 
-    return res.status(200).json({
-        success: true,
-        data: { profile: updatedProfile },
-        message: 'Profile picture updated successfully'
-    });
+    return successResponse(res, { profile: updatedProfile }, 'Profile picture updated successfully');
 });
 
 /**
@@ -623,10 +545,7 @@ export const searchUsers = asyncHandler(async (req, res) => {
     const skip = (page - 1) * limit;
 
     if (!searchTerm || searchTerm.length < 2) {
-        return res.status(400).json({
-            success: false,
-            message: 'Search term must be at least 2 characters'
-        });
+        return errorResponse(res, 'Search term must be at least 2 characters', 400);
     }
 
     // Build search conditions for username, firstName, and lastName
@@ -721,65 +640,54 @@ export const getUserStats = asyncHandler(async (req, res) => {
 
     logger.info('User stats retrieved', { userId });
 
-    return res.status(200).json({
-        success: true,
-        data: {
-            followers: followersCount,
-            following: followingCount,
-            threads: threadsCount,
-            pendingRequests: pendingRequestsCount
-        },
-        message: 'Statistics retrieved successfully'
-    });
+    return successResponse(res, {
+        followers: followersCount,
+        following: followingCount,
+        threads: threadsCount,
+        pendingRequests: pendingRequestsCount
+    }, 'Statistics retrieved successfully');
 });
 
+/**
+ * @desc    Check relationship status with another user
+ * @route   GET /api/user/:id/relationship
+ * @access  Private
+ */
 export const checkRelationship = asyncHandler(async (req, res) => {
-    const targetUserId = parseInt(req.params.id);
-    const userId = parseInt(req.user.userId);
-
+    const currentUserId = req.user.userId;
+    const targetUserId = Number(req.params.id);
 
     if (!targetUserId || isNaN(targetUserId)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid user ID'
-        })
+        return errorResponse(res, 'Invalid user ID', 400);
     }
 
-    if (targetUserId === userId) {
-        return res.status(200).json({
-            success: true,
-            data: {
-                relationship: 'THIS USER REQUESTS TO FOLLOW YOU'
-            }
-        })
+    if (targetUserId === currentUserId) {
+        return successResponse(res, { relationship: 'SELF' }, 'Relationship checked successfully');
     }
     const [followed, follower] = await Promise.all([
         prisma.follow.findUnique({
             where: {
                 followerId_followedId: {
-                    followerId: userId,
+                    followerId: currentUserId,
                     followedId: targetUserId
-                },
+                }
             },
-            select: {
-                status: true
-            }
+            select: { status: true }
         }),
         prisma.follow.findUnique({
             where: {
                 followerId_followedId: {
                     followerId: targetUserId,
-                    followedId: userId
-                },
+                    followedId: currentUserId
+                }
             },
-            select: {
-                status: true
-            }
+            select: { status: true }
         })
-    ])
+    ]);
 
-    const followingStatus = followed?.status;  // 'ACCEPTED', 'PENDING', or undefined
+    const followingStatus = followed?.status;
     const followerStatus = follower?.status;
+
     // Determine relationship
     let relationship;
 
@@ -788,54 +696,42 @@ export const checkRelationship = asyncHandler(async (req, res) => {
     } else if (followingStatus === 'ACCEPTED') {
         relationship = 'FOLLOWING';
     } else if (followingStatus === 'PENDING') {
-        relationship = 'PENDING_OUTGOING';  // You requested to follow them
+        relationship = 'PENDING_OUTGOING';
     } else if (followerStatus === 'ACCEPTED') {
         relationship = 'FOLLOWER';
     } else if (followerStatus === 'PENDING') {
-        relationship = 'PENDING_INCOMING';  // They requested to follow you
+        relationship = 'PENDING_INCOMING';
     } else {
         relationship = 'NONE';
     }
+
     logger.info('Relationship checked', { currentUserId, targetUserId, relationship });
-    return res.status(200).json({
-        success: true,
-        data: { relationship }
-    });
 
-})
+    return successResponse(res, { relationship }, 'Relationship checked successfully');
+});
 
+/**
+ * @desc    Get user by username
+ * @route   GET /api/user/username/:username
+ * @access  Private
+ */
 export const getUserByUsername = asyncHandler(async (req, res) => {
     const { username } = req.params;
 
-    if (!username) {
-        return res.status(400).json({
-            success: false,
-            message: 'Invalid username'
-        })
+    if (!username || username.trim().length < 3) {
+        return errorResponse(res, 'Username must be at least 3 characters', 400);
     }
-    const user = await prisma.user.findUnique({
-        where: {
-            username
-        },
-        select: {
-            id: true,
-            username: true,
-            type: true,
-            profile: {
-                select: {
-                    firstName: true,
-                    lastName: true,
-                    bio: true,
-                    photoUrl: true,
-                    gender: true
-                }
-            }
-        }
-    })
 
-    return res.status(200).json({
-        success: true,
-        data: user,
-        message: "User retrieved successfully"
-    })
-})
+    const user = await prisma.user.findUnique({
+        where: { username: username.toLowerCase() },
+        select: selectPublicUser
+    });
+
+    if (!user) {
+        return errorResponse(res, 'User not found', 404);
+    }
+
+    logger.info('User retrieved by username', { username, userId: user.id });
+
+    return successResponse(res, { user }, 'User retrieved successfully');
+});

@@ -8,3 +8,18 @@ SIGINT received. Starting graceful shutdown...
 2026-01-18 13:39:52 [info]: 🔗 API: http://localhost:8080/api
 2026-01-18 13:40:04 [info]: 
 SIGINT received. Starting graceful shutdown...
+2026-01-18 16:00:30 [info]: 🚀 Server is running on port 8080
+2026-01-18 16:00:30 [info]: 📝 Environment: development
+2026-01-18 16:00:30 [info]: 🔗 API: http://localhost:8080/api
+2026-01-18 16:00:37 [info]: 
+SIGINT received. Starting graceful shutdown...
+2026-01-18 16:09:56 [info]: 🚀 Server is running on port 8080
+2026-01-18 16:09:56 [info]: 📝 Environment: development
+2026-01-18 16:09:56 [info]: 🔗 API: http://localhost:8080/api
+2026-01-18 16:10:04 [info]: 
+SIGINT received. Starting graceful shutdown...
+2026-01-18 16:11:55 [info]: 🚀 Server is running on port 8080
+2026-01-18 16:11:55 [info]: 📝 Environment: development
+2026-01-18 16:11:55 [info]: 🔗 API: http://localhost:8080/api
+2026-01-18 16:12:02 [info]: 
+SIGINT received. Starting graceful shutdown...

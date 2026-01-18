@@ -76,12 +76,27 @@ export const likeEntity = asyncHandler(async (req, res) => {
                 message: `thread unliked successfully`
             })
         } else {
-            await prisma.reaction.create({
-                data: {
-                    userId,
-                    threadId: entityId,
-                }
-            });
+
+            Promise.all([
+                await prisma.reaction.create({
+                    data: {
+                        userId,
+                        threadId: entityId,
+                    }
+                }),
+
+                await prisma.thread.update({
+                    where: {
+                        id: entityId
+                    },
+                    data: {
+                        likesCount: {
+                            increment: 1
+                        }
+                    }
+                })
+            ])
+
             logger.info(`thread liked`, { entityId, userId })
             return res.status(200).json({
                 success: true,
@@ -110,12 +125,27 @@ export const likeEntity = asyncHandler(async (req, res) => {
                 message: `comment unliked successfully`
             })
         } else {
-            await prisma.reaction.create({
-                data: {
-                    userId,
-                    commentId: entityId
-                }
-            });
+
+            Promise.all([
+                await prisma.reaction.create({
+                    data: {
+                        userId,
+                        commentId: entityId
+                    }
+                }),
+
+                await prisma.comment.update({
+                    where: {
+                        id: entityId
+                    },
+                    data: {
+                        likesCount: {
+                            increment: 1
+                        }
+                    }
+                })
+            ])
+
             logger.info("comment liked successfully", { entityId, userId })
             return res.status(200).json({
                 success: true,

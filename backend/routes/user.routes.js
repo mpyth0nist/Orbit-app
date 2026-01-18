@@ -24,7 +24,9 @@ import {
     updateProfilePicture,
     getPendingFollowRequests,
     searchUsers,
-    getUserStats
+    getUserStats,
+    checkRelationship,
+    getUserByUsername
 } from "../controllers/user.controller.js";
 import {
     validateUpdateUser,
@@ -159,6 +161,20 @@ router.get("/follow-requests", protect, validatePagination, getPendingFollowRequ
 // ============================================================================
 // Specific User Route (Keep last to avoid route conflicts)
 // ============================================================================
+
+/**
+ * @route   GET /api/user/username/:username
+ * @desc    Get user by username
+ * @access  Private
+ */
+router.get("/username/:username", protect, getUserByUsername);
+
+/**
+ * @route   GET /api/user/:userId/relationship
+ * @desc    Check relationship with another user
+ * @access  Private
+ */
+router.get("/:userId/relationship", protect, validateUserId, checkRelationship);
 
 /**
  * @route   GET /api/user/:userId
