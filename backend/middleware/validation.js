@@ -131,15 +131,13 @@ export const loginSchema = Joi.object({
 // ============================================================================
 
 /**
- * Update user info validation schema
+ * Update user account info validation schema (email, username, type)
+ * Profile fields are updated via updateProfile endpoint
  */
 export const updateUserSchema = Joi.object({
-    firstName: Joi.string().min(2).max(50).trim().optional(),
-    lastName: Joi.string().min(2).max(50).trim().optional(),
     username: Joi.string().alphanum().min(3).max(30).trim().lowercase().optional(),
     email: Joi.string().email().trim().lowercase().optional(),
-    bio: Joi.string().max(500).trim().allow('', null).optional(),
-    photoUrl: Joi.string().uri().allow('', null).optional()
+    type: Joi.string().valid('PUBLIC', 'PRIVATE').optional()
 }).min(1); // At least one field required
 
 /**
@@ -275,6 +273,24 @@ export const idParamSchema = Joi.object({
         })
 });
 
+/**
+ * User search query validation schema
+ */
+export const searchQuerySchema = Joi.object({
+    q: Joi.string()
+        .min(2)
+        .max(100)
+        .trim()
+        .required()
+        .messages({
+            'string.min': 'Search term must be at least 2 characters',
+            'string.max': 'Search term cannot exceed 100 characters',
+            'any.required': 'Search term is required'
+        }),
+    page: Joi.number().integer().min(1).optional(),
+    limit: Joi.number().integer().min(1).max(50).optional()
+});
+
 // ============================================================================
 // Middleware Exports
 // ============================================================================
@@ -292,3 +308,4 @@ export const validateUpdateThread = validate(updateThreadSchema);
 export const validateCreateComment = validate(createCommentSchema);
 export const validatePagination = validate(paginationSchema, 'query');
 export const validateIdParam = validate(idParamSchema, 'params');
+export const validateSearchQuery = validate(searchQuerySchema, 'query');

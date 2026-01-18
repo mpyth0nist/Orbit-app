@@ -4,8 +4,6 @@ import logger from "../config/logger";
 
 
 
-
-
 export const likeEntity = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
     const entityType = req.params.entityType;
@@ -134,18 +132,32 @@ export const likeEntity = asyncHandler(async (req, res) => {
 export const getEntityLikes = asyncHandler(async (req, res) => {
     const entityId = parseInt(req.params.id);
     const entityType = req.params.entityType;
-    const entity = (entityType === 'thread' ? 'thread' : 'Comment');
-    const existingEntity = await prisma[entityType].findUnique({
-        where: { id: entityId }
+    const entity = (entityType === 'thread' ? 'thread' : 'comment');
+
+    const validChoices = ['thread', 'comment'];
+    if (!validChoices.includes(entityType)) {
+        return res.status(400).json({ message: 'Invalid entity type' });
+    }
+
+    const existingEntity = await prisma[entity].findUnique({
+        where: {
+            id: entityId
+        }
     });
+
+
     if (!existingEntity) {
         return res.status(404).json({ message: `${entity} not found` });
     }
+
+    const whereClause = entityType === 'thread' ? {
+        threadId: entityId
+    } : {
+        commentId: entityId
+    };
+
     const likes = await prisma.reaction.findMany({
-        where: {
-            entityId: entityId,
-            entityType
-        },
+        where: whereClause,
         include: {
             user: {
                 select: {
@@ -162,11 +174,12 @@ export const getEntityLikes = asyncHandler(async (req, res) => {
             }
         }
     })
+
+    logger.info("Entity likes data retrieved successfully", { entityId, entityType })
     return res.status(200).json({
         success: true,
+        likesCount: likes.length,
         likes,
-        entity,
-        existingEntity
     })
 
 })

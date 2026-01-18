@@ -1,0 +1,10 @@
+2026-01-18 12:25:36 [info]: 🚀 Server is running on port 8080
+2026-01-18 12:25:36 [info]: 📝 Environment: development
+2026-01-18 12:25:36 [info]: 🔗 API: http://localhost:8080/api
+2026-01-18 12:27:04 [info]: 
+SIGINT received. Starting graceful shutdown...
+2026-01-18 13:39:52 [info]: 🚀 Server is running on port 8080
+2026-01-18 13:39:52 [info]: 📝 Environment: development
+2026-01-18 13:39:52 [info]: 🔗 API: http://localhost:8080/api
+2026-01-18 13:40:04 [info]: 
+SIGINT received. Starting graceful shutdown...

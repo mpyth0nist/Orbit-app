@@ -21,14 +21,24 @@ import {
     updateRequest,
     getMyThreads,
     updateProfile,
-    updateProfilePicture
+    updateProfilePicture,
+    getPendingFollowRequests,
+    searchUsers,
+    getUserStats
 } from "../controllers/user.controller.js";
 import {
     validateUpdateUser,
     validateUpdateProfile,
     validateUpdateProfilePicture,
-    validateIdParam
+    validatePagination,
+    validateSearchQuery
 } from "../middleware/validation.js";
+import {
+    validateUserId,
+    validateFollowerId,
+    validateFollowedId,
+    validateUpdateFollowRequest
+} from "../middleware/user.validation.js";
 
 const router = express.Router();
 
@@ -49,6 +59,20 @@ router.get("/", protect, getMyInfo);
  * @access  Private
  */
 router.patch("/", protect, validateUpdateUser, updateMyInfo);
+
+/**
+ * @route   GET /api/user/stats
+ * @desc    Get current user's statistics (followers, following, threads counts)
+ * @access  Private
+ */
+router.get("/stats", protect, getUserStats);
+
+/**
+ * @route   GET /api/user/search
+ * @desc    Search for users by username or name
+ * @access  Private
+ */
+router.get("/search", protect, validateSearchQuery, searchUsers);
 
 // ============================================================================
 // Profile Management
@@ -77,7 +101,7 @@ router.patch("/profile/picture", protect, validateUpdateProfilePicture, updatePr
  * @desc    Get current user's threads
  * @access  Private
  */
-router.get("/threads", protect, getMyThreads);
+router.get("/threads", protect, validatePagination, getMyThreads);
 
 // ============================================================================
 // Follow System
@@ -88,42 +112,49 @@ router.get("/threads", protect, getMyThreads);
  * @desc    Follow a user
  * @access  Private
  */
-router.post("/follow/:followed", protect, follow);
+router.post("/follow/:followed", protect, validateFollowedId, follow);
 
 /**
  * @route   DELETE /api/user/follow/:followed
  * @desc    Unfollow a user
  * @access  Private
  */
-router.delete("/follow/:followed", protect, unfollow);
+router.delete("/follow/:followed", protect, validateFollowedId, unfollow);
 
 /**
  * @route   GET /api/user/followers
  * @desc    Get current user's followers
  * @access  Private
  */
-router.get("/followers", protect, getFollowers);
+router.get("/followers", protect, validatePagination, getFollowers);
 
 /**
  * @route   DELETE /api/user/followers/:follower
  * @desc    Remove a follower
  * @access  Private
  */
-router.delete("/followers/:follower", protect, removeFollower);
+router.delete("/followers/:follower", protect, validateFollowerId, removeFollower);
 
 /**
  * @route   GET /api/user/following
  * @desc    Get users that current user follows
  * @access  Private
  */
-router.get("/following", protect, getFollowed);
+router.get("/following", protect, validatePagination, getFollowed);
 
 /**
  * @route   PATCH /api/user/follow-requests/:follower
  * @desc    Accept or reject a follow request
  * @access  Private
  */
-router.patch("/follow-requests/:follower", protect, updateRequest);
+router.patch("/follow-requests/:follower", protect, validateFollowerId, validateUpdateFollowRequest, updateRequest);
+
+/**
+ * @route   GET /api/user/follow-requests
+ * @desc    Get pending follow requests for current user
+ * @access  Private
+ */
+router.get("/follow-requests", protect, validatePagination, getPendingFollowRequests);
 
 // ============================================================================
 // Specific User Route (Keep last to avoid route conflicts)
@@ -134,6 +165,6 @@ router.patch("/follow-requests/:follower", protect, updateRequest);
  * @desc    Get user by ID
  * @access  Private
  */
-router.get("/:userId", protect, getUser);
+router.get("/:userId", protect, validateUserId, getUser);
 
 export default router;

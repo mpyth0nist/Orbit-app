@@ -8,7 +8,7 @@
  */
 
 import { asyncHandler } from '../middleware/asyncHandler.js';
-import { successResponse, errorResponse, paginatedResponse, createdResponse, deletedResponse } from '../utils/response.js';
+import { successResponse, errorResponse, paginatedResponse, cursorPaginatedResponse, createdResponse, deletedResponse } from '../utils/response.js';
 import { prisma, selectThreadWithUser } from '../utils/prisma.js';
 import logger from '../utils/logger.js';
 import validator from 'validator';
@@ -17,7 +17,7 @@ import validator from 'validator';
  * Get personalized news feed
  * 
  * Fetches threads from users that the authenticated user follows.
- * Returns threads sorted by creation date (newest first) with pagination.
+ * Returns threads sorted by creation date (newest first) with cursor-based pagination.
  * 
  * @route   GET /api/threads/feed
  * @access  Private
@@ -25,13 +25,14 @@ import validator from 'validator';
  * @param {Request} req - Express request object
  * @param {Response} res - Express response object
  * 
- * @query {number} [page=1] - Page number for pagination
+ * @query {string} [cursor] - Base64-encoded cursor for pagination
  * @query {number} [limit=20] - Number of threads per page (max 100)
  * 
- * @returns {Object} Paginated list of threads from followed users
+ * @returns {Object} Cursor-paginated list of threads from followed users
  * 
  * @example
- * GET /api/threads/feed?page=1&limit=20
+ * GET /api/threads/feed?limit=20
+ * GET /api/threads/feed?cursor=eyJpZCI6MTAsImNyZWF0ZWRBdCI6IjIwMjQtMDEtMTVUMTA6MDA6MDBaIn0&limit=20
  * 
  * Response:
  * {
@@ -39,12 +40,9 @@ import validator from 'validator';
  *   "message": "Feed fetched successfully",
  *   "data": [{ thread1 }, { thread2 }, ...],
  *   "pagination": {
- *     "currentPage": 1,
- *     "itemsPerPage": 20,
- *     "totalItems": 45,
- *     "totalPages": 3,
- *     "hasNextPage": true,
- *     "hasPrevPage": false
+ *     "nextCursor": "eyJpZCI6MzAsImNyZWF0ZWRBdCI6IjIwMjQtMDEtMTRUMTA6MDA6MDBaIn0",
+ *     "limit": 20,
+ *     "hasNextPage": true
  *   }
  * }
  */
@@ -52,9 +50,30 @@ export const getFeed = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
 
     // Parse pagination parameters
-    const page = parseInt(req.query.page) || 1;
     const limit = Math.min(parseInt(req.query.limit) || 20, 100); // Max 100 per page
-    const skip = (page - 1) * limit;
+    const cursorParam = req.query.cursor;
+
+    // Decode cursor if provided
+    let cursorData = null;
+    if (cursorParam) {
+        try {
+            const decodedCursor = Buffer.from(cursorParam, 'base64').toString('utf-8');
+            cursorData = JSON.parse(decodedCursor);
+
+            // Validate cursor structure
+            if (!cursorData.id || !cursorData.createdAt) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid cursor format'
+                });
+            }
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid cursor encoding'
+            });
+        }
+    }
 
     // Get list of users that the current user follows (with ACCEPTED status)
     const followedUsers = await prisma.follow.findMany({
@@ -73,85 +92,163 @@ export const getFeed = asyncHandler(async (req, res) => {
     // If user doesn't follow anyone, return empty feed
     if (followedUserIds.length === 0) {
         logger.info('Empty feed - user follows no one', { userId });
-        return paginatedResponse(
+        return cursorPaginatedResponse(
             res,
             [],
-            { page, limit, total: 0 },
+            { nextCursor: null, limit },
             'Your feed is empty. Start following users to see their threads!'
         );
     }
 
-    // Fetch threads from followed users with pagination
-    const [threads, totalCount] = await Promise.all([
-        prisma.thread.findMany({
-            where: {
-                userId: {
-                    in: followedUserIds
+    // Build where clause based on cursor
+    const whereClause = {
+        userId: {
+            in: followedUserIds
+        }
+    };
+
+    // Add cursor pagination condition
+    if (cursorData) {
+        whereClause.OR = [
+            {
+                createdAt: {
+                    lt: new Date(cursorData.createdAt)
                 }
             },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        type: true,
-                        profile: {
-                            select: {
-                                firstName: true,
-                                lastName: true,
-                                photoUrl: true
-                            }
-                        }
-                    }
-                },
-                media: {
-                    select: {
-                        id: true,
-                        type: true,
-                        url: true
-                    }
-                }
-            },
-            orderBy: {
-                createdAt: 'desc'
-            },
-            skip,
-            take: limit
-        }),
-        // Count total threads for pagination
-        prisma.thread.count({
-            where: {
-                userId: {
-                    in: followedUserIds
+            {
+                createdAt: new Date(cursorData.createdAt),
+                id: {
+                    lt: cursorData.id
                 }
             }
-        })
-    ]);
+        ];
+    }
+
+    // Fetch threads from followed users with cursor pagination
+    // Fetch limit + 1 to determine if there are more results
+    const threads = await prisma.thread.findMany({
+        where: whereClause,
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    type: true,
+                    profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            photoUrl: true
+                        }
+                    }
+                }
+            },
+            media: {
+                select: {
+                    id: true,
+                    type: true,
+                    url: true
+                }
+            }
+        },
+        orderBy: [
+            { createdAt: 'desc' },
+            { id: 'desc' }
+        ],
+        take: limit + 1
+    });
+
+    // Determine if there are more results
+    const hasMore = threads.length > limit;
+    const returnThreads = hasMore ? threads.slice(0, limit) : threads;
+
+    // Generate next cursor if there are more results
+    let nextCursor = null;
+    if (hasMore) {
+        const lastThread = returnThreads[returnThreads.length - 1];
+        const cursorObj = {
+            id: lastThread.id,
+            createdAt: lastThread.createdAt.toISOString()
+        };
+        nextCursor = Buffer.from(JSON.stringify(cursorObj)).toString('base64');
+    }
 
     logger.info('Feed fetched', {
         userId,
-        threadsCount: threads.length,
-        totalCount,
-        page,
+        threadsCount: returnThreads.length,
+        hasMore,
         followingCount: followedUserIds.length
     });
 
-    paginatedResponse(
+    cursorPaginatedResponse(
         res,
-        threads,
-        { page, limit, total: totalCount },
+        returnThreads,
+        { nextCursor, limit },
         'Feed fetched successfully'
     );
 });
 
-
+/**
+ * Get threads from most liked accounts
+ * 
+ * Fetches threads from the top 3 accounts that the user has liked most.
+ * Returns threads sorted by reaction count (most liked first) with cursor-based pagination.
+ * 
+ * @route   GET /api/threads/recommended
+ * @access  Private
+ * 
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * 
+ * @query {string} [cursor] - Base64-encoded cursor for pagination
+ * @query {number} [limit=20] - Number of threads per page (max 100)
+ * 
+ * @returns {Object} Cursor-paginated list of recommended threads
+ * 
+ * @example
+ * GET /api/threads/recommended?limit=20
+ * GET /api/threads/recommended?cursor=eyJpZCI6MTUsInJlYWN0aW9uQ291bnQiOjQyfQ&limit=20
+ * 
+ * Response:
+ * {
+ *   "success": true,
+ *   "message": "Recommended threads fetched successfully",
+ *   "data": [{ thread1 }, { thread2 }, ...],
+ *   "pagination": {
+ *     "nextCursor": "eyJpZCI6MzUsInJlYWN0aW9uQ291bnQiOjMwfQ",
+ *     "limit": 20,
+ *     "hasNextPage": true
+ *   }
+ * }
+ */
 export const getMostLikedAccountsThreads = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
 
     // Parse pagination parameters
-    const page = parseInt(req.query.page) || 1;
     const limit = Math.min(parseInt(req.query.limit) || 20, 100);
-    const skip = (page - 1) * limit;
+    const cursorParam = req.query.cursor;
+
+    // Decode cursor if provided
+    let cursorData = null;
+    if (cursorParam) {
+        try {
+            const decodedCursor = Buffer.from(cursorParam, 'base64').toString('utf-8');
+            cursorData = JSON.parse(decodedCursor);
+
+            // Validate cursor structure
+            if (!cursorData.id || cursorData.reactionCount === undefined) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid cursor format'
+                });
+            }
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid cursor encoding'
+            });
+        }
+    }
 
     // Fetch all reactions by this user with related thread/comment owner info
     const likedAccounts = await prisma.reaction.findMany({
@@ -192,71 +289,115 @@ export const getMostLikedAccountsThreads = asyncHandler(async (req, res) => {
     // Check if user has no liked accounts
     if (accountIds.length === 0) {
         logger.info('No liked accounts for user', { userId });
-        return paginatedResponse(
+        return cursorPaginatedResponse(
             res,
             [],
-            { page, limit, total: 0 },
+            { nextCursor: null, limit },
             'No recommended threads available'
         );
     }
 
-    // Fetch threads with pagination
-    const [threads, totalCount] = await Promise.all([
-        prisma.thread.findMany({
-            where: {
-                userId: { in: accountIds }
+    // Build where clause based on cursor
+    const whereClause = {
+        userId: { in: accountIds }
+    };
+
+    // Add cursor pagination condition
+    // For reaction-based ordering, we need to handle the cursor differently
+    if (cursorData) {
+        whereClause.OR = [
+            {
+                reactions: {
+                    _count: {
+                        lt: cursorData.reactionCount
+                    }
+                }
             },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        profile: {
-                            select: {
-                                firstName: true,
-                                lastName: true,
-                                photoUrl: true,
+            {
+                AND: [
+                    {
+                        reactions: {
+                            _count: {
+                                equals: cursorData.reactionCount
                             }
                         }
                     },
-                },
-                media: {
-                    select: {
-                        id: true,
-                        type: true,
-                        url: true
+                    {
+                        id: {
+                            lt: cursorData.id
+                        }
+                    }
+                ]
+            }
+        ];
+    }
+
+    // Fetch threads with cursor pagination
+    // Fetch limit + 1 to determine if there are more results
+    const threads = await prisma.thread.findMany({
+        where: whereClause,
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            photoUrl: true,
+                        }
                     }
                 },
-                _count: {
-                    select: { reactions: true }
+            },
+            media: {
+                select: {
+                    id: true,
+                    type: true,
+                    url: true
                 }
             },
-            orderBy: {
+            _count: {
+                select: { reactions: true }
+            }
+        },
+        orderBy: [
+            {
                 reactions: {
                     _count: 'desc'
                 }
             },
-            skip,
-            take: limit
-        }),
-        prisma.thread.count({
-            where: {
-                userId: { in: accountIds }
-            }
-        })
-    ]);
+            { id: 'desc' }
+        ],
+        take: limit + 1
+    });
+
+    // Determine if there are more results
+    const hasMore = threads.length > limit;
+    const returnThreads = hasMore ? threads.slice(0, limit) : threads;
+
+    // Generate next cursor if there are more results
+    let nextCursor = null;
+    if (hasMore) {
+        const lastThread = returnThreads[returnThreads.length - 1];
+        const cursorObj = {
+            id: lastThread.id,
+            reactionCount: lastThread._count.reactions
+        };
+        nextCursor = Buffer.from(JSON.stringify(cursorObj)).toString('base64');
+    }
 
     logger.info('Most liked accounts threads fetched', {
         userId,
         topAccountsCount: accountIds.length,
-        threadsCount: threads.length,
-        page
+        threadsCount: returnThreads.length,
+        hasMore
     });
 
-    return paginatedResponse(
+    return cursorPaginatedResponse(
         res,
-        threads,
-        { page, limit, total: totalCount },
+        returnThreads,
+        { nextCursor, limit },
         'Recommended threads fetched successfully'
     );
 })

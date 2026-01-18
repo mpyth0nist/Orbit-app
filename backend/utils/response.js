@@ -86,6 +86,35 @@ export const paginatedResponse = (res, data, pagination, message = 'Success') =>
 };
 
 /**
+ * Send a cursor-based paginated response
+ * 
+ * @param {Response} res - Express response object
+ * @param {Array} data - Array of data items
+ * @param {Object} cursor - Cursor pagination metadata
+ * @param {string|null} cursor.nextCursor - Base64-encoded cursor for next page
+ * @param {number} cursor.limit - Items per page
+ * @param {string} [message='Success'] - Success message
+ * 
+ * @example
+ * cursorPaginatedResponse(res, threads, { nextCursor: 'eyJpZCI6MTB9', limit: 20 });
+ * // Returns: { success: true, data: [...], pagination: { nextCursor, limit, hasNextPage } }
+ */
+export const cursorPaginatedResponse = (res, data, cursor, message = 'Success') => {
+    const { nextCursor, limit } = cursor;
+
+    res.status(200).json({
+        success: true,
+        message,
+        data,
+        pagination: {
+            nextCursor,
+            limit,
+            hasNextPage: nextCursor !== null
+        }
+    });
+};
+
+/**
  * Send a created resource response
  * 
  * @param {Response} res - Express response object
