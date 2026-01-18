@@ -732,3 +732,110 @@ export const getUserStats = asyncHandler(async (req, res) => {
         message: 'Statistics retrieved successfully'
     });
 });
+
+export const checkRelationship = asyncHandler(async (req, res) => {
+    const targetUserId = parseInt(req.params.id);
+    const userId = parseInt(req.user.userId);
+
+
+    if (!targetUserId || isNaN(targetUserId)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid user ID'
+        })
+    }
+
+    if (targetUserId === userId) {
+        return res.status(200).json({
+            success: true,
+            data: {
+                relationship: 'THIS USER REQUESTS TO FOLLOW YOU'
+            }
+        })
+    }
+    const [followed, follower] = await Promise.all([
+        prisma.follow.findUnique({
+            where: {
+                followerId_followedId: {
+                    followerId: userId,
+                    followedId: targetUserId
+                },
+            },
+            select: {
+                status: true
+            }
+        }),
+        prisma.follow.findUnique({
+            where: {
+                followerId_followedId: {
+                    followerId: targetUserId,
+                    followedId: userId
+                },
+            },
+            select: {
+                status: true
+            }
+        })
+    ])
+
+    const followingStatus = followed?.status;  // 'ACCEPTED', 'PENDING', or undefined
+    const followerStatus = follower?.status;
+    // Determine relationship
+    let relationship;
+
+    if (followingStatus === 'ACCEPTED' && followerStatus === 'ACCEPTED') {
+        relationship = 'MUTUAL';
+    } else if (followingStatus === 'ACCEPTED') {
+        relationship = 'FOLLOWING';
+    } else if (followingStatus === 'PENDING') {
+        relationship = 'PENDING_OUTGOING';  // You requested to follow them
+    } else if (followerStatus === 'ACCEPTED') {
+        relationship = 'FOLLOWER';
+    } else if (followerStatus === 'PENDING') {
+        relationship = 'PENDING_INCOMING';  // They requested to follow you
+    } else {
+        relationship = 'NONE';
+    }
+    logger.info('Relationship checked', { currentUserId, targetUserId, relationship });
+    return res.status(200).json({
+        success: true,
+        data: { relationship }
+    });
+
+})
+
+export const getUserByUsername = asyncHandler(async (req, res) => {
+    const { username } = req.params;
+
+    if (!username) {
+        return res.status(400).json({
+            success: false,
+            message: 'Invalid username'
+        })
+    }
+    const user = await prisma.user.findUnique({
+        where: {
+            username
+        },
+        select: {
+            id: true,
+            username: true,
+            type: true,
+            profile: {
+                select: {
+                    firstName: true,
+                    lastName: true,
+                    bio: true,
+                    photoUrl: true,
+                    gender: true
+                }
+            }
+        }
+    })
+
+    return res.status(200).json({
+        success: true,
+        data: user,
+        message: "User retrieved successfully"
+    })
+})
