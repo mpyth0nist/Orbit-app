@@ -1,215 +1,206 @@
-import { asyncHandler } from "../middleware/asyncHandler";
-import { prisma } from "../config/prisma";
-import logger from "../config/logger";
+/**
+ * Reactions Controller
+ * 
+ * Handles like/unlike operations for threads and comments with proper
+ * atomic transactions and optimized database queries.
+ * 
+ * @module controllers/reactions
+ */
 
+import { asyncHandler } from '../middleware/asyncHandler.js';
+import { prisma } from '../utils/prisma.js';
+import { logger } from '../utils/logger.js';
+import { successResponse, errorResponse, paginatedResponse } from '../utils/response.js';
 
-
+/**
+ * @desc    Like or unlike a thread or comment
+ * @route   POST /api/reactions/:entityType/:id
+ * @access  Private
+ */
 export const likeEntity = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
     const entityType = req.params.entityType;
-    const entityId = parseInt(req.params.id);
+    const entityId = Number(req.params.id);
 
-    const validChoices = ['thread', 'comment']
-
-    if (!validChoices.includes(entityType)) {
-        return res.status(400).json({ message: 'Invalid entity type' });
+    // Validation
+    const validTypes = ['thread', 'comment'];
+    if (!validTypes.includes(entityType)) {
+        return errorResponse(res, 'Invalid entity type. Must be "thread" or "comment"', 400);
     }
 
-    const existingEntity = await prisma[entityType].findUnique({
-        where: { id: entityId }
-    });
+    if (!entityId || isNaN(entityId)) {
+        return errorResponse(res, 'Invalid entity ID', 400);
+    }
 
-    let existingLike;
+    // Dynamic field and constraint names
+    const modelField = entityType === 'thread' ? 'threadId' : 'commentId';
+    const uniqueConstraint = entityType === 'thread'
+        ? 'unique_user_thread_reaction'
+        : 'unique_user_comment_reaction';
 
-    // Check if the user has already liked the thread or comment
-    if (entityType === 'thread') {
-        existingLike = await prisma.reaction.findUnique({
+    // Parallel queries for better performance
+    const [existingEntity, existingLike] = await Promise.all([
+        prisma[entityType].findUnique({
+            where: { id: entityId },
+            select: { id: true, userId: true }
+        }),
+        prisma.reaction.findUnique({
             where: {
-                unique_user_thread_reaction: {
+                [uniqueConstraint]: {
                     userId,
-                    threadId: entityId
+                    [modelField]: entityId
                 }
             }
         })
-    }
+    ]);
 
-    if (entityType === 'comment') {
-        existingLike = await prisma.reaction.findUnique({
-            where: {
-                unique_user_comment_reaction: {
-                    userId,
-                    commentId: entityId
-                }
-            }
-        })
-    }
-
-    // Check if the entity exists
+    // Check if entity exists
     if (!existingEntity) {
-        return res.status(404).json({ message: 'Entity not found' });
+        return errorResponse(
+            res,
+            `${entityType.charAt(0).toUpperCase() + entityType.slice(1)} not found`,
+            404
+        );
     }
 
-    // Check if the user is trying to like their own thread or comment
+    // Prevent self-like
     if (existingEntity.userId === userId) {
-
-        return res.status(403).json({ message: `You are not authorized to like your own ${entityType}` });
+        return errorResponse(
+            res,
+            `You cannot like your own ${entityType}`,
+            403
+        );
     }
 
-    if (entityType === 'thread') {
-
-        // Check if the user has already liked the thread
-        // If the user has liked the thread, unlike the thread, else like it.
-        if (existingLike) {
-            await prisma.reaction.delete({
+    // Toggle like/unlike with atomic transaction
+    if (existingLike) {
+        // Unlike - decrement count and delete reaction
+        await prisma.$transaction([
+            prisma.reaction.delete({
                 where: {
-                    unique_user_thread_reaction: {
+                    [uniqueConstraint]: {
                         userId,
-                        threadId: entityId
+                        [modelField]: entityId
                     }
                 }
-
+            }),
+            prisma[entityType].update({
+                where: { id: entityId },
+                data: { likesCount: { decrement: 1 } }
             })
-            logger.info(`thread unliked`, { entityId, userId })
+        ]);
 
-            return res.status(200).json({
-                success: true,
-                message: `thread unliked successfully`
-            })
-        } else {
+        logger.info(`${entityType} unliked`, { entityType, entityId, userId });
 
-            Promise.all([
-                await prisma.reaction.create({
-                    data: {
-                        userId,
-                        threadId: entityId,
-                    }
-                }),
-
-                await prisma.thread.update({
-                    where: {
-                        id: entityId
-                    },
-                    data: {
-                        likesCount: {
-                            increment: 1
-                        }
-                    }
-                })
-            ])
-
-            logger.info(`thread liked`, { entityId, userId })
-            return res.status(200).json({
-                success: true,
-                message: `thread liked successfully`
-            })
-        }
-    }
-
-    if (entityType === 'comment') {
-
-
-        // Check if the user has already liked the comment
-        // If the user has liked the comment, unlike the comment, else like it.
-        if (existingLike) {
-            await prisma.reaction.delete({
-                where: {
-                    unique_user_comment_reaction: {
-                        userId,
-                        commentId: entityId
-                    }
+        return successResponse(
+            res,
+            { liked: false },
+            `${entityType.charAt(0).toUpperCase() + entityType.slice(1)} unliked successfully`
+        );
+    } else {
+        // Like - increment count and create reaction
+        await prisma.$transaction([
+            prisma.reaction.create({
+                data: {
+                    userId,
+                    [modelField]: entityId
                 }
+            }),
+            prisma[entityType].update({
+                where: { id: entityId },
+                data: { likesCount: { increment: 1 } }
             })
-            logger.info(`Comment unliked`, { entityId, userId })
-            return res.status(200).json({
-                success: true,
-                message: `comment unliked successfully`
-            })
-        } else {
+        ]);
 
-            Promise.all([
-                await prisma.reaction.create({
-                    data: {
-                        userId,
-                        commentId: entityId
-                    }
-                }),
+        logger.info(`${entityType} liked`, { entityType, entityId, userId });
 
-                await prisma.comment.update({
-                    where: {
-                        id: entityId
-                    },
-                    data: {
-                        likesCount: {
-                            increment: 1
-                        }
-                    }
-                })
-            ])
-
-            logger.info("comment liked successfully", { entityId, userId })
-            return res.status(200).json({
-                success: true,
-                message: `comment liked successfully`
-            })
-        }
+        return successResponse(
+            res,
+            { liked: true },
+            `${entityType.charAt(0).toUpperCase() + entityType.slice(1)} liked successfully`
+        );
     }
+});
 
-
-
-})
-
-
+/**
+ * @desc    Get all likes for a thread or comment
+ * @route   GET /api/reactions/:entityType/:id
+ * @access  Private
+ */
 export const getEntityLikes = asyncHandler(async (req, res) => {
-    const entityId = parseInt(req.params.id);
+    const entityId = Number(req.params.id);
     const entityType = req.params.entityType;
-    const entity = (entityType === 'thread' ? 'thread' : 'comment');
 
-    const validChoices = ['thread', 'comment'];
-    if (!validChoices.includes(entityType)) {
-        return res.status(400).json({ message: 'Invalid entity type' });
+    // Validation
+    const validTypes = ['thread', 'comment'];
+    if (!validTypes.includes(entityType)) {
+        return errorResponse(res, 'Invalid entity type. Must be "thread" or "comment"', 400);
     }
 
-    const existingEntity = await prisma[entity].findUnique({
-        where: {
-            id: entityId
-        }
+    if (!entityId || isNaN(entityId)) {
+        return errorResponse(res, 'Invalid entity ID', 400);
+    }
+
+    // Pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const skip = (page - 1) * limit;
+
+    // Check if entity exists
+    const existingEntity = await prisma[entityType].findUnique({
+        where: { id: entityId },
+        select: { id: true }
     });
 
-
     if (!existingEntity) {
-        return res.status(404).json({ message: `${entity} not found` });
+        return errorResponse(
+            res,
+            `${entityType.charAt(0).toUpperCase() + entityType.slice(1)} not found`,
+            404
+        );
     }
 
-    const whereClause = entityType === 'thread' ? {
-        threadId: entityId
-    } : {
-        commentId: entityId
-    };
+    // Build where clause
+    const whereClause = entityType === 'thread'
+        ? { threadId: entityId }
+        : { commentId: entityId };
 
-    const likes = await prisma.reaction.findMany({
-        where: whereClause,
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    username: true,
-                    profile: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                            photoUrl: true
+    // Parallel queries for likes and count
+    const [likes, totalCount] = await Promise.all([
+        prisma.reaction.findMany({
+            where: whereClause,
+            select: {
+                id: true,
+                createdAt: true,
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        profile: {
+                            select: {
+                                firstName: true,
+                                lastName: true,
+                                photoUrl: true
+                            }
                         }
                     }
                 }
-            }
-        }
-    })
+            },
+            skip,
+            take: limit,
+            orderBy: { createdAt: 'desc' }
+        }),
+        prisma.reaction.count({ where: whereClause })
+    ]);
 
-    logger.info("Entity likes data retrieved successfully", { entityId, entityType })
-    return res.status(200).json({
-        success: true,
-        likesCount: likes.length,
+    logger.info('Entity likes retrieved', { entityType, entityId, totalCount });
+
+    return paginatedResponse(
+        res,
         likes,
-    })
-
-})
+        { page, limit, total: totalCount },
+        totalCount === 0
+            ? `No likes yet`
+            : `Retrieved ${likes.length} likes`
+    );
+});
