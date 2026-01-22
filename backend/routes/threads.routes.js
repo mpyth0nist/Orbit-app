@@ -11,6 +11,7 @@ import express from 'express';
 import {
     getFeed,
     getMostLikedAccountsThreads,
+    searchThreads,
     createThread,
     updateThread,
     deleteThread
@@ -20,7 +21,8 @@ import {
     validatePagination,
     validateCreateThread,
     validateUpdateThread,
-    validateIdParam
+    validateIdParam,
+    validateSearchThreads
 } from '../middleware/validation.js';
 
 const router = express.Router();
@@ -44,6 +46,18 @@ router.get('/feed', protect, validatePagination, getFeed);
  * @example GET /api/threads/most-liked
  */
 router.get('/most-liked', protect, getMostLikedAccountsThreads);
+
+/**
+ * @route   GET /api/threads/search
+ * @desc    Search threads by content (case-insensitive)
+ * @access  Private
+ * @query   q - Search query (2-100 characters, required)
+ * @query   cursor - Base64-encoded cursor for pagination (optional)
+ * @query   limit - Items per page (default: 20, max: 100) (optional)
+ * 
+ * @example GET /api/threads/search?q=javascript&limit=20
+ */
+router.get('/search', protect, validateSearchThreads, searchThreads);
 
 /**
  * @route   POST /api/threads

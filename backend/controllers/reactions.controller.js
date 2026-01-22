@@ -11,6 +11,7 @@ import { asyncHandler } from '../middleware/asyncHandler.js';
 import { prisma } from '../utils/prisma.js';
 import { logger } from '../utils/logger.js';
 import { successResponse, errorResponse, paginatedResponse } from '../utils/response.js';
+import { createLikeNotification, deleteNotification } from '../utils/notificationService.js';
 
 /**
  * @desc    Like or unlike a thread or comment
@@ -90,6 +91,15 @@ export const likeEntity = asyncHandler(async (req, res) => {
             })
         ]);
 
+        // Delete LIKE notification
+        await deleteNotification({
+            actorId: userId,
+            receiverId: existingEntity.userId,
+            type: 'LIKE',
+            entityId,
+            entityType: entityType.toUpperCase()
+        });
+
         logger.info(`${entityType} unliked`, { entityType, entityId, userId });
 
         return successResponse(
@@ -111,6 +121,14 @@ export const likeEntity = asyncHandler(async (req, res) => {
                 data: { likesCount: { increment: 1 } }
             })
         ]);
+
+        // Create LIKE notification for entity owner
+        await createLikeNotification(
+            userId,                          // User who liked
+            entityId,                        // Entity ID
+            entityType.toUpperCase(),        // THREAD or COMMENT
+            existingEntity.userId            // Entity owner (receiver)
+        );
 
         logger.info(`${entityType} liked`, { entityType, entityId, userId });
 

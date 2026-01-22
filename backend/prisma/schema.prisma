@@ -112,13 +112,14 @@ model Thread {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
-  parentId  Int?     @map("parent_id")
-  threadId  Int      @map("thread_id")
-  userId    Int      @map("user_id")
-  content   String   @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id         Int      @id @default(autoincrement())
+  parentId   Int?     @map("parent_id")
+  threadId   Int      @map("thread_id")
+  userId     Int      @map("user_id")
+  likesCount Int      @default(0) @map("likes_count")
+  content    String   @db.Text
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   thread Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
   user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)

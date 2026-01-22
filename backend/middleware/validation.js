@@ -236,6 +236,22 @@ export const createCommentSchema = Joi.object({
         })
 });
 
+/**
+ * Update comment validation schema
+ */
+export const updateCommentSchema = Joi.object({
+    content: Joi.string()
+        .min(1)
+        .max(300)
+        .trim()
+        .required()
+        .messages({
+            'string.min': 'Comment cannot be empty',
+            'string.max': 'Comment cannot exceed 300 characters',
+            'any.required': 'Comment content is required'
+        })
+});
+
 // ============================================================================
 // Pagination & Query Validation Schemas
 // ============================================================================
@@ -291,6 +307,55 @@ export const searchQuerySchema = Joi.object({
     limit: Joi.number().integer().min(1).max(50).optional()
 });
 
+/**
+ * Thread search query validation schema
+ */
+export const searchThreadsSchema = Joi.object({
+    q: Joi.string()
+        .min(2)
+        .max(100)
+        .trim()
+        .required()
+        .messages({
+            'string.min': 'Search term must be at least 2 characters',
+            'string.max': 'Search term cannot exceed 100 characters',
+            'any.required': 'Search term is required'
+        }),
+    cursor: Joi.string().optional(),
+    limit: Joi.number().integer().min(1).max(100).optional()
+});
+
+// ============================================================================
+// Notification Validation Schemas
+// ============================================================================
+
+/**
+ * Update notification validation schema (mark as read/unread)
+ */
+export const updateNotificationSchema = Joi.object({
+    isRead: Joi.boolean()
+        .required()
+        .messages({
+            'boolean.base': 'isRead must be a boolean value',
+            'any.required': 'isRead is required'
+        })
+});
+
+/**
+ * Notification query validation schema
+ */
+export const notificationQuerySchema = Joi.object({
+    filter: Joi.string()
+        .valid('all', 'read', 'unread')
+        .optional()
+        .default('all')
+        .messages({
+            'any.only': 'Filter must be one of: all, read, unread'
+        }),
+    cursor: Joi.string().optional(),
+    limit: Joi.number().integer().min(1).max(100).optional()
+});
+
 // ============================================================================
 // Middleware Exports
 // ============================================================================
@@ -306,6 +371,10 @@ export const validateUpdateProfilePicture = validate(updateProfilePictureSchema)
 export const validateCreateThread = validate(createThreadSchema);
 export const validateUpdateThread = validate(updateThreadSchema);
 export const validateCreateComment = validate(createCommentSchema);
+export const validateUpdateComment = validate(updateCommentSchema);
 export const validatePagination = validate(paginationSchema, 'query');
 export const validateIdParam = validate(idParamSchema, 'params');
 export const validateSearchQuery = validate(searchQuerySchema, 'query');
+export const validateSearchThreads = validate(searchThreadsSchema, 'query');
+export const validateUpdateNotification = validate(updateNotificationSchema);
+export const validateNotificationQuery = validate(notificationQuerySchema, 'query');

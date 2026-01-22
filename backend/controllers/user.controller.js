@@ -17,6 +17,7 @@ import {
     createdResponse,
     deletedResponse
 } from '../utils/response.js';
+import { createFollowNotification, deleteNotification } from '../utils/notificationService.js';
 
 /**
  * @desc    Get current user's information
@@ -263,6 +264,10 @@ export const follow = asyncHandler(async (req, res) => {
         }
     });
 
+    // Create notification for the followed user
+    const notificationType = accountType === 'PRIVATE' ? 'FOLLOW_REQUEST' : 'NEW_FOLLOW';
+    await createFollowNotification(followerId, followedId, notificationType);
+
     logger.info('User followed', {
         followerId,
         followedId,
@@ -306,6 +311,20 @@ export const unfollow = asyncHandler(async (req, res) => {
                 followedId
             }
         }
+    });
+
+    // Delete NEW_FOLLOW or FOLLOW_REQUEST notification
+    await deleteNotification({
+        actorId: followerId,
+        receiverId: followedId,
+        type: 'NEW_FOLLOW',
+        entityType: 'USER'
+    });
+    await deleteNotification({
+        actorId: followerId,
+        receiverId: followedId,
+        type: 'FOLLOW_REQUEST',
+        entityType: 'USER'
     });
 
     logger.info('User unfollowed', { followerId, followedId });
@@ -371,6 +390,28 @@ export const updateRequest = asyncHandler(async (req, res) => {
         },
         data: { status: newStatus }
     });
+
+    // Handle notifications based on acceptance
+    if (isAccepted) {
+        // Delete FOLLOW_REQUEST notification
+        await deleteNotification({
+            actorId: followerId,
+            receiverId: followedId,
+            type: 'FOLLOW_REQUEST',
+            entityType: 'USER'
+        });
+
+        // Create ACCEPTED_FOLLOW notification for the follower
+        await createFollowNotification(followedId, followerId, 'ACCEPTED_FOLLOW');
+    } else {
+        // Delete FOLLOW_REQUEST notification on rejection
+        await deleteNotification({
+            actorId: followerId,
+            receiverId: followedId,
+            type: 'FOLLOW_REQUEST',
+            entityType: 'USER'
+        });
+    }
 
     logger.info('Follow request updated', {
         followerId,

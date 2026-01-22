@@ -16,6 +16,10 @@ import helmet from 'helmet';
 import authRoutes from './routes/auth.routes.js';
 import userRoutes from './routes/user.routes.js';
 import threadRoutes from './routes/threads.routes.js';
+import notificationRoutes from './routes/notifications.routes.js';
+import commentRoutes from './routes/comments.routes.js';
+import reactionRoutes from './routes/reactions.routes.js';
+import mediaRoutes from './routes/media.routes.js';
 
 // Middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -35,8 +39,21 @@ const port = process.env.PORT || 3000;
 app.use(helmet());
 
 // CORS - Configure allowed origins
+const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',')
+    : ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:4173'];
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -76,9 +93,17 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/threads', threadRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/reactions', reactionRoutes);
+app.use('/api/media', mediaRoutes);
+app.use('/api/threads/:threadId/comments', commentRoutes);  // Thread comments
+app.use('/api/comments', commentRoutes);  // Comment operations
 
-// TODO: Add notifications route when controller is implemented
-// app.use('/api/notifications', notificationRoutes);
+// ============================================================================
+// Static Files - Serve uploaded media
+// ============================================================================
+
+app.use('/uploads', express.static('uploads'));
 
 // ============================================================================
 // Error Handling

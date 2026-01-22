@@ -402,6 +402,126 @@ export const getMostLikedAccountsThreads = asyncHandler(async (req, res) => {
     );
 })
 
+// Search threads by content
+export const searchThreads = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+    const searchQuery = req.query.q;
+
+    // Parse pagination parameters
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const cursorParam = req.query.cursor;
+
+    // Decode cursor if provided
+    let cursorData = null;
+    if (cursorParam) {
+        try {
+            const decodedCursor = Buffer.from(cursorParam, 'base64').toString('utf-8');
+            cursorData = JSON.parse(decodedCursor);
+
+            // Validate cursor structure
+            if (!cursorData.id || !cursorData.createdAt) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid cursor format'
+                });
+            }
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid cursor encoding'
+            });
+        }
+    }
+
+    // Build where clause for search
+    const whereClause = {
+        content: {
+            contains: searchQuery,
+            mode: 'insensitive' // Case-insensitive search
+        }
+    };
+
+    // Add cursor pagination condition
+    if (cursorData) {
+        whereClause.OR = [
+            {
+                createdAt: {
+                    lt: new Date(cursorData.createdAt)
+                }
+            },
+            {
+                createdAt: new Date(cursorData.createdAt),
+                id: {
+                    lt: cursorData.id
+                }
+            }
+        ];
+    }
+
+    // Fetch threads matching search query with cursor pagination
+    // Fetch limit + 1 to determine if there are more results
+    const threads = await prisma.thread.findMany({
+        where: whereClause,
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    type: true,
+                    profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            photoUrl: true
+                        }
+                    }
+                }
+            },
+            media: {
+                select: {
+                    id: true,
+                    type: true,
+                    url: true
+                }
+            }
+        },
+        orderBy: [
+            { createdAt: 'desc' },
+            { id: 'desc' }
+        ],
+        take: limit + 1
+    });
+
+    // Determine if there are more results
+    const hasMore = threads.length > limit;
+    const returnThreads = hasMore ? threads.slice(0, limit) : threads;
+
+    // Generate next cursor if there are more results
+    let nextCursor = null;
+    if (hasMore) {
+        const lastThread = returnThreads[returnThreads.length - 1];
+        const cursorObj = {
+            id: lastThread.id,
+            createdAt: lastThread.createdAt.toISOString()
+        };
+        nextCursor = Buffer.from(JSON.stringify(cursorObj)).toString('base64');
+    }
+
+    logger.info('Thread search completed', {
+        userId,
+        searchQuery,
+        resultsCount: returnThreads.length,
+        hasMore
+    });
+
+    cursorPaginatedResponse(
+        res,
+        returnThreads,
+        { nextCursor, limit },
+        returnThreads.length > 0 ? 'Search results fetched successfully' : 'No threads found matching your search'
+    );
+});
+
 // Threads basic CRUD.
 
 
