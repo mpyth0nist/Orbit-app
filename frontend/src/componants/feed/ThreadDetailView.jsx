@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon } from '../ui/Icons';
-import * as base44 from '@/api/base44Client';
+import apiClient from '@/api/apiClient';
 import { format } from 'date-fns';
 import { Loader2 } from 'lucide-react';
 
-export default function ThreadDetailView({ 
-  post, 
-  onBack, 
+export default function ThreadDetailView({
+  post,
+  onBack,
   onLike,
   currentUserEmail,
-  user 
+  user
 }) {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,11 +25,11 @@ export default function ThreadDetailView({
 
   const loadComments = async () => {
     if (!post?.id) return;
-    
+
     setIsLoading(true);
     try {
-      const data = await base44.entities.Comment.filter({ post_id: post.id }, '-created_date');
-      setComments(data || []);
+      const response = await apiClient.comments.getThreadComments(post.id);
+      setComments(response.data || []);
     } catch (error) {
       console.error('Failed to load comments:', error);
     } finally {
@@ -43,21 +43,27 @@ export default function ThreadDetailView({
 
     setIsSubmitting(true);
     try {
-      const comment = await base44.entities.Comment.create({
-        post_id: post.id,
+      const response = await apiClient.comments.create(post.id, {
         content: newComment.trim(),
-        author_name: user?.full_name || 'User',
-        author_handle: user?.handle || user?.email?.split('@')[0],
-        author_avatar: user?.avatar,
       });
 
-      setComments([comment, ...comments]);
+      const newCommentData = response.data;
+
+      // Manually shape new comment to match display format if needed, 
+      // or just assume backend response is sufficient
+      const displayedComment = {
+        ...newCommentData,
+        author_name: user?.full_name || user?.username || 'User',
+        author_avatar: user?.avatar,
+        author_handle: user?.handle || user?.username,
+        created_date: new Date().toISOString(),
+      };
+
+      setComments([displayedComment, ...comments]);
       setNewComment('');
 
-      // Update post comment count
-      await base44.entities.Post.update(post.id, {
-        comments_count: (post.comments_count || 0) + 1,
-      });
+      // Note: Comment count update on thread is handled by backend aggregation, 
+      // invalidating thread query in parent would be cleaner but we lack access here.
     } catch (error) {
       console.error('Failed to post comment:', error);
     } finally {
@@ -67,7 +73,7 @@ export default function ThreadDetailView({
 
   if (!post) return null;
 
-  const timeAgo = post.created_date 
+  const timeAgo = post.created_date
     ? format(new Date(post.created_date), 'MMM d, yyyy · h:mm a')
     : 'Just now';
 
@@ -136,11 +142,10 @@ export default function ThreadDetailView({
         <div className="flex items-center justify-around pt-3">
           <button
             onClick={() => onLike?.(post)}
-            className={`flex items-center gap-2 p-3 rounded-xl transition-all duration-300 ${
-              isLiked 
-                ? 'text-rose-500 bg-rose-50' 
-                : 'text-gray-500 hover:text-rose-500 hover:bg-rose-50'
-            }`}
+            className={`flex items-center gap-2 p-3 rounded-xl transition-all duration-300 ${isLiked
+              ? 'text-rose-500 bg-rose-50'
+              : 'text-gray-500 hover:text-rose-500 hover:bg-rose-50'
+              }`}
           >
             <HeartIcon className="w-6 h-6" filled={isLiked} />
           </button>
@@ -152,11 +157,10 @@ export default function ThreadDetailView({
           </button>
           <button
             onClick={() => setIsBookmarked(!isBookmarked)}
-            className={`p-3 rounded-xl transition-all duration-300 ${
-              isBookmarked 
-                ? 'text-amber-500 bg-amber-50' 
-                : 'text-gray-500 hover:text-amber-500 hover:bg-amber-50'
-            }`}
+            className={`p-3 rounded-xl transition-all duration-300 ${isBookmarked
+              ? 'text-amber-500 bg-amber-50'
+              : 'text-gray-500 hover:text-amber-500 hover:bg-amber-50'
+              }`}
           >
             <BookmarkIcon className="w-6 h-6" filled={isBookmarked} />
           </button>

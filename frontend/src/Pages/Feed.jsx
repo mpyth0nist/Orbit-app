@@ -1,6 +1,7 @@
-import React from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as base44 from '../api/base44Client';
+import React, { useEffect } from 'react';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
+import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import FeedView from '../componants/feed/FeedView';
@@ -12,35 +13,49 @@ export default function Feed() {
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
+  const { ref, InView } = useInView();
 
-  // Fetch posts
-  const { data: posts = [], isLoading: postsLoading } = useQuery({
-    queryKey: ['posts'],
-    queryFn: () => base44.entities.Post.list('-created_date', 50),
+  // Fetch posts with infinite scroll
+  const {
+    data,
+    isLoading: postsLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['threads'],
+    queryFn: ({ pageParam }) => apiClient.threads.getFeed({ cursor: pageParam, limit: 10 }),
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => lastPage.pagination?.nextCursor,
   });
+
+  // Load more when scrolling to bottom
+  useEffect(() => {
+    if (InView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [InView, hasNextPage, fetchNextPage]);
+
+  // Flatten pages into a single array of posts
+  const posts = data?.pages.flatMap((page) => page.data) || [];
 
   // Fetch notifications count
-  const { data: notifications = [] } = useQuery({
+  const { data: notificationsData } = useQuery({
     queryKey: ['notifications', user?.email],
-    queryFn: () => base44.entities.Notification.filter({ user_email: user?.email, is_read: false }),
+    queryFn: () => apiClient.notifications.getUnreadCount(),
     enabled: !!user?.email,
   });
+
+  const unreadNotifications = notificationsData?.count || 0; // Adjust based on backend response
 
   // Like post mutation
   const likePostMutation = useMutation({
     mutationFn: async (post) => {
-      const isLiked = post.liked_by?.includes(user?.email);
-      const newLikedBy = isLiked
-        ? post.liked_by.filter(email => email !== user?.email)
-        : [...(post.liked_by || []), user?.email];
-      
-      return base44.entities.Post.update(post.id, {
-        liked_by: newLikedBy,
-        likes_count: isLiked ? (post.likes_count || 1) - 1 : (post.likes_count || 0) + 1,
-      });
+      // Optimistic update logic handles UI immediately, this is just the API call
+      return apiClient.reactions.toggle('thread', post.id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
   });
 
@@ -49,19 +64,13 @@ export default function Feed() {
     window.location.href = `/thread/${post.id}`;
   };
 
-  const unreadNotifications = notifications?.length || 0;
-
   return (
-    <div className={`min-h-screen ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
-    }`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'}`}>
       {/* Desktop Sidebar */}
-      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${
-        isDarkMode ? 'border-gray-700' : 'border-gray-100'
-      }`}>
+      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
         <Sidebar
           activeTab="feed"
-          setActiveTab={() => {}}
+          setActiveTab={() => { }}
           unreadNotifications={unreadNotifications}
           user={user}
         />
@@ -73,7 +82,7 @@ export default function Feed() {
         <Header
           user={user}
           unreadNotifications={unreadNotifications}
-          onMenuClick={() => {}}
+          onMenuClick={() => { }}
           onSearchClick={() => window.location.href = '/search'}
           onNotificationsClick={() => window.location.href = '/notifications'}
         />
@@ -88,13 +97,24 @@ export default function Feed() {
             onLike={(post) => likePostMutation.mutate(post)}
             onComment={handlePostClick}
           />
+
+          {/* Infinite scroll loader */}
+          {(isFetchingNextPage || hasNextPage) && (
+            <div ref={ref} className="flex justify-center py-4">
+              {isFetchingNextPage ? (
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+              ) : (
+                <span className="text-gray-400 text-sm">Load more</span>
+              )}
+            </div>
+          )}
         </main>
       </div>
 
       {/* Mobile Navigation */}
       <MobileNav
         activeTab="feed"
-        setActiveTab={() => {}}
+        setActiveTab={() => { }}
         unreadNotifications={unreadNotifications}
       />
     </div>

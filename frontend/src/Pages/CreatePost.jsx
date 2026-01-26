@@ -1,6 +1,6 @@
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import * as base44 from '../api/base44Client';
+import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import CreatePostView from '../componants/feed/CreatePostView';
@@ -16,17 +16,14 @@ export default function CreatePost() {
   // Create post mutation
   const createPostMutation = useMutation({
     mutationFn: async (postData) => {
-      return base44.entities.Post.create({
-        ...postData,
-        author_name: user?.full_name || 'User',
-        author_handle: user?.handle || user?.email?.split('@')[0],
-        author_avatar: user?.avatar,
-        author_verified: user?.role === 'admin',
-        likes_count: 0,
-        comments_count: 0,
-        shares_count: 0,
-        liked_by: [],
-      });
+      // Only send what backend expects. Author info is derived from token.
+      const payload = {
+        content: postData.content,
+        // If postData has media object with url/type/size, include it
+        media: postData.media
+      };
+
+      return apiClient.posts.create(payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
@@ -40,16 +37,14 @@ export default function CreatePost() {
   };
 
   return (
-    <div className={`min-h-screen ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
-    }`}>
-      {/* Desktop Sidebar */}
-      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${
-        isDarkMode ? 'border-gray-700' : 'border-gray-100'
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
       }`}>
+      {/* Desktop Sidebar */}
+      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-100'
+        }`}>
         <Sidebar
           activeTab="create"
-          setActiveTab={() => {}}
+          setActiveTab={() => { }}
           unreadNotifications={0}
           user={user}
         />
@@ -61,7 +56,7 @@ export default function CreatePost() {
         <Header
           user={user}
           unreadNotifications={0}
-          onMenuClick={() => {}}
+          onMenuClick={() => { }}
           onSearchClick={() => window.location.href = '/search'}
           onNotificationsClick={() => window.location.href = '/notifications'}
         />
@@ -79,7 +74,7 @@ export default function CreatePost() {
       {/* Mobile Navigation */}
       <MobileNav
         activeTab="create"
-        setActiveTab={() => {}}
+        setActiveTab={() => { }}
         unreadNotifications={0}
       />
     </div>

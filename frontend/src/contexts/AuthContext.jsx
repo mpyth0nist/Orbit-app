@@ -12,23 +12,9 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  // MOCK USER FOR TESTING - Comment/uncomment to enable/disable auth
-  const [user, setUser] = useState({
-    id: 'test-user-123',
-    email: 'test@example.com',
-    full_name: 'Test User',
-    handle: 'testuser',
-    avatar: 'https://ui-avatars.com/api/?name=Test+User&background=6366f1&color=fff',
-    role: 'user',
-    created_date: new Date().toISOString()
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-
-  // REAL AUTH CODE (Commented out for testing)
-  /*
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -37,12 +23,20 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
       const userData = await api.users.getCurrent();
       setUser(userData);
       setIsAuthenticated(true);
     } catch (error) {
+      console.error('Auth check failed:', error);
       setUser(null);
       setIsAuthenticated(false);
+      localStorage.removeItem('authToken');
     } finally {
       setIsLoading(false);
     }
@@ -51,7 +45,7 @@ export const AuthProvider = ({ children }) => {
   const initializeGoogleSignIn = () => {
     if (window.google) {
       window.google.accounts.id.initialize({
-        client_id: 'YOUR_GOOGLE_CLIENT_ID',
+        client_id: 'YOUR_GOOGLE_CLIENT_ID', // TODO: Move to env variable
         callback: handleGoogleSignIn,
         auto_select: false,
       });
@@ -61,10 +55,11 @@ export const AuthProvider = ({ children }) => {
   const handleGoogleSignIn = async (response) => {
     try {
       const payload = JSON.parse(atob(response.credential.split('.')[1]));
-      
+
       const userData = {
         email: payload.email,
-        full_name: payload.name,
+        firstName: payload.given_name,
+        lastName: payload.family_name,
         google_id: payload.sub,
         avatar: payload.picture,
         email_verified: payload.email_verified,
@@ -73,22 +68,11 @@ export const AuthProvider = ({ children }) => {
         created_date: new Date().toISOString()
       };
 
-      try {
-        // Check if user exists
-        const existingUser = await api.users.getById(payload.sub);
-        if (existingUser) {
-          setUser(existingUser);
-        } else {
-          const newUser = await api.users.register(userData);
-          setUser(newUser);
-        }
-        setIsAuthenticated(true);
-      } catch (error) {
-        // Create new user if doesn't exist
-        const newUser = await api.users.register(userData);
-        setUser(newUser);
-        setIsAuthenticated(true);
-      }
+      // Note: Backend google auth support needs to be verified.
+      // For now, this logic assumes a similar flow to what was mocked, 
+      // but ideally should verify with a backend endpoint.
+      console.log('Google Sign-In Payload:', userData);
+      // Placeholder for actual google login implementation
     } catch (error) {
       console.error('Google sign-in error:', error);
     }
@@ -98,8 +82,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await api.users.login({ email, password });
       if (response.token) {
-        setUser(response.user);
         localStorage.setItem('authToken', response.token);
+
+        // Fetch user details
+        const userData = await api.users.getCurrent();
+        setUser(userData);
         setIsAuthenticated(true);
         return true;
       }
@@ -113,11 +100,10 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await api.users.register(userData);
-      if (response.token) {
-        setUser(response.user);
-        localStorage.setItem('authToken', response.token);
-        setIsAuthenticated(true);
-        return true;
+      // If registration is successful, we try to login automatically
+      // Need password from userData to login
+      if (response) {
+        return await login(userData.email, userData.password);
       }
       return false;
     } catch (error) {
@@ -144,39 +130,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('authToken');
-  };
-
-  const value = {
-    user,
-    isLoading,
-    login,
-    register,
-    loginWithGoogle,
-    logout,
-    isAuthenticated: !!user
-  };
-  */
-
-  // MOCK AUTH FUNCTIONS FOR TESTING
-  const login = async (email, password) => {
-    console.log('Mock login:', email);
-    return true;
-  };
-
-  const register = async (userData) => {
-    console.log('Mock register:', userData);
-    return true;
-  };
-
-  const loginWithGoogle = () => {
-    console.log('Mock Google login');
-  };
-
-  const logout = () => {
-    console.log('Mock logout');
-    // Uncomment below lines to actually logout for testing
-    // setUser(null);
-    // setIsAuthenticated(false);
+    // Optional: api.auth.logout() if backend supports invalidating tokens
   };
 
   const value = {

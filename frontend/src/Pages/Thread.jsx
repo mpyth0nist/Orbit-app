@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as base44 from '../api/base44Client';
+import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import ThreadDetailView from '../componants/feed/ThreadDetailView';
@@ -17,35 +17,30 @@ export default function Thread() {
   const queryClient = useQueryClient();
 
   // Fetch specific post
-  const { data: post, isLoading: postLoading } = useQuery({
-    queryKey: ['post', id],
-    queryFn: () => base44.entities.Post.get(id),
+  const { data: postData, isLoading: postLoading } = useQuery({
+    queryKey: ['thread', id],
+    queryFn: () => apiClient.threads.getById(id),
     enabled: !!id,
   });
 
+  const post = postData?.data; // Extract from backend response wrapper
+
   // Fetch notifications count
-  const { data: notifications = [] } = useQuery({
+  const { data: notificationsData } = useQuery({
     queryKey: ['notifications', user?.email],
-    queryFn: () => base44.entities.Notification.filter({ user_email: user?.email, is_read: false }),
+    queryFn: () => apiClient.notifications.getUnreadCount(),
     enabled: !!user?.email,
   });
+
+  const unreadNotifications = notificationsData?.count || 0;
 
   // Like post mutation
   const likePostMutation = useMutation({
     mutationFn: async (post) => {
-      const isLiked = post.liked_by?.includes(user?.email);
-      const newLikedBy = isLiked
-        ? post.liked_by.filter(email => email !== user?.email)
-        : [...(post.liked_by || []), user?.email];
-      
-      return base44.entities.Post.update(post.id, {
-        liked_by: newLikedBy,
-        likes_count: isLiked ? (post.likes_count || 1) - 1 : (post.likes_count || 0) + 1,
-      });
+      return apiClient.reactions.toggle('thread', post.id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      queryClient.invalidateQueries({ queryKey: ['post', id] });
+      queryClient.invalidateQueries({ queryKey: ['thread', id] });
     },
   });
 
@@ -57,18 +52,8 @@ export default function Thread() {
 
   const handleLike = (post) => {
     likePostMutation.mutate(post);
-    // Update local selected post
-    const isLiked = post.liked_by?.includes(user?.email);
-    setSelectedPost({
-      ...post,
-      liked_by: isLiked
-        ? post.liked_by.filter(e => e !== user?.email)
-        : [...(post.liked_by || []), user?.email],
-      likes_count: isLiked ? (post.likes_count || 1) - 1 : (post.likes_count || 0) + 1,
-    });
+    // Optimistic update could go here, but invalidation is safer for now
   };
-
-  const unreadNotifications = notifications?.length || 0;
 
   if (postLoading) {
     return (
@@ -95,16 +80,14 @@ export default function Thread() {
   }
 
   return (
-    <div className={`min-h-screen ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
-    }`}>
-      {/* Desktop Sidebar */}
-      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${
-        isDarkMode ? 'border-gray-700' : 'border-gray-100'
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
       }`}>
+      {/* Desktop Sidebar */}
+      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-100'
+        }`}>
         <Sidebar
           activeTab="thread"
-          setActiveTab={() => {}}
+          setActiveTab={() => { }}
           unreadNotifications={unreadNotifications}
           user={user}
         />
@@ -116,7 +99,7 @@ export default function Thread() {
         <Header
           user={user}
           unreadNotifications={unreadNotifications}
-          onMenuClick={() => {}}
+          onMenuClick={() => { }}
           onSearchClick={() => window.location.href = '/search'}
           onNotificationsClick={() => window.location.href = '/notifications'}
         />
@@ -136,7 +119,7 @@ export default function Thread() {
       {/* Mobile Navigation */}
       <MobileNav
         activeTab="thread"
-        setActiveTab={() => {}}
+        setActiveTab={() => { }}
         unreadNotifications={unreadNotifications}
       />
     </div>

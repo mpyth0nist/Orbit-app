@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ArrowLeftIcon, CameraIcon } from '../ui/Icons';
-import * as base44 from '@/api/base44Client';
+import apiClient from '@/api/apiClient';
 import { Loader2 } from 'lucide-react';
 
 export default function EditProfileView({ user, onBack, onSave }) {
@@ -34,8 +34,8 @@ export default function EditProfileView({ user, onBack, onSave }) {
       let avatarUrl = user?.avatar;
 
       if (avatarFile) {
-        const uploadResult = await base44.integrations.Core.UploadFile({ file: avatarFile });
-        avatarUrl = uploadResult.file_url;
+        const uploadResult = await apiClient.files.upload(avatarFile);
+        avatarUrl = uploadResult.file_url || uploadResult.url || uploadResult; // Handle different potential responses
       }
 
       const updatedData = {
@@ -43,7 +43,7 @@ export default function EditProfileView({ user, onBack, onSave }) {
         avatar: avatarUrl,
       };
 
-      await base44.auth.updateMe(updatedData);
+      await apiClient.users.updateMe(updatedData);
       onSave?.(updatedData);
       onBack?.();
     } catch (error) {

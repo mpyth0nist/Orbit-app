@@ -31,3 +31,21 @@ SIGINT received. Starting graceful shutdown...
 2026-01-22 22:43:36 [info]: 🚀 Server is running on port 8080
 2026-01-22 22:43:36 [info]: 📝 Environment: development
 2026-01-22 22:43:36 [info]: 🔗 API: http://localhost:8080/api
+2026-01-23 02:23:10 [info]: 🚀 Server is running on port 5001
+2026-01-23 02:23:10 [info]: 📝 Environment: development
+2026-01-23 02:23:10 [info]: 🔗 API: http://localhost:5001/api
+2026-01-23 02:25:52 [error]: Error checking user existence
+{
+  "error": "\nInvalid `prisma.user.findFirst()` invocation:\n\n\nerror: Environment variable not found: DATABASE_URL.\n  -->  schema.prisma:13\n   | \n12 |   provider = \"postgresql\"\n13 |   url      = env(\"DATABASE_URL\")\n   | \n\nValidation Error Count: 1"
+}
+2026-01-23 02:25:52 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/auth/register",
+  "status": 500,
+  "duration": "29ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-01-26 01:56:07 [info]: 
+SIGINT received. Starting graceful shutdown...

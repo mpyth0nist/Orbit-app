@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import * as base44 from '../api/base44Client';
+import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import SettingsView from '../componants/views/SettingsView';
@@ -17,7 +17,7 @@ export default function Settings() {
   // Fetch notifications count
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', user?.email],
-    queryFn: () => base44.entities.Notification.filter({ user_email: user?.email, is_read: false }),
+    queryFn: () => apiClient.notifications.getUserNotifications(user?.email),
     enabled: !!user?.email,
   });
 
@@ -26,7 +26,7 @@ export default function Settings() {
     setUser({ ...user, ...data });
     // Update user in backend
     try {
-      await base44.entities.User.update(user.id, data);
+      await apiClient.users.update(user.id, data);
     } catch (error) {
       console.error('Failed to update user:', error);
     }
@@ -36,16 +36,14 @@ export default function Settings() {
   const unreadNotifications = notifications?.length || 0;
 
   return (
-    <div className={`min-h-screen ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
-    }`}>
-      {/* Desktop Sidebar */}
-      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${
-        isDarkMode ? 'border-gray-700' : 'border-gray-100'
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
       }`}>
+      {/* Desktop Sidebar */}
+      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-100'
+        }`}>
         <Sidebar
           activeTab="settings"
-          setActiveTab={() => {}}
+          setActiveTab={() => { }}
           unreadNotifications={unreadNotifications}
           user={user}
         />
@@ -57,7 +55,7 @@ export default function Settings() {
         <Header
           user={user}
           unreadNotifications={unreadNotifications}
-          onMenuClick={() => {}}
+          onMenuClick={() => { }}
           onSearchClick={() => window.location.href = '/search'}
           onNotificationsClick={() => window.location.href = '/notifications'}
         />
@@ -82,7 +80,7 @@ export default function Settings() {
       {/* Mobile Navigation */}
       <MobileNav
         activeTab="settings"
-        setActiveTab={() => {}}
+        setActiveTab={() => { }}
         unreadNotifications={unreadNotifications}
       />
     </div>
