@@ -2,13 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/apiClient';
 import { Search, User, FileText, Hash, TrendingUp, Clock, X } from 'lucide-react';
+import UserProfileView from './UserProfileView';
+import { useAuth } from '../../contexts/AuthContext';
 
 const SearchView = () => {
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
+
+  // Tab and Search State
   const [activeTab, setActiveTab] = useState('users'); // 'users', 'threads', 'hashtags'
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+
+  // Selection State (for inline profile viewing)
+  const [selectedUser, setSelectedUser] = useState(null);
 
   // Results for each tab
   const [userResults, setUserResults] = useState([]);
@@ -91,11 +99,13 @@ const SearchView = () => {
     setRecentSearches(updated);
     localStorage.setItem('recentSearches', JSON.stringify(updated));
 
-    navigate(`/users/${userId}`);
+    // Select user to show profile inline
+    setSelectedUser(userId);
   };
 
   const handleThreadClick = (threadId) => {
-    navigate(`/posts/${threadId}`);
+    // Navigate to thread detail page (singular /thread/:id)
+    navigate(`/thread/${threadId}`);
   };
 
   const handleHashtagClick = (tag) => {
@@ -113,6 +123,18 @@ const SearchView = () => {
     { id: 'threads', label: 'Threads', icon: FileText },
     { id: 'hashtags', label: 'Hashtags', icon: Hash }
   ];
+
+  // If a user is selected, show their profile
+  if (selectedUser) {
+    return (
+      <UserProfileView
+        userId={selectedUser}
+        onBack={() => setSelectedUser(null)}
+        currentUserId={currentUser?.id}
+        onPostClick={(post) => navigate(`/thread/${post.id}`)}
+      />
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto p-4">

@@ -324,7 +324,7 @@ export const searchThreadsSchema = Joi.object({
             'string.max': 'Search term cannot exceed 100 characters',
             'any.required': 'Search term is required'
         }),
-    cursor: Joi.string().optional(),
+    page: Joi.number().integer().min(1).optional(),
     limit: Joi.number().integer().min(1).max(100).optional()
 });
 

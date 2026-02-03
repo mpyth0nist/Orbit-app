@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,6 +7,176 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id                    Int            @id @default(autoincrement())
+  username              String         @unique @db.VarChar(255)
+  email                 String         @unique @db.VarChar(100)
+  passwordHash          String         @map("password_hash")
+  createdAt             DateTime       @default(now()) @map("created_at")
+  type                  AccountType    @default(PUBLIC)
+  updatedAt             DateTime       @default(now()) @updatedAt @map("updated_at")
+  comments              Comment[]
+  followers             Follow[]       @relation("UserFollowers")
+  following             Follow[]       @relation("UserFollowing")
+  media                 Media[]
+  notificationsSent     Notification[] @relation("NotificationActor")
+  notificationsReceived Notification[] @relation("NotificationReceiver")
+  profile               Profile?
+  reactions             Reaction[]
+  threads               Thread[]
+
+  @@index([email])
+  @@index([username])
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique @map("user_id")
+  bio       String?
+  photoUrl  String?  @map("photo_url") @db.VarChar(255)
+  firstName String   @map("first_name") @db.VarChar(100)
+  lastName  String   @map("last_name") @db.VarChar(100)
+  updatedAt DateTime @updatedAt @map("updated_at")
+  gender    Gender   @default(MALE)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Thread {
+  id             Int                      @id @default(autoincrement())
+  userId         Int                      @map("user_id")
+  content        String
+  createdAt      DateTime                 @default(now()) @map("created_at")
+  commentsCount  Int                      @default(0) @map("comments_count")
+  likesCount     Int                      @default(0) @map("likes_count")
+  updatedAt      DateTime                 @updatedAt @map("updated_at")
+  search_vector  Unsupported("tsvector")?
+  comments       Comment[]
+  media          Media[]
+  reactions      Reaction[]
+  user           User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ThreadHashtags ThreadHashtags[]
+
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([search_vector], map: "thread_search_idx", type: Gin)
+}
+
+model Comment {
+  id         Int        @id @default(autoincrement())
+  threadId   Int        @map("thread_id")
+  userId     Int        @map("user_id")
+  content    String
+  createdAt  DateTime   @default(now()) @map("created_at")
+  parentId   Int?       @map("parent_id")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+  likesCount Int        @default(0) @map("likes_count")
+  parent     Comment?   @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  comments   Comment[]  @relation("CommentReplies")
+  thread     Thread     @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reactions  Reaction[]
+
+  @@index([threadId])
+  @@index([userId])
+  @@index([parentId])
+  @@index([threadId, createdAt(sort: Desc)])
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  threadId  Int?     @map("thread_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  commentId Int?     @map("comment_id")
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  thread    Thread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, threadId], name: "unique_user_thread_reaction")
+  @@unique([userId, commentId], name: "unique_user_comment_reaction")
+  @@index([userId])
+  @@index([threadId])
+  @@index([commentId])
+}
+
+model Follow {
+  id         Int          @id @default(autoincrement())
+  followerId Int          @map("follower_id")
+  followedId Int          @map("followed_id")
+  status     FollowStatus @default(ACCEPTED)
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at")
+  followed   User         @relation("UserFollowers", fields: [followedId], references: [id], onDelete: Cascade)
+  follower   User         @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followedId])
+  @@index([followerId])
+  @@index([followedId])
+  @@index([followerId, status])
+  @@index([followedId, status])
+}
+
+model Notification {
+  id         Int              @id @default(autoincrement())
+  type       NotificationType
+  isRead     Boolean          @default(false) @map("is_read")
+  createdAt  DateTime         @default(now()) @map("created_at")
+  actorId    Int              @map("actor_id")
+  entityId   Int?             @map("entity_id")
+  entityType EntityType?      @map("entity_type")
+  receiverId Int              @map("receiver_id")
+  actor      User             @relation("NotificationActor", fields: [actorId], references: [id], onDelete: Cascade)
+  receiver   User             @relation("NotificationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([receiverId])
+  @@index([actorId])
+  @@index([receiverId, isRead])
+  @@index([receiverId, createdAt(sort: Desc)])
+}
+
+model Media {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @map("user_id")
+  threadId   Int?      @map("thread_id")
+  type       MediaType
+  url        String    @db.VarChar(500)
+  size       Int
+  uploadedAt DateTime  @default(now()) @map("uploaded_at")
+  thread     Thread?   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([threadId])
+  @@index([uploadedAt(sort: Desc)])
+}
+
+model Hashtag {
+  id             Int              @id @default(autoincrement())
+  tag            String           @unique @db.VarChar(100)
+  useCount       Int              @default(1) @map("use_count")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  ThreadHashtags ThreadHashtags[]
+
+  @@index([tag])
+  @@index([useCount(sort: Desc)])
+  @@map("hashtags")
+}
+
+model ThreadHashtags {
+  A        Int
+  B        Int
+  hashtags Hashtag @relation(fields: [A], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  Thread   Thread  @relation(fields: [B], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([A, B], map: "_ThreadHashtags_AB_unique")
+  @@index([B], map: "_ThreadHashtags_B_index")
+  @@map("_ThreadHashtags")
+}
+
 enum FollowStatus {
   ACCEPTED
   REFUSED
@@ -20,11 +184,11 @@ enum FollowStatus {
 }
 
 enum NotificationType {
-  FOLLOW_REQUEST
   NEW_FOLLOW
   ACCEPTED_FOLLOW
   COMMENT
   LIKE
+  FOLLOW_REQUEST
 }
 
 enum MediaType {
@@ -43,188 +207,7 @@ enum EntityType {
   USER
 }
 
-enum ThreadType {
-  NORMAL
-  RUBBERDUCK
-}
-
 enum Gender {
   MALE
   FEMALE
-}
-
-// --- Tables ---
-
-model User {
-  id           Int         @id @default(autoincrement())
-  username     String      @unique @db.VarChar(255)
-  email        String      @unique @db.VarChar(100)
-  type         AccountType @default(PUBLIC)
-  passwordHash String      @map("password_hash")
-  createdAt    DateTime    @default(now()) @map("created_at")
-  updatedAt    DateTime    @default(now()) @updatedAt @map("updated_at")
-
-  // Relations
-  profile   Profile?
-  threads   Thread[]
-  comments  Comment[]
-  reactions Reaction[]
-  media     Media[]
-
-  // Self-relation for Followers/Following
-  following Follow[] @relation("UserFollowing")
-  followers Follow[] @relation("UserFollowers")
-
-  notificationsSent     Notification[] @relation("NotificationActor")
-  notificationsReceived Notification[] @relation("NotificationReceiver")
-
-  @@index([email])
-  @@index([username])
-}
-
-model Profile {
-  id           Int      @id @default(autoincrement())
-  userId       Int      @unique @map("user_id")
-  firstName    String   @map("first_name") @db.VarChar(100)
-  lastName     String   @map("last_name") @db.VarChar(100)
-  bio          String?  @db.Text
-  gender       Gender   @default(MALE)
-  photoUrl     String?  @map("photo_url") @db.VarChar(255)
-  helperPoints Int      @default(0) @map("helper_points")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-}
-
-model Thread {
-  id            Int        @id @default(autoincrement())
-  userId        Int        @map("user_id")
-  content       String     @db.Text
-  likesCount    Int        @default(0) @map("likes_count")
-  commentsCount Int        @default(0) @map("comments_count")
-  type          ThreadType @default(NORMAL)
-  createdAt     DateTime   @default(now()) @map("created_at")
-  updatedAt     DateTime   @updatedAt @map("updated_at")
-
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  comments  Comment[]
-  reactions Reaction[]
-  media     Media[]
-  hashtags  Hashtag[]  @relation("ThreadHashtags")
-
-  @@index([userId])
-  @@index([createdAt(sort: Desc)])
-  @@index([userId, createdAt(sort: Desc)])
-}
-
-model Comment {
-  id         Int      @id @default(autoincrement())
-  parentId   Int?     @map("parent_id")
-  threadId   Int      @map("thread_id")
-  userId     Int      @map("user_id")
-  likesCount Int      @default(0) @map("likes_count")
-  content    String   @db.Text
-  helping    Boolean  @default(false)
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-
-  thread Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parent Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
-
-  reactions Reaction[]
-  comments  Comment[]  @relation("CommentReplies")
-
-  @@index([threadId])
-  @@index([userId])
-  @@index([parentId])
-  @@index([threadId, createdAt(sort: Desc)])
-}
-
-model Reaction {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  threadId  Int?     @map("thread_id")
-  commentId Int?     @map("comment_id")
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  thread  Thread?  @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, threadId], name: "unique_user_thread_reaction")
-  @@unique([userId, commentId], name: "unique_user_comment_reaction")
-  @@index([userId])
-  @@index([threadId])
-  @@index([commentId])
-}
-
-model Follow {
-  id         Int          @id @default(autoincrement())
-  followerId Int          @map("follower_id")
-  followedId Int          @map("followed_id")
-  status     FollowStatus @default(ACCEPTED)
-  createdAt  DateTime     @default(now()) @map("created_at")
-  updatedAt  DateTime     @default(now()) @updatedAt @map("updated_at")
-
-  follower User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
-  followed User @relation("UserFollowers", fields: [followedId], references: [id], onDelete: Cascade)
-
-  @@unique([followerId, followedId])
-  @@index([followerId])
-  @@index([followedId])
-  @@index([followerId, status])
-  @@index([followedId, status])
-}
-
-model Notification {
-  id         Int              @id @default(autoincrement())
-  actorId    Int              @map("actor_id")
-  receiverId Int              @map("receiver_id")
-  entityId   Int?             @map("entity_id")
-  entityType EntityType?      @map("entity_type")
-  type       NotificationType
-  isRead     Boolean          @default(false) @map("is_read")
-  createdAt  DateTime         @default(now()) @map("created_at")
-
-  actor    User @relation("NotificationActor", fields: [actorId], references: [id], onDelete: Cascade)
-  receiver User @relation("NotificationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
-
-  @@index([receiverId])
-  @@index([actorId])
-  @@index([receiverId, isRead])
-  @@index([receiverId, createdAt(sort: Desc)])
-}
-
-model Media {
-  id         Int       @id @default(autoincrement())
-  userId     Int       @map("user_id")
-  threadId   Int?      @map("thread_id")
-  type       MediaType
-  url        String    @db.VarChar(500)
-  size       Int // Size in bytes
-  uploadedAt DateTime  @default(now()) @map("uploaded_at")
-
-  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  thread Thread? @relation(fields: [threadId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([threadId])
-  @@index([uploadedAt(sort: Desc)])
-}
-
-model Hashtag {
-  id        Int      @id @default(autoincrement())
-  tag       String   @unique @db.VarChar(100)
-  useCount  Int      @default(1) @map("use_count")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  threads Thread[] @relation("ThreadHashtags")
-
-  @@index([tag])
-  @@index([useCount(sort: Desc)])
-  @@map("hashtags")
 }

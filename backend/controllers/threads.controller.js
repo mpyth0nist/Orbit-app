@@ -630,7 +630,6 @@ export const searchThreads = asyncHandler(async (req, res) => {
             t.content,
             t."likes_count" as "likesCount",
             t."comments_count" as "commentsCount",
-            t.type,
             t."created_at" as "createdAt",
             t."updated_at" as "updatedAt",
             ts_rank(t.search_vector, to_tsquery('english', ${searchTerms})) as rank
