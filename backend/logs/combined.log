@@ -20922,3 +20922,399 @@ SIGINT received. Starting graceful shutdown...
   "userId": 1,
   "count": 0
 }
+2026-02-03 23:20:38 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=se&limit=20",
+  "status": 500,
+  "duration": "22ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:20:41 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=hel&limit=20",
+  "status": 500,
+  "duration": "12ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:20:42 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:20:42 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 23:20:42 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 23:20:44 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:20:58 [info]: CreateThread request
+{
+  "userId": 1,
+  "contentLength": 34,
+  "filesCount": 0,
+  "files": []
+}
+2026-02-03 23:20:58 [info]: Thread created successfully
+{
+  "userId": 1,
+  "threadId": 8,
+  "mediaCount": 0
+}
+2026-02-03 23:21:00 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:21:00 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:21:03 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=has&limit=20",
+  "status": 500,
+  "duration": "12ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:21:04 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=hash&limit=20",
+  "status": 500,
+  "duration": "11ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:21:04 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=hashta&limit=20",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:21:05 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=hashtag&limit=20",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:21:07 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=%23has&limit=20",
+  "status": 500,
+  "duration": "11ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:21:08 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=%23ha&limit=20",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:21:11 [info]: Thread FTS search completed
+{
+  "userId": 1,
+  "searchQuery": "has",
+  "resultsCount": 0,
+  "totalCount": 0
+}
+2026-02-03 23:21:12 [info]: Thread FTS search completed
+{
+  "userId": 1,
+  "searchQuery": "hash",
+  "resultsCount": 1,
+  "totalCount": 1
+}
+2026-02-03 23:21:13 [info]: Thread FTS search completed
+{
+  "userId": 1,
+  "searchQuery": "hasht",
+  "resultsCount": 1,
+  "totalCount": 1
+}
+2026-02-03 23:21:17 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:21:17 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-03 23:21:20 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:21:20 [info]: Thread fetched
+{
+  "threadId": 7,
+  "userId": 1
+}
+2026-02-03 23:21:20 [info]: Thread comments retrieved
+{
+  "threadId": 7,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-03 23:21:23 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:21:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:21:25 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "yousse",
+  "resultsCount": 1
+}
+2026-02-03 23:21:26 [info]: Relationship checked
+{
+  "currentUserId": 1,
+  "targetUserId": 11,
+  "relationship": "MUTUAL"
+}
+2026-02-03 23:21:26 [info]: User threads retrieved
+{
+  "currentUserId": 1,
+  "targetUserId": 11,
+  "threadsCount": 1
+}
+2026-02-03 23:25:53 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "74ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:25:53 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "yousse",
+  "resultsCount": 1
+}
+2026-02-03 23:25:55 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "22ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:25:55 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "yousse",
+  "resultsCount": 1
+}
+2026-02-03 23:25:57 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:25:59 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "14ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 23:26:09 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "youssef",
+  "resultsCount": 1
+}
+2026-02-03 23:26:10 [info]: Relationship checked
+{
+  "currentUserId": 1,
+  "targetUserId": 11,
+  "relationship": "MUTUAL"
+}
+2026-02-03 23:26:10 [info]: User threads retrieved
+{
+  "currentUserId": 1,
+  "targetUserId": 11,
+  "threadsCount": 1
+}
+2026-02-03 23:26:13 [info]: Notification deleted
+{
+  "count": 1,
+  "criteria": {
+    "actorId": 1,
+    "receiverId": 11,
+    "type": "LIKE",
+    "entityId": 7,
+    "entityType": "THREAD"
+  }
+}
+2026-02-03 23:26:13 [info]: thread unliked
+{
+  "entityType": "thread",
+  "entityId": 7,
+  "userId": 1
+}
+2026-02-03 23:26:14 [info]: Notification created
+{
+  "notificationId": 89,
+  "actorId": 1,
+  "receiverId": 11,
+  "type": "LIKE"
+}
+2026-02-03 23:26:14 [info]: thread liked
+{
+  "entityType": "thread",
+  "entityId": 7,
+  "userId": 1
+}
+2026-02-03 23:26:15 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:26:15 [info]: Thread fetched
+{
+  "threadId": 7,
+  "userId": 1
+}
+2026-02-03 23:26:15 [info]: Thread comments retrieved
+{
+  "threadId": 7,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-03 23:26:17 [info]: Notification deleted
+{
+  "count": 1,
+  "criteria": {
+    "actorId": 1,
+    "receiverId": 11,
+    "type": "LIKE",
+    "entityId": 7,
+    "entityType": "THREAD"
+  }
+}
+2026-02-03 23:26:17 [info]: thread unliked
+{
+  "entityType": "thread",
+  "entityId": 7,
+  "userId": 1
+}
+2026-02-03 23:26:17 [info]: Thread fetched
+{
+  "threadId": 7,
+  "userId": 1
+}
+2026-02-03 23:26:17 [info]: Notification created
+{
+  "notificationId": 90,
+  "actorId": 1,
+  "receiverId": 11,
+  "type": "LIKE"
+}
+2026-02-03 23:26:17 [info]: thread liked
+{
+  "entityType": "thread",
+  "entityId": 7,
+  "userId": 1
+}
+2026-02-03 23:26:17 [info]: Thread fetched
+{
+  "threadId": 7,
+  "userId": 1
+}
+2026-02-03 23:26:19 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:26:19 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-03 23:26:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:26:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:26:23 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 23:26:23 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 23:26:33 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 23:26:33 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-03 23:26:33 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}

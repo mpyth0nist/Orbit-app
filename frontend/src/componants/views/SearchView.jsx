@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/apiClient';
 import { Search, User, FileText, Hash, TrendingUp, Clock, X } from 'lucide-react';
-import UserProfileView from './UserProfileView';
 import { useAuth } from '../../contexts/AuthContext';
 
 const SearchView = () => {
@@ -15,8 +14,7 @@ const SearchView = () => {
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
 
-  // Selection State (for inline profile viewing)
-  const [selectedUser, setSelectedUser] = useState(null);
+
 
   // Results for each tab
   const [userResults, setUserResults] = useState([]);
@@ -99,8 +97,8 @@ const SearchView = () => {
     setRecentSearches(updated);
     localStorage.setItem('recentSearches', JSON.stringify(updated));
 
-    // Select user to show profile inline
-    setSelectedUser(userId);
+    // Navigate to profile page
+    navigate(`/profile/${userId}`);
   };
 
   const handleThreadClick = (threadId) => {
@@ -124,17 +122,7 @@ const SearchView = () => {
     { id: 'hashtags', label: 'Hashtags', icon: Hash }
   ];
 
-  // If a user is selected, show their profile
-  if (selectedUser) {
-    return (
-      <UserProfileView
-        userId={selectedUser}
-        onBack={() => setSelectedUser(null)}
-        currentUserId={currentUser?.id}
-        onPostClick={(post) => navigate(`/thread/${post.id}`)}
-      />
-    );
-  }
+
 
   return (
     <div className="max-w-2xl mx-auto p-4">
@@ -170,8 +158,8 @@ const SearchView = () => {
             <button
               key={tab.id}
               className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all ${isActive
-                  ? 'bg-indigo-600 text-white shadow-md'
-                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                ? 'bg-indigo-600 text-white shadow-md'
+                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               onClick={() => setActiveTab(tab.id)}
             >
