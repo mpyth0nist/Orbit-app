@@ -17,9 +17,9 @@ export default function Search() {
   // Note: SearchView component handles its own search queries
 
   // Fetch notifications count
-  const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications'],
-    queryFn: () => api.notifications.getUserNotifications(),
+  const { data: unreadData } = useQuery({
+    queryKey: ['notifications-unread-count'],
+    queryFn: () => api.notifications.getUnreadCount(),
     enabled: !!user,
   });
 
@@ -38,7 +38,7 @@ export default function Search() {
     window.location.href = `/thread/${post.id}`;
   };
 
-  const unreadNotifications = notifications?.length || 0;
+  const unreadNotifications = unreadData?.count || 0;
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
@@ -57,13 +57,7 @@ export default function Search() {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Header */}
-        <Header
-          user={user}
-          unreadNotifications={unreadNotifications}
-          onMenuClick={() => { }}
-          onSearchClick={() => { }}
-          onNotificationsClick={() => window.location.href = '/notifications'}
-        />
+
 
         {/* Page Content */}
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">

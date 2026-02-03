@@ -43,6 +43,11 @@ enum EntityType {
   USER
 }
 
+enum ThreadType {
+  NORMAL
+  RUBBERDUCK
+}
+
 enum Gender {
   MALE
   FEMALE
@@ -78,14 +83,15 @@ model User {
 }
 
 model Profile {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique @map("user_id")
-  firstName String   @map("first_name") @db.VarChar(100)
-  lastName  String   @map("last_name") @db.VarChar(100)
-  bio       String?  @db.Text
-  gender    Gender   @default(MALE)
-  photoUrl  String?  @map("photo_url") @db.VarChar(255)
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique @map("user_id")
+  firstName    String   @map("first_name") @db.VarChar(100)
+  lastName     String   @map("last_name") @db.VarChar(100)
+  bio          String?  @db.Text
+  gender       Gender   @default(MALE)
+  photoUrl     String?  @map("photo_url") @db.VarChar(255)
+  helperPoints Int      @default(0) @map("helper_points")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -93,18 +99,20 @@ model Profile {
 }
 
 model Thread {
-  id            Int      @id @default(autoincrement())
-  userId        Int      @map("user_id")
-  content       String   @db.Text
-  likesCount    Int      @default(0) @map("likes_count")
-  commentsCount Int      @default(0) @map("comments_count")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
+  id            Int        @id @default(autoincrement())
+  userId        Int        @map("user_id")
+  content       String     @db.Text
+  likesCount    Int        @default(0) @map("likes_count")
+  commentsCount Int        @default(0) @map("comments_count")
+  type          ThreadType @default(NORMAL)
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
 
   user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments  Comment[]
   reactions Reaction[]
   media     Media[]
+  hashtags  Hashtag[]  @relation("ThreadHashtags")
 
   @@index([userId])
   @@index([createdAt(sort: Desc)])
@@ -118,6 +126,7 @@ model Comment {
   userId     Int      @map("user_id")
   likesCount Int      @default(0) @map("likes_count")
   content    String   @db.Text
+  helping    Boolean  @default(false)
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
@@ -204,4 +213,18 @@ model Media {
   @@index([userId])
   @@index([threadId])
   @@index([uploadedAt(sort: Desc)])
+}
+
+model Hashtag {
+  id        Int      @id @default(autoincrement())
+  tag       String   @unique @db.VarChar(100)
+  useCount  Int      @default(1) @map("use_count")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  threads Thread[] @relation("ThreadHashtags")
+
+  @@index([tag])
+  @@index([useCount(sort: Desc)])
+  @@map("hashtags")
 }

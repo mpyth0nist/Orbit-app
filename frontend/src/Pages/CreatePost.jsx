@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -12,6 +12,15 @@ export default function CreatePost() {
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
+
+  // Fetch notifications count
+  const { data: unreadData } = useQuery({
+    queryKey: ['notifications-unread-count'],
+    queryFn: () => apiClient.notifications.getUnreadCount(),
+    enabled: !!user,
+  });
+
+  const unreadNotifications = unreadData?.count || 0;
 
   // Create post mutation
   const createPostMutation = useMutation({
@@ -45,7 +54,7 @@ export default function CreatePost() {
         <Sidebar
           activeTab="create"
           setActiveTab={() => { }}
-          unreadNotifications={0}
+          unreadNotifications={unreadNotifications}
           user={user}
         />
       </aside>
@@ -53,13 +62,7 @@ export default function CreatePost() {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Header */}
-        <Header
-          user={user}
-          unreadNotifications={0}
-          onMenuClick={() => { }}
-          onSearchClick={() => window.location.href = '/search'}
-          onNotificationsClick={() => window.location.href = '/notifications'}
-        />
+
 
         {/* Page Content */}
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">
@@ -75,7 +78,7 @@ export default function CreatePost() {
       <MobileNav
         activeTab="create"
         setActiveTab={() => { }}
-        unreadNotifications={0}
+        unreadNotifications={unreadNotifications}
       />
     </div>
   );

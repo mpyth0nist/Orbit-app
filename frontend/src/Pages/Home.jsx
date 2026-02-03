@@ -61,9 +61,9 @@ export default function Home() {
   });
 
   // Fetch notifications count
-  const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications'],
-    queryFn: () => api.notifications.getUserNotifications(),
+  const { data: unreadData } = useQuery({
+    queryKey: ['notifications-unread-count'],
+    queryFn: () => api.notifications.getUnreadCount(),
     enabled: !!user,
   });
 
@@ -101,7 +101,7 @@ export default function Home() {
     setUser({ ...user, ...data });
   };
 
-  const unreadNotifications = notifications?.length || 0;
+  const unreadNotifications = unreadData?.count || 0;
 
   const renderContent = () => {
     if (isEditingProfile) {
@@ -230,13 +230,7 @@ export default function Home() {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Header */}
-        <Header
-          user={user}
-          unreadNotifications={unreadNotifications}
-          onMenuClick={() => setIsMobileSidebarOpen(true)}
-          onSearchClick={() => setActiveTab('search')}
-          onNotificationsClick={() => setActiveTab('notifications')}
-        />
+
 
         {/* Page Content */}
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">

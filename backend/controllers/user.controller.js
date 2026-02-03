@@ -717,7 +717,7 @@ export const getPendingFollowRequests = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc    Search users by username or name
+ * @desc    Search users by username or name with relevance boosting
  * @route   GET /api/user/search
  * @access  Private
  */
@@ -731,7 +731,9 @@ export const searchUsers = asyncHandler(async (req, res) => {
         return errorResponse(res, 'Search term must be at least 2 characters', 400);
     }
 
-    // Build search conditions for username, firstName, and lastName
+    const searchLower = searchTerm.toLowerCase();
+
+    // Fetch all matching users first (we need to sort in-memory for relevance)
     const searchConditions = {
         OR: [
             {
@@ -759,20 +761,55 @@ export const searchUsers = asyncHandler(async (req, res) => {
         ]
     };
 
-    const [users, totalCount] = await Promise.all([
+    const [allUsers, totalCount] = await Promise.all([
         prisma.user.findMany({
             where: searchConditions,
-            select: selectPublicUser,
-            skip,
-            take: limit,
-            orderBy: {
-                username: 'asc'
-            }
+            select: selectPublicUser
         }),
         prisma.user.count({
             where: searchConditions
         })
     ]);
+
+    // Sort by relevance: exact match > starts with > contains
+    const sortedUsers = allUsers.sort((a, b) => {
+        const aUsername = a.username.toLowerCase();
+        const bUsername = b.username.toLowerCase();
+        const aFirstName = a.profile?.firstName?.toLowerCase() || '';
+        const aLastName = a.profile?.lastName?.toLowerCase() || '';
+        const bFirstName = b.profile?.firstName?.toLowerCase() || '';
+        const bLastName = b.profile?.lastName?.toLowerCase() || '';
+
+        // Priority 1: Exact username match
+        if (aUsername === searchLower && bUsername !== searchLower) return -1;
+        if (bUsername === searchLower && aUsername !== searchLower) return 1;
+
+        // Priority 2: Username starts with search term
+        if (aUsername.startsWith(searchLower) && !bUsername.startsWith(searchLower)) return -1;
+        if (bUsername.startsWith(searchLower) && !aUsername.startsWith(searchLower)) return 1;
+
+        // Priority 3: First name exact match
+        if (aFirstName === searchLower && bFirstName !== searchLower) return -1;
+        if (bFirstName === searchLower && aFirstName !== searchLower) return 1;
+
+        // Priority 4: Last name exact match
+        if (aLastName === searchLower && bLastName !== searchLower) return -1;
+        if (bLastName === searchLower && aLastName !== searchLower) return 1;
+
+        // Priority 5: First name starts with
+        if (aFirstName.startsWith(searchLower) && !bFirstName.startsWith(searchLower)) return -1;
+        if (bFirstName.startsWith(searchLower) && !aFirstName.startsWith(searchLower)) return 1;
+
+        // Priority 6: Last name starts with
+        if (aLastName.startsWith(searchLower) && !bLastName.startsWith(searchLower)) return -1;
+        if (bLastName.startsWith(searchLower) && !aLastName.startsWith(searchLower)) return 1;
+
+        // Default: alphabetical by username
+        return aUsername.localeCompare(bUsername);
+    });
+
+    // Apply pagination after sorting
+    const paginatedUsers = sortedUsers.slice(skip, skip + limit);
 
     logger.info('User search performed', {
         userId: req.user.userId,
@@ -783,13 +820,13 @@ export const searchUsers = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: true,
         data: {
-            users,
+            users: paginatedUsers,
             pagination: {
                 page,
                 limit,
                 total: totalCount,
                 totalPages: Math.ceil(totalCount / limit),
-                hasMore: skip + users.length < totalCount
+                hasMore: skip + paginatedUsers.length < totalCount
             }
         },
         message: totalCount === 0

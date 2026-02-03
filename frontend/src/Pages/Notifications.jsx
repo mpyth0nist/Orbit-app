@@ -40,13 +40,7 @@ export default function Notifications() {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Header */}
-        <Header
-          user={user}
-          unreadNotifications={unreadNotifications}
-          onMenuClick={() => { }}
-          onSearchClick={() => navigate('/search')}
-          onNotificationsClick={() => { }}
-        />
+
 
         {/* Page Content */}
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">

@@ -12,6 +12,7 @@ import { successResponse, errorResponse, paginatedResponse, cursorPaginatedRespo
 import { prisma, selectThreadWithUser } from '../utils/prisma.js';
 import logger from '../utils/logger.js';
 import validator from 'validator';
+import { extractHashtags } from '../utils/hashtagParser.js';
 
 /**
  * Get personalized news feed
@@ -598,7 +599,7 @@ export const getTrendingThreads = asyncHandler(async (req, res) => {
     );
 });
 
-// Search threads by content
+// Search threads by content using Full-Text Search
 export const searchThreads = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
     const searchQuery = req.query.q?.trim();
@@ -610,53 +611,51 @@ export const searchThreads = asyncHandler(async (req, res) => {
 
     // Parse pagination parameters
     const limit = Math.min(parseInt(req.query.limit) || 20, 100);
-    const cursorParam = req.query.cursor;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
 
-    // Decode cursor if provided
-    let cursorData = null;
-    if (cursorParam) {
-        try {
-            const decodedCursor = Buffer.from(cursorParam, 'base64').toString('utf-8');
-            cursorData = JSON.parse(decodedCursor);
+    // Prepare search query for PostgreSQL (escape special characters)
+    // Convert to tsquery format (words joined by &)
+    const searchTerms = searchQuery
+        .split(/\s+/)
+        .filter(term => term.length > 0)
+        .map(term => `${term}:*`)
+        .join(' & ');
 
-            // Validate cursor structure
-            if (!cursorData.id || !cursorData.createdAt) {
-                return errorResponse(res, 'Invalid cursor format', 400);
-            }
-        } catch (error) {
-            return errorResponse(res, 'Invalid cursor encoding', 400);
-        }
-    }
+    // Use raw SQL for Full-Text Search with relevance ranking
+    const threads = await prisma.$queryRaw`
+        SELECT 
+            t.id,
+            t."user_id" as "userId",
+            t.content,
+            t."likes_count" as "likesCount",
+            t."comments_count" as "commentsCount",
+            t.type,
+            t."created_at" as "createdAt",
+            t."updated_at" as "updatedAt",
+            ts_rank(t.search_vector, to_tsquery('english', ${searchTerms})) as rank
+        FROM "Thread" t
+        WHERE t.search_vector @@ to_tsquery('english', ${searchTerms})
+        ORDER BY rank DESC, t."created_at" DESC
+        LIMIT ${limit}
+        OFFSET ${skip}
+    `;
 
-    // Build where clause for search
-    const whereClause = {
-        content: {
-            contains: searchQuery,
-            mode: 'insensitive' // Case-insensitive search
-        }
-    };
+    // Get total count for pagination
+    const totalCountResult = await prisma.$queryRaw`
+        SELECT COUNT(*) as count
+        FROM "Thread" t
+        WHERE t.search_vector @@ to_tsquery('english', ${searchTerms})
+    `;
 
-    // Add cursor pagination condition
-    if (cursorData) {
-        whereClause.OR = [
-            {
-                createdAt: {
-                    lt: new Date(cursorData.createdAt)
-                }
-            },
-            {
-                createdAt: new Date(cursorData.createdAt),
-                id: {
-                    lt: cursorData.id
-                }
-            }
-        ];
-    }
+    const totalCount = Number(totalCountResult[0]?.count || 0);
 
-    // Fetch threads matching search query with cursor pagination
-    // Fetch limit + 1 to determine if there are more results
-    const threads = await prisma.thread.findMany({
-        where: whereClause,
+    // Fetch full thread details with relations for each result
+    const threadIds = threads.map(t => t.id);
+    const fullThreads = await prisma.thread.findMany({
+        where: {
+            id: { in: threadIds }
+        },
         include: {
             user: {
                 select: {
@@ -679,42 +678,36 @@ export const searchThreads = asyncHandler(async (req, res) => {
                     url: true
                 }
             }
-        },
-        orderBy: [
-            { createdAt: 'desc' },
-            { id: 'desc' }
-        ],
-        take: limit + 1
+        }
     });
 
-    // Determine if there are more results
-    const hasMore = threads.length > limit;
-    const returnThreads = hasMore ? threads.slice(0, limit) : threads;
+    // Sort by original rank order
+    const threadMap = new Map(fullThreads.map(t => [t.id, t]));
+    const orderedThreads = threadIds.map(id => threadMap.get(id)).filter(Boolean);
 
-    // Generate next cursor if there are more results
-    let nextCursor = null;
-    if (hasMore) {
-        const lastThread = returnThreads[returnThreads.length - 1];
-        const cursorObj = {
-            id: lastThread.id,
-            createdAt: lastThread.createdAt.toISOString()
-        };
-        nextCursor = Buffer.from(JSON.stringify(cursorObj)).toString('base64');
-    }
-
-    logger.info('Thread search completed', {
+    logger.info('Thread FTS search completed', {
         userId,
         searchQuery,
-        resultsCount: returnThreads.length,
-        hasMore
+        resultsCount: orderedThreads.length,
+        totalCount
     });
 
-    return cursorPaginatedResponse(
-        res,
-        returnThreads,
-        { nextCursor, limit },
-        returnThreads.length > 0 ? 'Search results fetched successfully' : 'No threads found matching your search'
-    );
+    return res.status(200).json({
+        success: true,
+        data: {
+            threads: orderedThreads,
+            pagination: {
+                page,
+                limit,
+                total: totalCount,
+                totalPages: Math.ceil(totalCount / limit),
+                hasMore: skip + orderedThreads.length < totalCount
+            }
+        },
+        message: orderedThreads.length > 0
+            ? `Found ${totalCount} thread${totalCount > 1 ? 's' : ''} matching your search`
+            : 'No threads found matching your search'
+    });
 });
 
 /**
@@ -854,7 +847,28 @@ export const createThread = asyncHandler(async (req, res) => {
             }
         });
 
-        // 2. Create media records if files exist
+        // 2. Extract and process hashtags
+        const hashtags = extractHashtags(content); // Use original content, not escaped
+
+        if (hashtags.length > 0) {
+            // Upsert hashtags (create if new, increment use count if exists)
+            for (const tag of hashtags) {
+                const hashtag = await tx.hashtag.upsert({
+                    where: { tag },
+                    create: { tag, useCount: 1 },
+                    update: { useCount: { increment: 1 } }
+                });
+
+                // Link hashtag to thread
+                await tx.$executeRaw`
+                    INSERT INTO "_ThreadHashtags" ("A", "B")
+                    VALUES (${hashtag.id}, ${thread.id})
+                    ON CONFLICT DO NOTHING
+                `;
+            }
+        }
+
+        // 3. Create media records if files exist
         if (files.length > 0) {
             const mediaData = files.map(file => ({
                 userId,
@@ -871,7 +885,7 @@ export const createThread = asyncHandler(async (req, res) => {
             });
         }
 
-        // 3. Return the full thread with user and media
+        // 4. Return the full thread with user and media
         return await tx.thread.findUnique({
             where: { id: thread.id },
             include: {

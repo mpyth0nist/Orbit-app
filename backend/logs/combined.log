@@ -16783,3 +16783,2730 @@ SIGINT received. Starting graceful shutdown...
   "hasMore": false,
   "followingCount": 1
 }
+2026-02-03 17:02:22 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 1,
+  "originalCount": 20,
+  "hasMore": true
+}
+2026-02-03 17:02:31 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 1,
+  "originalCount": 20,
+  "hasMore": true
+}
+2026-02-03 17:02:35 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 21
+}
+2026-02-03 17:02:35 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 17:02:36 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 21
+}
+2026-02-03 17:02:36 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 17:05:20 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 21
+}
+2026-02-03 17:05:20 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 17:05:20 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 21
+}
+2026-02-03 17:05:20 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:05:20 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 17:05:42 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 2
+}
+2026-02-03 17:05:42 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 11
+}
+2026-02-03 17:05:43 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 2
+}
+2026-02-03 17:05:43 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:05:43 [info]: All notifications marked as read
+{
+  "userId": 11,
+  "count": 2
+}
+2026-02-03 17:05:43 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:05:43 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:45 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:45 [info]: Feed fetched
+{
+  "userId": 11,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 17:05:47 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:48 [info]: Feed fetched
+{
+  "userId": 11,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 17:05:48 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:48 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:05:48 [info]: All notifications marked as read
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:48 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:05:48 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:49 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:05:50 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:05:50 [info]: User stats retrieved
+{
+  "userId": 11
+}
+2026-02-03 17:05:50 [info]: User stats retrieved
+{
+  "userId": 11
+}
+2026-02-03 17:05:51 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:51 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:05:51 [info]: All notifications marked as read
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:51 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:05:51 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:09:19 [info]: 🚀 Server is running on port 8080
+2026-02-03 17:09:19 [info]: 📝 Environment: development
+2026-02-03 17:09:19 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 17:09:48 [info]: 🚀 Server is running on port 8080
+2026-02-03 17:09:48 [info]: 📝 Environment: development
+2026-02-03 17:09:48 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 17:14:43 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:14:43 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:45 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:46 [info]: User stats retrieved
+{
+  "userId": 11
+}
+2026-02-03 17:14:46 [info]: User stats retrieved
+{
+  "userId": 11
+}
+2026-02-03 17:14:46 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:48 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:48 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:14:48 [info]: Feed fetched
+{
+  "userId": 11,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 17:14:50 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:50 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:50 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:14:50 [info]: All notifications marked as read
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:14:50 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:50 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:14:51 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:52 [info]: User stats retrieved
+{
+  "userId": 11
+}
+2026-02-03 17:14:52 [info]: User stats retrieved
+{
+  "userId": 11
+}
+2026-02-03 17:14:52 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:14:52 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:16:38 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 1,
+  "originalCount": 20,
+  "hasMore": true
+}
+2026-02-03 17:16:39 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 1,
+  "originalCount": 20,
+  "hasMore": true
+}
+2026-02-03 17:16:39 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 17:16:39 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 17:17:22 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:17:24 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:17:24 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 17:17:26 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 17:17:26 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 17:17:26 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:19:40 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:19:40 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 1,
+  "originalCount": 20,
+  "hasMore": true
+}
+2026-02-03 17:20:14 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:20:14 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 1,
+  "originalCount": 20,
+  "hasMore": true
+}
+2026-02-03 17:20:20 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:20:20 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:30 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:33 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:33 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 17:20:34 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:35 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:35 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:35 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 17:20:35 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:35 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:36 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 17:20:36 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 17:20:36 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:36 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:45 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:20:46 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:20:46 [info]: All notifications marked as read
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:20:46 [info]: Notifications retrieved
+{
+  "userId": 11,
+  "filter": "all",
+  "count": 3,
+  "originalCount": 3,
+  "hasMore": false
+}
+2026-02-03 17:20:47 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:20:48 [info]: Comment retrieved
+{
+  "commentId": 3
+}
+2026-02-03 17:20:48 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 17:20:48 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 11
+}
+2026-02-03 17:20:48 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 17:20:51 [info]: Notification deleted
+{
+  "count": 1,
+  "criteria": {
+    "actorId": 11,
+    "receiverId": 1,
+    "type": "LIKE",
+    "entityId": 2,
+    "entityType": "THREAD"
+  }
+}
+2026-02-03 17:20:51 [info]: thread unliked
+{
+  "entityType": "thread",
+  "entityId": 2,
+  "userId": 11
+}
+2026-02-03 17:20:51 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 11
+}
+2026-02-03 17:20:51 [info]: Notification created
+{
+  "notificationId": 85,
+  "actorId": 11,
+  "receiverId": 1,
+  "type": "LIKE"
+}
+2026-02-03 17:20:51 [info]: thread liked
+{
+  "entityType": "thread",
+  "entityId": 2,
+  "userId": 11
+}
+2026-02-03 17:20:51 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 11
+}
+2026-02-03 17:20:55 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 1
+}
+2026-02-03 17:20:55 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 17:20:56 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 1
+}
+2026-02-03 17:20:56 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 17:20:56 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 1
+}
+2026-02-03 17:20:56 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:20:56 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 17:21:01 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:21:01 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 17:21:02 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:21:02 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:21:03 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 17:21:03 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 17:21:03 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:21:04 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:21:05 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:21:07 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:21:07 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 17:21:07 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 17:21:07 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:37:49 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:37:49 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:37:49 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/2"
+}
+2026-02-03 18:37:49 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/2",
+  "status": 401,
+  "duration": "14ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:37:50 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:37:50 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:37:52 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:37:52 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:37:55 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:37:55 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:41:37 [info]: User logged in successfully
+{
+  "userId": 1,
+  "username": "pythonist01",
+  "email": "pythonist@gmail.com"
+}
+2026-02-03 18:41:37 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:41:37 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:41:40 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 18:41:45 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:41:46 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:41:46 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:41:46 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:41:46 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 18:41:57 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:41:59 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:41:59 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:41:59 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:42:42 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:42:42 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:42:48 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 18:42:50 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:42:51 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 18:42:52 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:44:14 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:44:14 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "11ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:44:14 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:44:14 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:44:15 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:44:15 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:44:15 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:44:15 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:44:17 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:44:17 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:44:17 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:44:17 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:44:17 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:44:17 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:44:21 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:44:21 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:44:21 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:44:21 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:48:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:48:23 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:49:53 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:49:53 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:50:01 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:01 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:50:01 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:50:06 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:07 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:07 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:50:37 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:37 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:50:44 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:45 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:45 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:45 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 18:50:45 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:46 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:47 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:47 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:50:47 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:50:47 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:49 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:50:49 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:50:57 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:50:57 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:50:57 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/mark-all-read"
+}
+2026-02-03 18:50:57 [warn]: HTTP Request
+{
+  "method": "PATCH",
+  "url": "/api/notifications/mark-all-read",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:50:57 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:50:57 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:50:58 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:50:58 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:50:58 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:50:58 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:51:00 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:51:00 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:51:00 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:51:00 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:51:04 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 18:51:04 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:51:04 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 18:51:04 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 18:51:06 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:06 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:06 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 18:51:06 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:06 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 18:51:09 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:11 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:11 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:51:12 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:13 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:13 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:51:13 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:51:14 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:37 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:39 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:39 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:51:42 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:44 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:44 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 18:51:46 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:46 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:46 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:46 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 18:51:46 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 18:51:46 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:47 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:47 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:51:47 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:51:48 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:48 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:49 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:51:49 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:49 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:51:49 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:57 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 18:51:57 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 18:51:57 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:02:07 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:02:07 [info]: 📝 Environment: development
+2026-02-03 19:02:07 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:02:21 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:26 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:26 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:02:27 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:28 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:28 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:28 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 19:02:28 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:29 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:30 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:30 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:02:30 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:02:31 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:35 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:35 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:02:36 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:37 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:37 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:37 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 19:02:37 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:02:37 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 19:03:10 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:03:10 [info]: 📝 Environment: development
+2026-02-03 19:03:10 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:03:21 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:03:21 [info]: 📝 Environment: development
+2026-02-03 19:03:21 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:03:28 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:03:28 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 19:03:37 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:03:37 [info]: 📝 Environment: development
+2026-02-03 19:03:37 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:03:51 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:03:51 [info]: 📝 Environment: development
+2026-02-03 19:03:51 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:10:11 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:10:11 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 19:14:10 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:14:10 [info]: 📝 Environment: development
+2026-02-03 19:14:10 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:16:38 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:16:38 [info]: 📝 Environment: development
+2026-02-03 19:16:38 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:16:53 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:16:53 [info]: 📝 Environment: development
+2026-02-03 19:16:53 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:16:59 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:16:59 [info]: 📝 Environment: development
+2026-02-03 19:16:59 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:17:01 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:17:01 [info]: 📝 Environment: development
+2026-02-03 19:17:01 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:17:23 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:17:23 [info]: 📝 Environment: development
+2026-02-03 19:17:23 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:17:52 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:17:52 [info]: 📝 Environment: development
+2026-02-03 19:17:52 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:18:33 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:18:33 [info]: 📝 Environment: development
+2026-02-03 19:18:33 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:18:45 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:18:45 [info]: 📝 Environment: development
+2026-02-03 19:18:45 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:18:47 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:18:47 [info]: 📝 Environment: development
+2026-02-03 19:18:47 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:19:31 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:19:31 [info]: 📝 Environment: development
+2026-02-03 19:19:31 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:19:39 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:19:39 [info]: 📝 Environment: development
+2026-02-03 19:19:39 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:34:54 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:34:54 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 19:35:08 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:35:08 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 19:35:13 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:35:13 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:35:14 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:35:15 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:35:15 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:35:16 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:35:16 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:35:18 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:35:18 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:35:18 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:36:57 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:36:57 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:37:00 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:37:06 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:37:07 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:37:07 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:39:40 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:39:43 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kaddioui",
+  "resultsCount": 1
+}
+2026-02-03 19:39:43 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kaddioui",
+  "resultsCount": 1
+}
+2026-02-03 19:39:44 [info]: Relationship checked
+{
+  "currentUserId": 1,
+  "targetUserId": 11,
+  "relationship": "FOLLOWER"
+}
+2026-02-03 19:39:44 [info]: User threads retrieved
+{
+  "currentUserId": 1,
+  "targetUserId": 11,
+  "threadsCount": 0
+}
+2026-02-03 19:39:50 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 19:39:50 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 19:40:03 [info]: User logged in successfully
+{
+  "userId": 11,
+  "username": "kaddioui2007",
+  "email": "kaddioui_2007@gmail.com"
+}
+2026-02-03 19:40:03 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 19:40:03 [info]: Feed fetched
+{
+  "userId": 11,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:40:05 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 19:40:25 [info]: CreateThread request
+{
+  "userId": 11,
+  "contentLength": 59,
+  "filesCount": 0,
+  "files": []
+}
+2026-02-03 19:40:25 [info]: Thread created successfully
+{
+  "userId": 11,
+  "threadId": 7,
+  "mediaCount": 0
+}
+2026-02-03 19:40:26 [info]: User stats retrieved
+{
+  "userId": 11
+}
+2026-02-03 19:40:26 [info]: Unread notification count retrieved
+{
+  "userId": 11,
+  "count": 0
+}
+2026-02-03 19:40:26 [info]: User stats retrieved
+{
+  "userId": 11
+}
+2026-02-03 19:40:33 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:40:37 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kaddioui",
+  "resultsCount": 1
+}
+2026-02-03 19:40:37 [info]: Relationship checked
+{
+  "currentUserId": 1,
+  "targetUserId": 11,
+  "relationship": "FOLLOWER"
+}
+2026-02-03 19:40:37 [info]: User threads retrieved
+{
+  "currentUserId": 1,
+  "targetUserId": 11,
+  "threadsCount": 1
+}
+2026-02-03 19:40:40 [info]: Notification created
+{
+  "notificationId": 86,
+  "actorId": 1,
+  "receiverId": 11,
+  "type": "LIKE"
+}
+2026-02-03 19:40:40 [info]: thread liked
+{
+  "entityType": "thread",
+  "entityId": 7,
+  "userId": 1
+}
+2026-02-03 19:40:44 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:40:44 [info]: Thread fetched
+{
+  "threadId": 7,
+  "userId": 1
+}
+2026-02-03 19:40:44 [info]: Thread comments retrieved
+{
+  "threadId": 7,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-03 19:43:00 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:43:00 [info]: 📝 Environment: development
+2026-02-03 19:43:00 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:43:30 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/7"
+}
+2026-02-03 19:43:30 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/7",
+  "status": 401,
+  "duration": "21ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 19:43:30 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 19:43:30 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 19:43:31 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 19:43:31 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 19:47:32 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/7"
+}
+2026-02-03 19:47:32 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/7",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 19:47:32 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 19:47:32 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 19:47:36 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-03 19:47:36 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 19:47:38 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 19:47:38 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 19:47:47 [info]: User logged in successfully
+{
+  "userId": 1,
+  "username": "pythonist01",
+  "email": "pythonist@gmail.com"
+}
+2026-02-03 19:47:47 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:47:47 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:47:51 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 19:47:52 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:47:53 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:47:53 [info]: Thread fetched
+{
+  "threadId": 1,
+  "userId": 1
+}
+2026-02-03 19:47:53 [info]: Thread comments retrieved
+{
+  "threadId": 1,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-03 19:47:56 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:48:49 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kaddioui",
+  "resultsCount": 1
+}
+2026-02-03 19:49:09 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:49:09 [info]: 📝 Environment: development
+2026-02-03 19:49:09 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:49:25 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:25 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:49:25 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:49:40 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:40 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:40 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 19:49:40 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:41 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:42 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:42 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:49:42 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:49:42 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:49:42 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:44 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:44 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:49:44 [info]: 📝 Environment: development
+2026-02-03 19:49:44 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:49:48 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:49:48 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:49:48 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 19:50:31 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:50:31 [info]: 📝 Environment: development
+2026-02-03 19:50:31 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:50:32 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:50:32 [info]: 📝 Environment: development
+2026-02-03 19:50:32 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:51:03 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:51:03 [info]: 📝 Environment: development
+2026-02-03 19:51:03 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:51:05 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:51:05 [info]: 📝 Environment: development
+2026-02-03 19:51:05 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:56:42 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:56:42 [info]: 📝 Environment: development
+2026-02-03 19:56:42 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:56:42 [info]: 🚀 Server is running on port 8080
+2026-02-03 19:56:42 [info]: 📝 Environment: development
+2026-02-03 19:56:42 [info]: 🔗 API: http://localhost:8080/api
+2026-02-03 19:58:11 [info]: User logged in successfully
+{
+  "userId": 1,
+  "username": "pythonist01",
+  "email": "pythonist@gmail.com"
+}
+2026-02-03 19:58:11 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:58:11 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 19:58:12 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 19:58:15 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kadd",
+  "resultsCount": 1
+}
+2026-02-03 19:58:15 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kadd",
+  "resultsCount": 1
+}
+2026-02-03 19:58:16 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kaddioui",
+  "resultsCount": 1
+}
+2026-02-03 20:04:56 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:11:59 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:01 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:01 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 20:12:03 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 20:12:07 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 20:12:08 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 20:12:20 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 20:12:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:25 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:25 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:25 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 20:12:25 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:30 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:33 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:33 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 20:12:33 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 20:12:37 [info]: User media retrieved
+{
+  "userId": 1,
+  "totalCount": 1
+}
+2026-02-03 20:12:39 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:12:39 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-03 20:12:39 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 20:12:41 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 20:12:44 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:10 [info]: Profile updated
+{
+  "userId": 1
+}
+2026-02-03 20:13:12 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 20:13:12 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:12 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-03 20:13:15 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:24 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:24 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:24 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:24 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 20:13:24 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 20:13:24 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:52 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:52 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:52 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 20:13:52 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:52 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 5,
+  "originalCount": 25,
+  "hasMore": false
+}
+2026-02-03 20:13:56 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:13:56 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 20:14:04 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:14:18 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:14:18 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 20:18:04 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:18:04 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 20:19:23 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 20:19:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:19:26 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/search?q=te&page=1&limit=20",
+  "status": 400,
+  "duration": "18ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 20:19:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/search?q=test&page=1&limit=20",
+  "status": 400,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 20:19:29 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/search?q=media&page=1&limit=20",
+  "status": 400,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 20:19:35 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "Kaddi",
+  "resultsCount": 1
+}
+2026-02-03 20:19:36 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "Kaddioui",
+  "resultsCount": 1
+}
+2026-02-03 20:19:49 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 20:22:14 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 20:22:18 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/search?q=test&page=1&limit=20",
+  "status": 400,
+  "duration": "12ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 20:22:20 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/search?q=test+me&page=1&limit=20",
+  "status": 400,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 20:22:21 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/search?q=test+medoa&page=1&limit=20",
+  "status": 400,
+  "duration": "12ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 20:35:52 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 21:45:22 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-03 21:45:22 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 21:54:32 [info]: User logged in successfully
+{
+  "userId": 1,
+  "username": "pythonist01",
+  "email": "pythonist@gmail.com"
+}
+2026-02-03 21:54:32 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 21:54:32 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 21:54:34 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-03 21:54:34 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 21:54:34 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 21:54:35 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 21:54:36 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 21:54:36 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 1,
+  "hasMore": false,
+  "followingCount": 1
+}
+2026-02-03 21:54:38 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 21:54:40 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 21:54:41 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 21:54:43 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 21:54:44 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-03 21:54:44 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 21:54:47 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-03 22:00:32 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 22:00:32 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-03 22:01:24 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 22:01:24 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-03 22:03:00 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-03 22:03:00 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}

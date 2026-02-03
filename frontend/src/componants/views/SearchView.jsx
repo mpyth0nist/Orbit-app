@@ -1,299 +1,332 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { SearchIcon, XMarkIcon, UserIcon } from '../ui/Icons';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/apiClient';
-import { Loader2 } from 'lucide-react';
-import { useLanguage } from '../../contexts/LanguageContext';
-import { useTheme } from '../../contexts/ThemeContext';
-import UserProfileView from './UserProfileView';
+import { Search, User, FileText, Hash, TrendingUp, Clock, X } from 'lucide-react';
 
-export default function SearchView({ onPostClick, currentUserEmail, currentUserId }) {
-  const [query, setQuery] = useState('');
+const SearchView = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('users'); // 'users', 'threads', 'hashtags'
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-  const [recentSearches, setRecentSearches] = useState(() => {
-    const saved = localStorage.getItem('recentUserSearches');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [error, setError] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
 
-  const { t } = useLanguage();
-  const { isDarkMode } = useTheme();
+  // Results for each tab
+  const [userResults, setUserResults] = useState([]);
+  const [threadResults, setThreadResults] = useState([]);
+  const [hashtagResults, setHashtagResults] = useState([]);
+  const [trendingHashtags, setTrendingHashtags] = useState([]);
 
-  // Save recent searches to localStorage
+  // Recent searches from localStorage
+  const [recentSearches, setRecentSearches] = useState([]);
+
+  // Load recent searches on mount
   useEffect(() => {
-    localStorage.setItem('recentUserSearches', JSON.stringify(recentSearches));
-  }, [recentSearches]);
-
-  const handleSearch = useCallback(async (searchQuery) => {
-    const trimmedQuery = searchQuery.trim();
-
-    if (!trimmedQuery) {
-      setSearchResults([]);
-      setError(null);
-      return;
-    }
-
-    // Backend requires minimum 2 characters
-    if (trimmedQuery.length < 2) {
-      setSearchResults([]);
-      setError('Search term must be at least 2 characters');
-      return;
-    }
-
-    setIsSearching(true);
-    setError(null);
-
-    try {
-      const response = await api.users.search({ q: trimmedQuery, limit: 20 });
-
-      // Handle the backend response format: { users, pagination }
-      const users = response?.users || response || [];
-      setSearchResults(Array.isArray(users) ? users : []);
-
-      // Add to recent searches if we got results
-      if (users.length > 0 && !recentSearches.includes(trimmedQuery)) {
-        setRecentSearches(prev => [trimmedQuery, ...prev.slice(0, 4)]);
+    const stored = localStorage.getItem('recentSearches');
+    if (stored) {
+      try {
+        setRecentSearches(JSON.parse(stored));
+      } catch (error) {
+        console.error('Error loading recent searches:', error);
       }
-    } catch (err) {
-      console.error('User search failed:', err);
-      const errorMessage = err.response?.data?.message || 'Failed to search users';
-      setError(errorMessage);
-      setSearchResults([]);
-    } finally {
-      setIsSearching(false);
     }
-  }, [recentSearches]);
+  }, []);
 
-  // Debounced search
+  // Load trending hashtags on mount
   useEffect(() => {
-    const debounce = setTimeout(() => {
-      if (query) handleSearch(query);
-    }, 300);
-    return () => clearTimeout(debounce);
-  }, [query, handleSearch]);
+    const fetchTrendingHashtags = async () => {
+      try {
+        const data = await api.hashtags.trending({ limit: 10 });
+        setTrendingHashtags(data || []);
+      } catch (error) {
+        console.error('Error fetching trending hashtags:', error);
+      }
+    };
+    fetchTrendingHashtags();
+  }, []);
 
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Perform search based on active tab
+  useEffect(() => {
+    if (!debouncedQuery || debouncedQuery.length < 2) {
+      setUserResults([]);
+      setThreadResults([]);
+      setHashtagResults([]);
+      return;
+    }
+
+    const performSearch = async () => {
+      setIsSearching(true);
+      try {
+        if (activeTab === 'users') {
+          const data = await api.search.searchUsers(debouncedQuery);
+          setUserResults(data?.users || []);
+        } else if (activeTab === 'threads') {
+          const data = await api.search.searchThreads({ q: debouncedQuery, page: 1, limit: 20 });
+          setThreadResults(data?.threads || []);
+        } else if (activeTab === 'hashtags') {
+          const data = await api.search.searchHashtags(debouncedQuery);
+          setHashtagResults(data || []);
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    performSearch();
+  }, [debouncedQuery, activeTab]);
+
+  const handleUserClick = (userId) => {
+    // Save to recent searches
+    const newRecent = { type: 'user', userId, query: searchQuery, timestamp: Date.now() };
+    const updated = [newRecent, ...recentSearches.filter(r => !(r.type === 'user' && r.userId === userId))].slice(0, 10);
+    setRecentSearches(updated);
+    localStorage.setItem('recentSearches', JSON.stringify(updated));
+
+    navigate(`/users/${userId}`);
   };
 
-  const handleBackFromProfile = () => {
-    setSelectedUser(null);
+  const handleThreadClick = (threadId) => {
+    navigate(`/posts/${threadId}`);
+  };
+
+  const handleHashtagClick = (tag) => {
+    setActiveTab('threads');
+    setSearchQuery(`#${tag}`);
   };
 
   const clearRecentSearches = () => {
     setRecentSearches([]);
-    localStorage.removeItem('recentUserSearches');
+    localStorage.removeItem('recentSearches');
   };
 
-  const removeRecentSearch = (searchToRemove) => {
-    setRecentSearches(prev => prev.filter(s => s !== searchToRemove));
-  };
-
-  // Get user display info with fallbacks
-  const getUserDisplayName = (user) => {
-    if (user.profile?.firstName || user.profile?.lastName) {
-      return `${user.profile.firstName || ''} ${user.profile.lastName || ''}`.trim();
-    }
-    return user.username;
-  };
-
-  const getUserAvatar = (user) => {
-    return user.profile?.photoUrl || null;
-  };
-
-  // Show UserProfileView if a user is selected
-  if (selectedUser) {
-    return (
-      <UserProfileView
-        userId={selectedUser.id}
-        onBack={handleBackFromProfile}
-        onPostClick={onPostClick}
-        currentUserId={currentUserId}
-      />
-    );
-  }
+  const tabs = [
+    { id: 'users', label: 'Users', icon: User },
+    { id: 'threads', label: 'Threads', icon: FileText },
+    { id: 'hashtags', label: 'Hashtags', icon: Hash }
+  ];
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto p-4">
       {/* Search Input */}
       <div className="relative mb-6">
-        <SearchIcon className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-400'
-          }`} />
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+          <Search size={20} />
+        </div>
         <input
           type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={t('searchPlaceholder') || 'Search users...'}
-          className={`w-full pl-12 pr-12 py-4 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm transition-all ${isDarkMode
-              ? 'bg-gray-800 border-gray-700 text-gray-100 placeholder-gray-500'
-              : 'bg-white border-gray-200 text-gray-800 placeholder-gray-400 border'
-            }`}
+          placeholder={`Search ${activeTab}...`}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-12 pr-4 py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
           autoFocus
         />
-        {query && (
+        {searchQuery && (
           <button
-            onClick={() => {
-              setQuery('');
-              setSearchResults([]);
-              setError(null);
-            }}
-            className={`absolute right-4 top-1/2 -translate-y-1/2 p-1 ${isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-400 hover:text-gray-600'
-              }`}
+            onClick={() => setSearchQuery('')}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
           >
-            <XMarkIcon className="w-5 h-5" />
+            <X size={18} />
           </button>
         )}
       </div>
 
-      {/* Error Message */}
-      {error && (
-        <div className={`mb-4 p-3 rounded-lg text-sm ${isDarkMode ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-600'
-          }`}>
-          {error}
-        </div>
-      )}
+      {/* Tab Switcher */}
+      <div className="flex gap-2 mb-6 border-b border-gray-200 dark:border-gray-800 pb-2 overflow-x-auto">
+        {tabs.map(tab => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all ${isActive
+                  ? 'bg-indigo-600 text-white shadow-md'
+                  : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <Icon size={18} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
-      {/* Search Results */}
-      {query && query.length >= 2 && (
-        <div className="mb-6">
-          {isSearching ? (
-            <div className="flex justify-center py-8">
-              <Loader2 className="w-6 h-6 text-indigo-600 animate-spin" />
+      {/* Search Content */}
+      <div className="min-h-[400px]">
+        {isSearching && (
+          <div className="flex flex-col items-center justify-center py-12 gap-4">
+            <div className="w-8 h-8 border-4 border-gray-200 border-t-indigo-600 rounded-full animate-spin"></div>
+            <p className="text-gray-500 dark:text-gray-400">Searching...</p>
+          </div>
+        )}
+
+        {/* Trending Hashtags (Empty State) */}
+        {!searchQuery && activeTab === 'hashtags' && trendingHashtags.length > 0 && (
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4 text-gray-900 dark:text-gray-100">
+              <TrendingUp size={20} />
+              <h3 className="text-lg font-bold">Trending Hashtags</h3>
             </div>
-          ) : searchResults.length > 0 ? (
-            <div className="space-y-2">
-              <h3 className={`text-sm font-semibold uppercase tracking-wide mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                }`}>
-                {t('searchResults') || 'Results'} for "{query}"
-              </h3>
-              <div className={`rounded-2xl overflow-hidden ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-sm border border-gray-100'
-                }`}>
-                {searchResults.map((user) => (
-                  <div
-                    key={user.id}
-                    onClick={() => handleUserClick(user)}
-                    className={`flex items-center gap-4 p-4 cursor-pointer transition-colors ${isDarkMode
-                        ? 'hover:bg-gray-700 border-b border-gray-700 last:border-b-0'
-                        : 'hover:bg-gray-50 border-b border-gray-100 last:border-b-0'
-                      }`}
-                  >
-                    {/* Avatar */}
-                    {getUserAvatar(user) ? (
-                      <img
-                        src={getUserAvatar(user)}
-                        alt={user.username}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'
-                        }`}>
-                        <UserIcon className={`w-6 h-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                          }`} />
-                      </div>
-                    )}
+            <div className="flex flex-col gap-2">
+              {trendingHashtags.map(hashtag => (
+                <div
+                  key={hashtag.id}
+                  className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors group"
+                  onClick={() => handleHashtagClick(hashtag.tag)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      <Hash size={18} />
+                    </div>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">#{hashtag.tag}</span>
+                  </div>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{hashtag.useCount} posts</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-                    {/* User Info */}
-                    <div className="flex-1 min-w-0">
-                      <p className={`font-semibold truncate ${isDarkMode ? 'text-gray-100' : 'text-gray-900'
-                        }`}>
-                        {getUserDisplayName(user)}
-                      </p>
-                      <p className={`text-sm truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                        }`}>
-                        @{user.username}
-                      </p>
-                      {user.profile?.bio && (
-                        <p className={`text-sm truncate mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'
-                          }`}>
-                          {user.profile.bio}
-                        </p>
-                      )}
+        {/* Recent Searches (Empty State) */}
+        {!searchQuery && recentSearches.length > 0 && activeTab === 'users' && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
+                <Clock size={20} />
+                <h3 className="text-lg font-bold">Recent Searches</h3>
+              </div>
+              <button
+                onClick={clearRecentSearches}
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
+              >
+                Clear
+              </button>
+            </div>
+            <div className="flex flex-col gap-2">
+              {recentSearches.filter(r => r.type === 'user').map((recent, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  onClick={() => handleUserClick(recent.userId)}
+                >
+                  <Search size={16} className="text-gray-400" />
+                  <span className="text-gray-700 dark:text-gray-300">{recent.query}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* User Results */}
+        {!isSearching && searchQuery && activeTab === 'users' && (
+          <div className="flex flex-col gap-2">
+            {userResults.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                <User size={48} className="mb-4 text-gray-300 dark:text-gray-600" />
+                <p>No users found for "{searchQuery}"</p>
+              </div>
+            ) : (
+              userResults.map(user => (
+                <div
+                  key={user.id}
+                  className="flex items-center gap-4 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors"
+                  onClick={() => handleUserClick(user.id)}
+                >
+                  <img
+                    src={user.profile?.photoUrl || '/default-avatar.png'}
+                    alt={user.username}
+                    className="w-12 h-12 rounded-full object-cover border border-gray-100 dark:border-gray-700"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-gray-900 dark:text-gray-100 truncate">
+                      {user.profile?.firstName} {user.profile?.lastName}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 truncate">@{user.username}</div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+
+        {/* Thread Results */}
+        {!isSearching && searchQuery && activeTab === 'threads' && (
+          <div className="flex flex-col gap-4">
+            {threadResults.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                <FileText size={48} className="mb-4 text-gray-300 dark:text-gray-600" />
+                <p>No threads found for "{searchQuery}"</p>
+              </div>
+            ) : (
+              threadResults.map(thread => (
+                <div
+                  key={thread.id}
+                  className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors"
+                  onClick={() => handleThreadClick(thread.id)}
+                >
+                  <div className="flex items-center gap-3 mb-3">
+                    <img
+                      src={thread.user.profile?.photoUrl || '/default-avatar.png'}
+                      alt={thread.user.username}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                      <span className="block font-semibold text-sm text-gray-900 dark:text-gray-100">
+                        {thread.user.profile?.firstName} {thread.user.profile?.lastName}
+                      </span>
+                      <span className="block text-xs text-gray-500 dark:text-gray-400">@{thread.user.username}</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          ) : !error && (
-            <div className={`text-center py-8 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'
-              }`}>
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'
-                }`}>
-                <SearchIcon className={`w-8 h-8 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'
-                  }`} />
-              </div>
-              <h3 className={`text-lg font-semibold mb-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'
-                }`}>{t('noResults') || 'No results'}</h3>
-              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
-                No users found for "{query}"
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Default Content - shown when not searching */}
-      {!query && (
-        <>
-          {/* Recent Searches */}
-          {recentSearches.length > 0 && (
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className={`text-lg font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'
-                  }`}>{t('recentSearches') || 'Recent Searches'}</h2>
-                <button
-                  onClick={clearRecentSearches}
-                  className={`text-sm font-medium ${isDarkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'
-                    }`}
-                >
-                  {t('clear') || 'Clear'}
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {recentSearches.map((search, i) => (
-                  <div
-                    key={i}
-                    className={`group flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${isDarkMode
-                        ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                  >
-                    <span onClick={() => setQuery(search)}>{search}</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeRecentSearch(search);
-                      }}
-                      className={`opacity-0 group-hover:opacity-100 transition-opacity ${isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'
-                        }`}
-                    >
-                      <XMarkIcon className="w-4 h-4" />
-                    </button>
+                  <p className="text-gray-800 dark:text-gray-200 mb-3 text-sm leading-relaxed line-clamp-3">{thread.content}</p>
+                  <div className="flex gap-4 text-xs font-medium text-gray-500 dark:text-gray-400">
+                    <span>{thread.likesCount} likes</span>
+                    <span>{thread.commentsCount} comments</span>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Search Hint */}
-          <div className={`text-center py-12 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white shadow-sm border border-gray-100'
-            }`}>
-            <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-indigo-50'
-              }`}>
-              <SearchIcon className={`w-10 h-10 ${isDarkMode ? 'text-gray-400' : 'text-indigo-500'
-                }`} />
-            </div>
-            <h3 className={`text-xl font-semibold mb-2 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'
-              }`}>
-              {t('searchUsers') || 'Search for Users'}
-            </h3>
-            <p className={`max-w-sm mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-500'
-              }`}>
-              Find people by their username, first name, or last name
-            </p>
+                </div>
+              ))
+            )}
           </div>
-        </>
-      )}
+        )}
+
+        {/* Hashtag Results */}
+        {!isSearching && searchQuery && activeTab === 'hashtags' && (
+          <div className="flex flex-col gap-2">
+            {hashtagResults.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+                <Hash size={48} className="mb-4 text-gray-300 dark:text-gray-600" />
+                <p>No hashtags found for "{searchQuery}"</p>
+              </div>
+            ) : (
+              hashtagResults.map(hashtag => (
+                <div
+                  key={hashtag.id}
+                  className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors group"
+                  onClick={() => handleHashtagClick(hashtag.tag)}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                      <Hash size={18} />
+                    </div>
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">#{hashtag.tag}</span>
+                  </div>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">{hashtag.useCount} posts</span>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
-}
+};
+
+export default SearchView;

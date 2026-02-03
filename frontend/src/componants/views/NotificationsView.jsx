@@ -140,6 +140,11 @@ export default function NotificationsView() {
     }
   };
 
+  // Mark all as read when component mounts
+  React.useEffect(() => {
+    markAllAsReadMutation.mutate();
+  }, []);
+
   // Extract notifications from response
   const notifications = useMemo(() => {
     if (!notificationsData) return [];

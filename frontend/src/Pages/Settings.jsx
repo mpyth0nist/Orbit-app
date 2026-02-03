@@ -19,7 +19,7 @@ export default function Settings() {
   // Fetch notifications count
   const { data: notifications = [] } = useQuery({
     queryKey: ['notifications', user?.email],
-    queryFn: () => apiClient.notifications.getUserNotifications(user?.email),
+    queryFn: () => apiClient.notifications.getUnreadCount(),
     enabled: !!user?.email,
   });
 
@@ -54,13 +54,7 @@ export default function Settings() {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Header */}
-        <Header
-          user={user}
-          unreadNotifications={unreadNotifications}
-          onMenuClick={() => { }}
-          onSearchClick={() => navigate('/search')}
-          onNotificationsClick={() => navigate('/notifications')}
-        />
+
 
         {/* Page Content */}
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">

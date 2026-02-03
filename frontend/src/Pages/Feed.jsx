@@ -52,9 +52,9 @@ export default function Feed() {
 
   // Fetch notifications count
   const { data: notificationsData } = useQuery({
-    queryKey: ['notifications', user?.email],
+    queryKey: ['notifications-unread-count'],
     queryFn: () => apiClient.notifications.getUnreadCount(),
-    enabled: !!user?.email,
+    enabled: !!user,
   });
 
   const unreadNotifications = notificationsData?.count || 0;
@@ -123,13 +123,7 @@ export default function Feed() {
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Header */}
-        <Header
-          user={user}
-          unreadNotifications={unreadNotifications}
-          onMenuClick={() => { }}
-          onSearchClick={() => window.location.href = '/search'}
-          onNotificationsClick={() => window.location.href = '/notifications'}
-        />
+
 
         {/* Page Content */}
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">
