@@ -17,6 +17,9 @@ export default function Feed() {
   const queryClient = useQueryClient();
   const { ref, InView } = useInView();
 
+  // State for active feed tab
+  const [activeFeedTab, setActiveFeedTab] = React.useState('following');
+
   // Fetch posts with infinite scroll
   const {
     data,
@@ -25,8 +28,14 @@ export default function Feed() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['threads'],
-    queryFn: ({ pageParam }) => apiClient.threads.getFeed({ cursor: pageParam, limit: 10 }),
+    queryKey: ['threads', activeFeedTab],
+    queryFn: ({ pageParam }) => {
+      // Choose API endpoint based on active tab
+      if (activeFeedTab === 'trending') {
+        return apiClient.threads.getTrending({ cursor: pageParam, limit: 10 });
+      }
+      return apiClient.threads.getFeed({ cursor: pageParam, limit: 10 });
+    },
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => lastPage.pagination?.nextCursor,
   });
@@ -39,7 +48,7 @@ export default function Feed() {
   }, [InView, hasNextPage, fetchNextPage]);
 
   // Flatten pages into a single array of posts, filtering out any undefined/null items
-  const posts = data?.pages.flatMap((page) => page.data).filter(Boolean) || [];
+  const posts = data?.pages.flatMap((page) => page).filter(Boolean) || [];
 
   // Fetch notifications count
   const { data: notificationsData } = useQuery({
@@ -57,13 +66,13 @@ export default function Feed() {
     },
     onMutate: async (postToLike) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['threads'] });
+      await queryClient.cancelQueries({ queryKey: ['threads', activeFeedTab] });
 
       // Snapshot the previous value
-      const previousData = queryClient.getQueryData(['threads']);
+      const previousData = queryClient.getQueryData(['threads', activeFeedTab]);
 
       // Optimistically update the cache
-      queryClient.setQueryData(['threads'], (old) => {
+      queryClient.setQueryData(['threads', activeFeedTab], (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -89,11 +98,11 @@ export default function Feed() {
     onError: (err, postToLike, context) => {
       // Rollback on error
       if (context?.previousData) {
-        queryClient.setQueryData(['threads'], context.previousData);
+        queryClient.setQueryData(['threads', activeFeedTab], context.previousData);
       }
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['threads'] });
+      queryClient.invalidateQueries({ queryKey: ['threads', activeFeedTab] });
     },
   });
 
@@ -124,6 +133,34 @@ export default function Feed() {
 
         {/* Page Content */}
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">
+          {/* Feed Tabs */}
+          <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-700">
+            <button
+              onClick={() => setActiveFeedTab('following')}
+              className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeFeedTab === 'following'
+                ? 'text-indigo-600 dark:text-indigo-400'
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                }`}
+            >
+              Following
+              {activeFeedTab === 'following' && (
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-t-full" />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveFeedTab('trending')}
+              className={`pb-3 px-1 text-sm font-medium transition-colors relative ${activeFeedTab === 'trending'
+                ? 'text-indigo-600 dark:text-indigo-400'
+                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                }`}
+            >
+              Trending
+              {activeFeedTab === 'trending' && (
+                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-t-full" />
+              )}
+            </button>
+          </div>
+
           <FeedView
             posts={posts}
             isLoading={postsLoading}

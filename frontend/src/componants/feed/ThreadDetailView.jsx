@@ -113,6 +113,8 @@ export default function ThreadDetailView({
     }
   };
 
+
+
   const getCommentAuthor = (comment) => {
     const commentUser = comment.user || {};
     const profile = commentUser.profile || {};
@@ -127,6 +129,196 @@ export default function ThreadDetailView({
     };
   };
 
+  /* Comment Item Component */
+  const CommentItem = ({ comment, threadId, onReplySuccess }) => {
+    const [likesCount, setLikesCount] = useState(comment.likesCount || comment.likes_count || 0);
+    const [isLiked, setIsLiked] = useState(comment.isLiked || false);
+    const [isReplying, setIsReplying] = useState(false);
+    const [replyContent, setReplyContent] = useState('');
+    const [isSubmittingReply, setIsSubmittingReply] = useState(false);
+
+    const [showReplies, setShowReplies] = useState(false);
+    const [replies, setReplies] = useState([]);
+    const [isLoadingReplies, setIsLoadingReplies] = useState(false);
+    const [replyCount, setReplyCount] = useState(comment._count?.comments || 0);
+
+    const commentAuthor = getCommentAuthor(comment);
+    const commentTime = comment.createdAt || comment.created_date;
+
+    const handleLike = async () => {
+      // Optimistic update
+      const newIsLiked = !isLiked;
+      setIsLiked(newIsLiked);
+      setLikesCount(prev => newIsLiked ? prev + 1 : prev - 1);
+
+      try {
+        await api.reactions.toggle('comment', comment.id);
+      } catch (error) {
+        console.error('Failed to toggle like:', error);
+        // Revert on failure
+        setIsLiked(!newIsLiked);
+        setLikesCount(prev => newIsLiked ? prev - 1 : prev + 1);
+      }
+    };
+
+    const handleReplySubmit = async (e) => {
+      e.preventDefault();
+      if (!replyContent.trim() || isSubmittingReply) return;
+
+      setIsSubmittingReply(true);
+      try {
+        const response = await api.comments.create(threadId, {
+          content: replyContent.trim(),
+          parentId: comment.id
+        });
+
+        const newReply = response?.data || response;
+
+        // Add to local replies if showing, otherwise update count
+        if (showReplies) {
+          setReplies(prev => [...prev, newReply]);
+        }
+        setReplyCount(prev => prev + 1);
+
+        setReplyContent('');
+        setIsReplying(false);
+        if (!showReplies) fetchReplies(); // Auto-open replies if not open
+      } catch (error) {
+        console.error('Failed to reply:', error);
+      } finally {
+        setIsSubmittingReply(false);
+      }
+    };
+
+    const fetchReplies = async () => {
+      if (showReplies) {
+        setShowReplies(false);
+        return;
+      }
+
+      setIsLoadingReplies(true);
+      setShowReplies(true);
+      try {
+        const response = await api.comments.getReplies(comment.id);
+        const repliesData = response?.data || response || [];
+        setReplies(Array.isArray(repliesData) ? repliesData : []);
+      } catch (error) {
+        console.error('Failed to load replies:', error);
+      } finally {
+        setIsLoadingReplies(false);
+      }
+    };
+
+    return (
+      <div className={`rounded-2xl p-4 shadow-sm border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+        <div className="flex items-start gap-3">
+          <img
+            src={commentAuthor.avatar}
+            alt={commentAuthor.name}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+                {commentAuthor.name}
+              </span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                @{commentAuthor.username}
+              </span>
+              <span className={isDarkMode ? 'text-gray-600' : 'text-gray-400'}>·</span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                {commentTime
+                  ? formatDistanceToNow(new Date(commentTime), { addSuffix: true })
+                  : 'Just now'
+                }
+              </span>
+            </div>
+            <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
+              {comment.content}
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-4 mt-2">
+              <button
+                onClick={handleLike}
+                className={`flex items-center gap-1 text-sm transition-colors ${isLiked
+                  ? 'text-rose-500'
+                  : isDarkMode ? 'text-gray-500 hover:text-rose-400' : 'text-gray-500 hover:text-rose-500'
+                  }`}
+              >
+                <HeartIcon className="w-4 h-4" filled={isLiked} />
+                {likesCount > 0 && likesCount}
+              </button>
+
+              <button
+                onClick={() => setIsReplying(!isReplying)}
+                className={`flex items-center gap-1 text-sm transition-colors ${isDarkMode ? 'text-gray-500 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-500'
+                  }`}
+              >
+                <ChatBubbleIcon className="w-4 h-4" />
+                {t('reply') || 'Reply'}
+              </button>
+
+              {replyCount > 0 && (
+                <button
+                  onClick={fetchReplies}
+                  className={`text-sm font-medium ${isDarkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
+                >
+                  {showReplies
+                    ? (t('hideReplies') || 'Hide Replies')
+                    : `${t('viewReplies') || 'View'} ${replyCount} ${t('replies') || 'Replies'}`
+                  }
+                </button>
+              )}
+            </div>
+
+            {/* Reply Input */}
+            {isReplying && (
+              <form onSubmit={handleReplySubmit} className="mt-3 flex gap-2">
+                <input
+                  type="text"
+                  value={replyContent}
+                  onChange={(e) => setReplyContent(e.target.value)}
+                  placeholder={t('writeReply') || "Write a reply..."}
+                  autoFocus
+                  className={`flex-1 px-3 py-2 text-sm rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 ${isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'
+                    }`}
+                />
+                <button
+                  type="submit"
+                  disabled={!replyContent.trim() || isSubmittingReply}
+                  className="p-2 bg-indigo-600 text-white rounded-xl disabled:opacity-50"
+                >
+                  {isSubmittingReply ? <Loader2 className="w-4 h-4 animate-spin" /> : <SendIcon className="w-4 h-4" />}
+                </button>
+              </form>
+            )}
+
+            {/* Nested Replies */}
+            {showReplies && (
+              <div className="mt-3 space-y-3 pl-4 border-l-2 border-gray-200 dark:border-gray-700">
+                {isLoadingReplies ? (
+                  <div className="flex justify-center py-2">
+                    <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />
+                  </div>
+                ) : (
+                  replies.map(reply => (
+                    <CommentItem
+                      key={reply.id}
+                      comment={reply}
+                      threadId={threadId}
+                      onReplySuccess={() => { }}
+                    />
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (!post) return null;
 
   return (
@@ -136,8 +328,8 @@ export default function ThreadDetailView({
         <button
           onClick={onBack}
           className={`p-2 -ml-2 rounded-xl transition-colors ${isDarkMode
-              ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+            ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
             }`}
           aria-label="Go back"
         >
@@ -150,8 +342,8 @@ export default function ThreadDetailView({
 
       {/* Post Card */}
       <article className={`rounded-3xl p-6 shadow-lg border ${isDarkMode
-          ? 'bg-gray-800 border-gray-700'
-          : 'bg-white border-gray-100'
+        ? 'bg-gray-800 border-gray-700'
+        : 'bg-white border-gray-100'
         } mb-4`}>
         {/* Author Header */}
         <div
@@ -212,8 +404,8 @@ export default function ThreadDetailView({
                       key={index}
                       onClick={() => setCurrentMediaIndex(index)}
                       className={`w-2 h-2 rounded-full transition-all ${index === currentMediaIndex
-                          ? 'bg-white w-4'
-                          : 'bg-white/50 hover:bg-white/75'
+                        ? 'bg-white w-4'
+                        : 'bg-white/50 hover:bg-white/75'
                         }`}
                       aria-label={`View media ${index + 1}`}
                     />
@@ -250,8 +442,8 @@ export default function ThreadDetailView({
                     key={index}
                     onClick={() => setCurrentMediaIndex(index)}
                     className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 transition-all ${index === currentMediaIndex
-                        ? 'ring-2 ring-indigo-500'
-                        : 'opacity-60 hover:opacity-100'
+                      ? 'ring-2 ring-indigo-500'
+                      : 'opacity-60 hover:opacity-100'
                       }`}
                   >
                     <img
@@ -300,10 +492,10 @@ export default function ThreadDetailView({
           <button
             onClick={() => onLike?.(post)}
             className={`flex items-center gap-2 p-3 rounded-xl transition-all duration-300 ${isLiked
-                ? 'text-rose-500 bg-rose-500/10'
-                : isDarkMode
-                  ? 'text-gray-400 hover:text-rose-500 hover:bg-rose-500/10'
-                  : 'text-gray-500 hover:text-rose-500 hover:bg-rose-50'
+              ? 'text-rose-500 bg-rose-500/10'
+              : isDarkMode
+                ? 'text-gray-400 hover:text-rose-500 hover:bg-rose-500/10'
+                : 'text-gray-500 hover:text-rose-500 hover:bg-rose-50'
               }`}
             aria-label={isLiked ? 'Unlike' : 'Like'}
             aria-pressed={isLiked}
@@ -312,8 +504,8 @@ export default function ThreadDetailView({
           </button>
           <button
             className={`flex items-center gap-2 p-3 rounded-xl transition-all duration-300 ${isDarkMode
-                ? 'text-gray-400 hover:text-indigo-400 hover:bg-indigo-500/10'
-                : 'text-gray-500 hover:text-indigo-500 hover:bg-indigo-50'
+              ? 'text-gray-400 hover:text-indigo-400 hover:bg-indigo-500/10'
+              : 'text-gray-500 hover:text-indigo-500 hover:bg-indigo-50'
               }`}
             aria-label="Comment"
           >
@@ -321,8 +513,8 @@ export default function ThreadDetailView({
           </button>
           <button
             className={`flex items-center gap-2 p-3 rounded-xl transition-all duration-300 ${isDarkMode
-                ? 'text-gray-400 hover:text-green-400 hover:bg-green-500/10'
-                : 'text-gray-500 hover:text-green-500 hover:bg-green-50'
+              ? 'text-gray-400 hover:text-green-400 hover:bg-green-500/10'
+              : 'text-gray-500 hover:text-green-500 hover:bg-green-50'
               }`}
             aria-label="Share"
           >
@@ -331,10 +523,10 @@ export default function ThreadDetailView({
           <button
             onClick={() => setIsBookmarked(!isBookmarked)}
             className={`p-3 rounded-xl transition-all duration-300 ${isBookmarked
-                ? 'text-amber-500 bg-amber-500/10'
-                : isDarkMode
-                  ? 'text-gray-400 hover:text-amber-500 hover:bg-amber-500/10'
-                  : 'text-gray-500 hover:text-amber-500 hover:bg-amber-50'
+              ? 'text-amber-500 bg-amber-500/10'
+              : isDarkMode
+                ? 'text-gray-400 hover:text-amber-500 hover:bg-amber-500/10'
+                : 'text-gray-500 hover:text-amber-500 hover:bg-amber-50'
               }`}
             aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
             aria-pressed={isBookmarked}
@@ -363,8 +555,8 @@ export default function ThreadDetailView({
             onChange={(e) => setNewComment(e.target.value)}
             placeholder={t('writeComment') || 'Write a comment...'}
             className={`flex-1 px-4 py-2.5 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDarkMode
-                ? 'bg-gray-700 text-gray-200 placeholder-gray-500'
-                : 'bg-gray-100 text-gray-800 placeholder-gray-500'
+              ? 'bg-gray-700 text-gray-200 placeholder-gray-500'
+              : 'bg-gray-100 text-gray-800 placeholder-gray-500'
               }`}
           />
           <button
@@ -396,60 +588,13 @@ export default function ThreadDetailView({
             </p>
           </div>
         ) : (
-          comments.map((comment) => {
-            const commentAuthor = getCommentAuthor(comment);
-            const commentTime = comment.createdAt || comment.created_date;
-
-            return (
-              <div
-                key={comment.id}
-                className={`rounded-2xl p-4 shadow-sm border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
-                  }`}
-              >
-                <div className="flex items-start gap-3">
-                  <img
-                    src={commentAuthor.avatar}
-                    alt={commentAuthor.name}
-                    className="w-10 h-10 rounded-full object-cover"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                        {commentAuthor.name}
-                      </span>
-                      <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                        @{commentAuthor.username}
-                      </span>
-                      <span className={isDarkMode ? 'text-gray-600' : 'text-gray-400'}>·</span>
-                      <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                        {commentTime
-                          ? formatDistanceToNow(new Date(commentTime), { addSuffix: true })
-                          : 'Just now'
-                        }
-                      </span>
-                    </div>
-                    <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
-                      {comment.content}
-                    </p>
-                    <div className="flex items-center gap-4 mt-2">
-                      <button className={`text-sm transition-colors ${isDarkMode
-                          ? 'text-gray-500 hover:text-rose-400'
-                          : 'text-gray-500 hover:text-rose-500'
-                        }`}>
-                        ♡ {comment.likesCount || comment.likes_count || 0}
-                      </button>
-                      <button className={`text-sm transition-colors ${isDarkMode
-                          ? 'text-gray-500 hover:text-indigo-400'
-                          : 'text-gray-500 hover:text-indigo-500'
-                        }`}>
-                        {t('reply') || 'Reply'}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })
+          comments.map((comment) => (
+            <CommentItem
+              key={comment.id}
+              comment={comment}
+              threadId={post.id}
+            />
+          ))
         )}
       </div>
     </div>

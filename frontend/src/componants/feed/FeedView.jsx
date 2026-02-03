@@ -36,26 +36,7 @@ export default function FeedView({
   return (
     <div className="space-y-4">
       {/* Stories/Highlights Bar */}
-      <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-        {['Your Story', 'Tech', 'Design', 'Gaming', 'Travel', 'Music'].map((story, i) => (
-          <div key={story} className="flex flex-col items-center gap-2 flex-shrink-0">
-            <div className={`w-16 h-16 rounded-full p-0.5 ${i === 0 ? 'bg-gray-200' : 'bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500'}`}>
-              <div className="w-full h-full bg-white rounded-full p-0.5">
-                <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
-                  {i === 0 ? (
-                    <svg className="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                  ) : (
-                    <span className="text-2xl">{['✨', '🎨', '🎮', '✈️', '🎵'][i - 1]}</span>
-                  )}
-                </div>
-              </div>
-            </div>
-            <span className="text-xs text-gray-600 font-medium">{story}</span>
-          </div>
-        ))}
-      </div>
+
 
       {/* Posts */}
       {posts && posts.length > 0 ? (

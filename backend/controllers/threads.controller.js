@@ -432,6 +432,172 @@ export const getMostLikedAccountsThreads = asyncHandler(async (req, res) => {
     );
 })
 
+/**
+ * Get trending threads (most liked in the last week)
+ * 
+ * Fetches threads created in the last 7 days, sorted by reaction count.
+ * 
+ * @route   GET /api/threads/trending
+ * @access  Private
+ */
+export const getTrendingThreads = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+
+    // Parse pagination parameters
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const cursorParam = req.query.cursor;
+
+    // Decode cursor if provided
+    let cursorData = null;
+    if (cursorParam) {
+        try {
+            const decodedCursor = Buffer.from(cursorParam, 'base64').toString('utf-8');
+            cursorData = JSON.parse(decodedCursor);
+
+            // Validate cursor structure
+            if (!cursorData.id || cursorData.reactionCount === undefined) {
+                return errorResponse(res, 'Invalid cursor format', 400);
+            }
+        } catch (error) {
+            return errorResponse(res, 'Invalid cursor encoding', 400);
+        }
+    }
+
+    // Filter threads from the last 7 days
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+    // Build where clause
+    const whereClause = {
+        createdAt: {
+            gte: oneWeekAgo
+        },
+        likesCount: {
+            gte: 10
+        }
+    };
+
+    // Add cursor pagination condition
+    if (cursorData) {
+        whereClause.OR = [
+            {
+                reactions: {
+                    _count: {
+                        lt: cursorData.reactionCount
+                    }
+                }
+            },
+            {
+                AND: [
+                    {
+                        reactions: {
+                            _count: {
+                                equals: cursorData.reactionCount
+                            }
+                        }
+                    },
+                    {
+                        id: {
+                            lt: cursorData.id
+                        }
+                    }
+                ]
+            }
+        ];
+    }
+
+    // Fetch threads
+    const threads = await prisma.thread.findMany({
+        where: whereClause,
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    type: true,
+                    profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            photoUrl: true,
+                        }
+                    }
+                },
+            },
+            media: {
+                select: {
+                    id: true,
+                    type: true,
+                    url: true
+                }
+            },
+            _count: {
+                select: {
+                    reactions: true,
+                    comments: true
+                }
+            }
+        },
+        orderBy: [
+            {
+                reactions: {
+                    _count: 'desc'
+                }
+            },
+            { id: 'desc' }
+        ],
+        take: limit + 1
+    });
+
+    // Check if user has liked these threads
+    const threadIds = threads.map(t => t.id);
+    const userReactions = await prisma.reaction.findMany({
+        where: {
+            userId,
+            threadId: { in: threadIds }
+        },
+        select: { threadId: true }
+    });
+    const likedThreadIds = new Set(userReactions.map(r => r.threadId));
+
+    // Determine if there are more results
+    const hasMore = threads.length > limit;
+    const returnThreads = hasMore ? threads.slice(0, limit) : threads;
+
+    // Format threads
+    const formattedThreads = returnThreads.map(thread => ({
+        ...thread,
+        likesCount: thread._count.reactions || 0,
+        commentsCount: thread._count.comments || 0,
+        isLiked: likedThreadIds.has(thread.id),
+        _count: undefined
+    }));
+
+    // Generate next cursor
+    let nextCursor = null;
+    if (hasMore) {
+        const lastThread = returnThreads[returnThreads.length - 1];
+        const cursorObj = {
+            id: lastThread.id,
+            reactionCount: lastThread._count.reactions
+        };
+        nextCursor = Buffer.from(JSON.stringify(cursorObj)).toString('base64');
+    }
+
+    logger.info('Trending threads fetched', {
+        userId,
+        count: formattedThreads.length,
+        hasMore
+    });
+
+    return cursorPaginatedResponse(
+        res,
+        formattedThreads,
+        { nextCursor, limit },
+        'Trending threads fetched successfully'
+    );
+});
+
 // Search threads by content
 export const searchThreads = asyncHandler(async (req, res) => {
     const userId = req.user.userId;

@@ -50,6 +50,14 @@ export const register = asyncHandler(async (req, res) => {
     if (trimmedFirstName.length === 0 || trimmedLastName.length === 0) {
         return errorResponse(res, 'First name and last name cannot be empty', 400);
     }
+    if (trimmedFirstName.length > 100 || trimmedLastName.length > 100) {
+        return errorResponse(res, 'First name and last name cannot exceed 100 characters', 400);
+    }
+
+    // Validate email length
+    if (email.length > 100) {
+        return errorResponse(res, 'Email cannot exceed 100 characters', 400);
+    }
 
     // Check if user already exists
     const existingUser = await checkUserExists(trimmedUsername, email.toLowerCase());

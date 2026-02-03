@@ -697,3 +697,21 @@ Error: write EPIPE
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
 }
+2026-02-03 14:26:29 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/user/follow/6",
+  "status": 500,
+  "duration": "214ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Linux; Android 13; SM-G981B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Mobile Safari/537.36"
+}
+2026-02-03 14:26:39 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/user/follow/6",
+  "status": 500,
+  "duration": "15ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}

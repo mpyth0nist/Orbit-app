@@ -7,7 +7,7 @@
  * @module controllers/user.controller
  */
 
-import { prisma, selectUser, selectPublicUser, selectThreadWithUser } from '../utils/prisma.js';
+import { prisma, selectUser, selectPublicUser, selectUserProfile, selectThreadWithUser } from '../utils/prisma.js';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { logger, logDatabaseError } from '../utils/logger.js';
 import {
@@ -94,7 +94,7 @@ export const getUser = asyncHandler(async (req, res) => {
 
     const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: selectPublicUser
+        select: selectUserProfile
     });
 
     if (!user) {
@@ -243,8 +243,10 @@ export const follow = asyncHandler(async (req, res) => {
         where: {
             followerId_followedId: {
                 followerId,
-                followedId
-            }
+                followedId,
+
+            },
+            status: { in: ['PENDING', 'ACCEPTED'] }
         }
     });
 
@@ -409,7 +411,7 @@ export const updateRequest = asyncHandler(async (req, res) => {
 
     const newStatus = isAccepted ? 'ACCEPTED' : 'REFUSED';
 
-    await prisma.follow.update({
+    const updatedFollowRequest = await prisma.follow.update({
         where: {
             followerId_followedId: {
                 followerId,
@@ -418,6 +420,7 @@ export const updateRequest = asyncHandler(async (req, res) => {
         },
         data: { status: newStatus }
     });
+
 
     // Handle notifications based on acceptance
     if (isAccepted) {
@@ -430,7 +433,7 @@ export const updateRequest = asyncHandler(async (req, res) => {
         });
 
         // Create ACCEPTED_FOLLOW notification for the follower
-        await createFollowNotification(followedId, followerId, 'ACCEPTED_FOLLOW');
+        await createFollowNotification(followerId, followedId, 'ACCEPTED_FOLLOW');
     } else {
         // Delete FOLLOW_REQUEST notification on rejection
         await deleteNotification({
@@ -439,6 +442,17 @@ export const updateRequest = asyncHandler(async (req, res) => {
             type: 'FOLLOW_REQUEST',
             entityType: 'USER'
         });
+
+        await prisma.follow.delete({
+            where: {
+                followerId_followedId: {
+                    followerId,
+                    followedId
+                }
+            }
+        });
+
+
     }
 
     logger.info('Follow request updated', {

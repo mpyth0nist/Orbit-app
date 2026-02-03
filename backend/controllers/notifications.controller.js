@@ -99,9 +99,34 @@ export const getMyNotifications = asyncHandler(async (req, res) => {
     // Extract valid notifications
     const validNotifications = returnNotifications; // We already sliced if needed
 
+    // Aggregate LIKE notifications
+    const aggregatedNotifications = [];
+    const likeMap = new Map(); // Key: entityType_entityId -> index in aggregatedNotifications
+
+    for (const notif of validNotifications) {
+        if (notif.type === 'LIKE' && notif.entityType === 'THREAD') {
+            const key = `${notif.entityType}_${notif.entityId}`;
+            if (likeMap.has(key)) {
+                const existingIndex = likeMap.get(key);
+                aggregatedNotifications[existingIndex].aggregatedCount = (aggregatedNotifications[existingIndex].aggregatedCount || 1) + 1;
+                // Keep the isRead status of the newest one (the one already in the list), 
+                // or optionally force to unread if any in the group are unread.
+                // For now, simpler to stick with the newest one's status or logical OR.
+                if (!notif.isRead) aggregatedNotifications[existingIndex].isRead = false;
+            } else {
+                // Clone to avoid mutating original if needed (though not strictly necessary here)
+                const newEntry = { ...notif, aggregatedCount: 1 };
+                aggregatedNotifications.push(newEntry);
+                likeMap.set(key, aggregatedNotifications.length - 1);
+            }
+        } else {
+            aggregatedNotifications.push(notif);
+        }
+    }
+
     // Enrich notifications with follow status for FOLLOW_REQUESTs
     // 1. Identify follow requests
-    const followRequests = validNotifications.filter(n => n.type === 'FOLLOW_REQUEST');
+    const followRequests = aggregatedNotifications.filter(n => n.type === 'FOLLOW_REQUEST');
 
     // 2. Fetch follow statuses
     let followStatuses = {};
@@ -126,13 +151,10 @@ export const getMyNotifications = asyncHandler(async (req, res) => {
     }
 
     // Format notifications to include entity info and request status
-    const formattedNotifications = validNotifications.map(notif => {
+    const formattedNotifications = aggregatedNotifications.map(notif => {
         let additionalData = {};
 
         if (notif.type === 'FOLLOW_REQUEST') {
-            // If check found a status, use it. If not found, it implies no relationship exists (maybe unfollowed/cancelled), 
-            // but for safety we can default to 'PENDING' or handle specifically. 
-            // Prisma enum for status is ACCEPTED, REFUSED, PENDING.
             const status = followStatuses[notif.actorId];
             additionalData.requestStatus = status || 'PENDING';
         }
@@ -143,6 +165,7 @@ export const getMyNotifications = asyncHandler(async (req, res) => {
             isRead: notif.isRead,
             createdAt: notif.createdAt,
             actor: notif.actor,
+            aggregatedCount: notif.aggregatedCount, // Pass this to frontend
             entity: notif.entityId ? {
                 id: notif.entityId,
                 type: notif.entityType
@@ -154,7 +177,8 @@ export const getMyNotifications = asyncHandler(async (req, res) => {
     logger.info('Notifications retrieved', {
         userId,
         filter,
-        count: returnNotifications.length,
+        count: formattedNotifications.length, // Log the aggregated count
+        originalCount: returnNotifications.length,
         hasMore
     });
 

@@ -81,6 +81,20 @@ export const selectPublicUser = {
 };
 
 /**
+ * Select object for full user profile including stats
+ */
+export const selectUserProfile = {
+    ...selectPublicUser,
+    _count: {
+        select: {
+            followers: { where: { status: 'ACCEPTED' } },
+            following: { where: { status: 'ACCEPTED' } },
+            threads: true
+        }
+    }
+};
+
+/**
  * Select object for thread with user info
  */
 export const selectThreadWithUser = {

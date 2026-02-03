@@ -8,9 +8,11 @@
  */
 
 import express from 'express';
+// ... (imports remain the same)
 import {
     getFeed,
     getMostLikedAccountsThreads,
+    getTrendingThreads,
     searchThreads,
     getThreadById,
     createThread,
@@ -38,6 +40,14 @@ const router = express.Router();
  * @example GET /api/threads/feed?page=1&limit=20
  */
 router.get('/feed', protect, getFeed);
+
+/**
+ * @route   GET /api/threads/trending
+ * @desc    Get trending threads (most liked in last 7 days)
+ * @access  Private
+ */
+router.get('/trending', protect, getTrendingThreads);
+
 
 /**
  * @route   GET /api/threads/most-liked

@@ -98,6 +98,10 @@ const handlePrismaError = (err, res) => {
         'P2016': {
             status: 400,
             message: 'Query interpretation error'
+        },
+        'P2000': {
+            status: 400,
+            message: 'Input value too long for column'
         }
     };
 
@@ -112,7 +116,8 @@ const handlePrismaError = (err, res) => {
         error: process.env.NODE_ENV === 'development' ? {
             code: err.code,
             meta: err.meta,
-            details: err.message
+            details: err.message,
+            stack: err.stack
         } : undefined
     });
 };

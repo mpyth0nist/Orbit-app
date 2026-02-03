@@ -33,7 +33,13 @@ const getNotificationBg = (type, isDarkMode) => {
 };
 
 // Get notification message based on type
-const getNotificationMessage = (type, t) => {
+const getNotificationMessage = (notification, t) => {
+  const { type, aggregatedCount } = notification;
+
+  if (type === 'LIKE' && aggregatedCount && aggregatedCount > 1) {
+    return `${t('and') || 'and'} ${aggregatedCount - 1} ${t('others liked your post') || 'others liked your post'}`;
+  }
+
   const messages = {
     LIKE: t('likedYourPost') || 'liked your post',
     COMMENT: t('commentedOnYourPost') || 'commented on your post',
@@ -43,6 +49,8 @@ const getNotificationMessage = (type, t) => {
   };
   return messages[type] || 'interacted with you';
 };
+
+
 
 // Map filter to notification type
 const getFilterType = (filter) => {
@@ -153,7 +161,7 @@ export default function NotificationsView() {
   const unreadCount = unreadData?.count || 0;
 
   // Handle notification click
-  const handleNotificationClick = (notification) => {
+  const handleNotificationClick = async (notification) => {
     // Prevent clicking if it's a pending follow request (interactions are handled by buttons)
     if (notification.type === 'FOLLOW_REQUEST') return;
 
@@ -167,8 +175,17 @@ export default function NotificationsView() {
       if (notification.entity.type === 'THREAD') {
         navigate(`/thread/${notification.entity.id}`);
       } else if (notification.entity.type === 'COMMENT') {
-        // Navigate to thread containing the comment
-        navigate(`/thread/${notification.entity.id}`);
+        try {
+          // Fetch comment to get thread ID
+          const comment = await api.comments.getById(notification.entity.id);
+          if (comment && comment.threadId) {
+            navigate(`/thread/${comment.threadId}`);
+          } else {
+            console.error('Thread ID not found in comment details');
+          }
+        } catch (error) {
+          console.error('Failed to fetch comment details for navigation:', error);
+        }
       } else if (notification.entity.type === 'USER') {
         navigate(`/user/${notification.entity.id}`);
       }
@@ -294,7 +311,7 @@ export default function NotificationsView() {
                 <p className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>
                   <span className="font-semibold">{getActorName(notification.actor)}</span>{' '}
                   <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
-                    {getNotificationMessage(notification.type, t)}
+                    {getNotificationMessage(notification, t)}
                   </span>
                 </p>
                 <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'

@@ -46,7 +46,13 @@ apiClient.interceptors.response.use(
     // Backend returns {success: true, data: {...}, message: '...'} format
     // Extract the data field if it exists, otherwise return the whole response
     if (response.data && typeof response.data === 'object' && 'success' in response.data) {
-      return response.data.data || response.data;
+      const data = response.data.data;
+      // If pagination info exists and data is an array, attach pagination to it
+      // so we don't lose the cursor metadata while still returning the array
+      if (response.data.pagination && Array.isArray(data)) {
+        data.pagination = response.data.pagination;
+      }
+      return data || response.data;
     }
     return response.data;
   },
@@ -67,9 +73,13 @@ export const threadsAPI = {
   getFeed: ({ cursor, limit = 20 } = {}) =>
     apiClient.get(`/threads/feed`, { params: { cursor, limit } }),
 
-  // Get most liked/recommended
+  // Get most liked/recommended (accounts)
   getMostLiked: ({ cursor, limit = 20 } = {}) =>
     apiClient.get(`/threads/most-liked`, { params: { cursor, limit } }),
+
+  // Get trending threads (most liked in last 7 days)
+  getTrending: ({ cursor, limit = 20 } = {}) =>
+    apiClient.get(`/threads/trending`, { params: { cursor, limit } }),
 
   // Search threads
   search: ({ q, cursor, limit = 20 }) =>
