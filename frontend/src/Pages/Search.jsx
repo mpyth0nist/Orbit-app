@@ -14,29 +14,20 @@ export default function Search() {
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
 
-  // Fetch posts for search
-  const { data: posts = [] } = useQuery({
-    queryKey: ['posts'],
-    queryFn: () => [], // TODO: Replace with api.posts.getAll() when endpoint is ready
-  });
+  // Note: SearchView component handles its own search queries
 
   // Fetch notifications count
   const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications', user?.email],
-    queryFn: () => api.notifications.getUserNotifications(user?.email),
-    enabled: !!user?.email,
+    queryKey: ['notifications'],
+    queryFn: () => api.notifications.getUserNotifications(),
+    enabled: !!user,
   });
 
   // Like post mutation
   const likePostMutation = useMutation({
     mutationFn: async (post) => {
-      const isLiked = post.liked_by?.includes(user?.email);
-      
-      if (isLiked) {
-        return api.posts.unlike(post.id, user?.email);
-      } else {
-        return api.posts.like(post.id, user?.email);
-      }
+      // Use reactions toggle API
+      return api.reactions.toggle('thread', post.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
@@ -50,16 +41,14 @@ export default function Search() {
   const unreadNotifications = notifications?.length || 0;
 
   return (
-    <div className={`min-h-screen ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
-    }`}>
-      {/* Desktop Sidebar */}
-      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${
-        isDarkMode ? 'border-gray-700' : 'border-gray-100'
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
       }`}>
+      {/* Desktop Sidebar */}
+      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-100'
+        }`}>
         <Sidebar
           activeTab="search"
-          setActiveTab={() => {}}
+          setActiveTab={() => { }}
           unreadNotifications={unreadNotifications}
           user={user}
         />
@@ -71,8 +60,8 @@ export default function Search() {
         <Header
           user={user}
           unreadNotifications={unreadNotifications}
-          onMenuClick={() => {}}
-          onSearchClick={() => {}}
+          onMenuClick={() => { }}
+          onSearchClick={() => { }}
           onNotificationsClick={() => window.location.href = '/notifications'}
         />
 
@@ -89,7 +78,7 @@ export default function Search() {
       {/* Mobile Navigation */}
       <MobileNav
         activeTab="search"
-        setActiveTab={() => {}}
+        setActiveTab={() => { }}
         unreadNotifications={unreadNotifications}
       />
     </div>

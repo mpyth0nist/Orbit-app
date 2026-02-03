@@ -1,134 +1,108 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeftIcon, PhotoIcon, SparklesIcon, XMarkIcon, GlobeIcon, MediaIcon } from '../ui/Icons';
+import { ArrowLeftIcon, PhotoIcon, XMarkIcon, GlobeIcon } from '../ui/Icons';
 import api from '../../api/apiClient';
 import { Loader2 } from 'lucide-react';
 
 export default function CreatePostView({ onBack, onPost, user }) {
   const [content, setContent] = useState('');
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
-  const [mediaFiles, setMediaFiles] = useState([]);
-  const [isEnhancing, setIsEnhancing] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
   const [isPosting, setIsPosting] = useState(false);
+  const [error, setError] = useState('');
   const fileInputRef = useRef(null);
-  const mediaInputRef = useRef(null);
 
-  const handleImageSelect = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
+  const MAX_CONTENT_LENGTH = 500;
+  const MAX_FILES = 4;
+
+  const handleFileSelect = (e) => {
+    const selectedFiles = Array.from(e.target.files || []);
+
+    if (files.length + selectedFiles.length > MAX_FILES) {
+      setError(`Maximum ${MAX_FILES} files allowed`);
+      return;
+    }
+
+    // Validate file types - backend accepts images and videos
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'video/mp4', 'video/quicktime'];
+    const invalidFiles = selectedFiles.filter(file => !validTypes.includes(file.type));
+
+    if (invalidFiles.length > 0) {
+      setError('Only images (JPG, PNG, GIF, WebP) and videos (MP4, MOV) are allowed');
+      return;
+    }
+
+    setError('');
+    setFiles(prev => [...prev, ...selectedFiles]);
+
+    // Create previews
+    selectedFiles.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result);
+        setPreviews(prev => [...prev, {
+          url: reader.result,
+          type: file.type.startsWith('image/') ? 'image' : 'video',
+          name: file.name
+        }]);
       };
       reader.readAsDataURL(file);
-    }
+    });
   };
 
-  const removeImage = () => {
-    setImagePreview(null);
-    setImageFile(null);
+  const removeFile = (index) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviews(prev => prev.filter((_, i) => i !== index));
+    setError('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
   };
 
-  const handleMediaSelect = (e) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 0) {
-      setMediaFiles(prev => [...prev, ...files]);
+  const handlePost = async (e) => {
+    e.preventDefault();
+
+    if (!content.trim()) {
+      setError('Content is required');
+      return;
     }
-  };
 
-  const removeMediaFile = (index) => {
-    setMediaFiles(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const getFileIcon = (file) => {
-    if (file.type.startsWith('image/')) {
-      return <PhotoIcon className="w-5 h-5" />;
-    } else if (file.type.startsWith('video/')) {
-      return <div className="w-5 h-5 bg-red-500 rounded flex items-center justify-center text-white text-xs font-bold">▶</div>;
-    } else {
-      return <MediaIcon className="w-5 h-5" />;
+    if (content.trim().length > MAX_CONTENT_LENGTH) {
+      setError(`Content must be ${MAX_CONTENT_LENGTH} characters or less`);
+      return;
     }
-  };
 
-  const getFileName = (file) => {
-    const name = file.name;
-    if (name.length > 20) {
-      return name.substring(0, 17) + '...';
-    }
-    return name;
-  };
-
-  /*const handleEnhanceWithAI = async () => {
-    if (!content.trim()) return;
-    
-    setIsEnhancing(true);
-    try {
-      const result = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are a social media expert. Enhance the following post to make it more engaging, add relevant emojis, and improve readability while keeping the original message. Keep it concise (max 280 chars). 
-
-Original post: "${content}"
-
-Return only the enhanced post text, nothing else.`,
-      });
-      
-      if (result) {
-        setContent(typeof result === 'string' ? result : result.enhanced_post || content);
-      }
-    } catch (error) {
-      console.error('AI enhancement failed:', error);
-    } finally {
-      setIsEnhancing(false);
-    }
-  };*/
-
-  const handlePost = async () => {
-    if (!content.trim()) return;
-    
     setIsPosting(true);
+    setError('');
+
     try {
-      let imageUrl = null;
-      let uploadedFiles = [];
-      
-      // Upload main image if exists
-      if (imageFile) {
-        const uploadResult = await api.files.upload(imageFile);
-        imageUrl = uploadResult.file_url;
-      }
+      const formData = new FormData();
+      formData.append('content', content.trim());
 
-      // Upload additional media files
-      for (const file of mediaFiles) {
-        const uploadResult = await api.files.upload(file);
-        uploadedFiles.push({
-          name: file.name,
-          type: file.type,
-          url: uploadResult.file_url
-        });
-      }
-
-      await onPost({
-        content: content.trim(),
-        image_url: imageUrl,
-        media_files: uploadedFiles,
+      // Backend expects 'media' field name (multer config: .array('media', 4))
+      files.forEach(file => {
+        formData.append('media', file);
       });
 
+      await api.threads.create(formData);
+
+      // Cleanup
       setContent('');
-      setImagePreview(null);
-      setImageFile(null);
-      setMediaFiles([]);
-      onBack?.();
+      setFiles([]);
+      setPreviews([]);
+
+      if (onPost) {
+        onPost();
+      }
+
     } catch (error) {
       console.error('Failed to post:', error);
+      setError(error.response?.data?.message || 'Failed to create post. Please try again.');
     } finally {
       setIsPosting(false);
     }
   };
 
   const charCount = content.length;
-  const maxChars = 500;
+  const maxChars = MAX_CONTENT_LENGTH;
   const charPercentage = (charCount / maxChars) * 100;
 
   return (
@@ -170,41 +144,44 @@ Return only the enhanced post text, nothing else.`,
           placeholder="What's on your mind?"
           className="w-full min-h-[150px] resize-none text-lg text-gray-800 placeholder-gray-400 focus:outline-none"
           maxLength={maxChars}
+          disabled={isPosting}
         />
 
-        {/* Image Preview */}
-        {imagePreview && (
-          <div className="relative mt-4 rounded-2xl overflow-hidden">
-            <img src={imagePreview} alt="Preview" className="w-full max-h-80 object-cover" />
-            <button
-              onClick={removeImage}
-              className="absolute top-3 right-3 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
-            >
-              <XMarkIcon className="w-5 h-5" />
-            </button>
+        {/* Media Preview Grid */}
+        {previews.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 gap-3 animate-[fadeIn_0.3s_ease]">
+            {previews.map((preview, index) => (
+              <div key={index} className="relative aspect-square bg-gray-100 rounded-2xl overflow-hidden group">
+                {preview.type === 'image' ? (
+                  <img
+                    src={preview.url}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <video
+                    src={preview.url}
+                    controls
+                    className="w-full h-full object-cover"
+                  />
+                )}
+                <button
+                  onClick={() => removeFile(index)}
+                  className="absolute top-2 right-2 p-1.5 bg-black/50 backdrop-blur-sm text-white rounded-full hover:bg-black/70 transition-colors"
+                  disabled={isPosting}
+                  type="button"
+                >
+                  <XMarkIcon className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Media Files Preview */}
-        {mediaFiles.length > 0 && (
-          <div className="mt-4 space-y-2">
-            <div className="flex flex-wrap gap-2">
-              {mediaFiles.map((file, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  {getFileIcon(file)}
-                  <span className="text-sm text-gray-700">{getFileName(file)}</span>
-                  <button
-                    onClick={() => removeMediaFile(index)}
-                    className="text-gray-500 hover:text-red-500 transition-colors"
-                  >
-                    <XMarkIcon className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
+        {/* Error Message */}
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm animate-[shake_0.4s_ease]">
+            {error}
           </div>
         )}
 
@@ -214,44 +191,26 @@ Return only the enhanced post text, nothing else.`,
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
-              onChange={handleImageSelect}
-              className="hidden"
-            />
-            <input
-              ref={mediaInputRef}
-              type="file"
-              accept="image/*,video/*,.pdf,.doc,.docx,.txt,.zip"
+              accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/quicktime"
               multiple
-              onChange={handleMediaSelect}
+              onChange={handleFileSelect}
               className="hidden"
+              disabled={isPosting || files.length >= MAX_FILES}
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="p-2.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
-              title="Add image"
+              className="p-2.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              title={`Add media (${files.length}/${MAX_FILES})`}
+              disabled={isPosting || files.length >= MAX_FILES}
+              type="button"
             >
               <PhotoIcon className="w-6 h-6" />
             </button>
-            <button
-              onClick={() => mediaInputRef.current?.click()}
-              className="p-2.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors"
-              title="Add media (images, videos, files)"
-            >
-              <MediaIcon className="w-6 h-6" />
-            </button>
-            {/* <button
-              onClick={handleEnhanceWithAI}
-              disabled={!content.trim() || isEnhancing}
-              className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isEnhancing ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <SparklesIcon className="w-5 h-5" />
-              )}
-              <span className="hidden sm:inline">Enhance with AI</span>
-            </button> */}
+            {files.length > 0 && (
+              <span className="text-sm text-gray-500 ml-1">
+                {files.length}/{MAX_FILES} files
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-3">
@@ -287,6 +246,7 @@ Return only the enhanced post text, nothing else.`,
             <button
               onClick={handlePost}
               disabled={!content.trim() || isPosting}
+              type="submit"
               className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {isPosting && <Loader2 className="w-4 h-4 animate-spin" />}

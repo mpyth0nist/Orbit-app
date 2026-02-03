@@ -149,6 +149,12 @@ export const getFeed = asyncHandler(async (req, res) => {
                     type: true,
                     url: true
                 }
+            },
+            _count: {
+                select: {
+                    reactions: true,
+                    comments: true
+                }
             }
         },
         orderBy: [
@@ -161,6 +167,30 @@ export const getFeed = asyncHandler(async (req, res) => {
     // Determine if there are more results
     const hasMore = threads.length > limit;
     const returnThreads = hasMore ? threads.slice(0, limit) : threads;
+
+    // Get thread IDs to check which ones the user has liked
+    const threadIds = returnThreads.map(t => t.id);
+
+    // Fetch user's reactions for these threads
+    const userReactions = await prisma.reaction.findMany({
+        where: {
+            userId,
+            threadId: { in: threadIds }
+        },
+        select: { threadId: true }
+    });
+
+    // Create a Set for quick lookup
+    const likedThreadIds = new Set(userReactions.map(r => r.threadId));
+
+    // Format threads with isLiked and counts
+    const formattedThreads = returnThreads.map(thread => ({
+        ...thread,
+        likesCount: thread._count.reactions,
+        commentsCount: thread._count.comments,
+        isLiked: likedThreadIds.has(thread.id),
+        _count: undefined // Remove _count from response
+    }));
 
     // Generate next cursor if there are more results
     let nextCursor = null;
@@ -175,14 +205,14 @@ export const getFeed = asyncHandler(async (req, res) => {
 
     logger.info('Feed fetched', {
         userId,
-        threadsCount: returnThreads.length,
+        threadsCount: formattedThreads.length,
         hasMore,
         followingCount: followedUserIds.length
     });
 
-    cursorPaginatedResponse(
+    return cursorPaginatedResponse(
         res,
-        returnThreads,
+        formattedThreads,
         { nextCursor, limit },
         'Feed fetched successfully'
     );
@@ -405,7 +435,12 @@ export const getMostLikedAccountsThreads = asyncHandler(async (req, res) => {
 // Search threads by content
 export const searchThreads = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
-    const searchQuery = req.query.q;
+    const searchQuery = req.query.q?.trim();
+
+    // Validate search query
+    if (!searchQuery || searchQuery.length < 2) {
+        return errorResponse(res, 'Search query must be at least 2 characters', 400);
+    }
 
     // Parse pagination parameters
     const limit = Math.min(parseInt(req.query.limit) || 20, 100);
@@ -420,16 +455,10 @@ export const searchThreads = asyncHandler(async (req, res) => {
 
             // Validate cursor structure
             if (!cursorData.id || !cursorData.createdAt) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Invalid cursor format'
-                });
+                return errorResponse(res, 'Invalid cursor format', 400);
             }
         } catch (error) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid cursor encoding'
-            });
+            return errorResponse(res, 'Invalid cursor encoding', 400);
         }
     }
 
@@ -514,7 +543,7 @@ export const searchThreads = asyncHandler(async (req, res) => {
         hasMore
     });
 
-    cursorPaginatedResponse(
+    return cursorPaginatedResponse(
         res,
         returnThreads,
         { nextCursor, limit },
@@ -522,90 +551,163 @@ export const searchThreads = asyncHandler(async (req, res) => {
     );
 });
 
+/**
+ * Get a single thread by ID
+ * 
+ * Fetches a specific thread with user info, media, and like status.
+ * 
+ * @route   GET /api/threads/:id
+ * @access  Private
+ * 
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * 
+ * @returns {Object} Thread data with user, media, and engagement info
+ */
+export const getThreadById = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+    const threadId = parseInt(req.params.id);
+
+    if (isNaN(threadId)) {
+        return errorResponse(res, 'Invalid thread ID', 400);
+    }
+
+    const thread = await prisma.thread.findUnique({
+        where: { id: threadId },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    username: true,
+                    type: true,
+                    profile: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                            photoUrl: true
+                        }
+                    }
+                }
+            },
+            media: {
+                select: {
+                    id: true,
+                    type: true,
+                    url: true
+                }
+            },
+            _count: {
+                select: {
+                    reactions: true,
+                    comments: true
+                }
+            }
+        }
+    });
+
+    if (!thread) {
+        return errorResponse(res, 'Thread not found', 404);
+    }
+
+    // Check if thread owner's account is private and user doesn't have access
+    if (thread.user.type === 'PRIVATE' && thread.userId !== userId) {
+        const isFollowing = await prisma.follow.findFirst({
+            where: {
+                followerId: userId,
+                followedId: thread.userId,
+                status: 'ACCEPTED'
+            }
+        });
+
+        if (!isFollowing) {
+            return errorResponse(res, 'This thread is from a private account', 403);
+        }
+    }
+
+    // Check if the current user has liked this thread
+    const userReaction = await prisma.reaction.findFirst({
+        where: {
+            userId,
+            threadId
+        }
+    });
+
+    // Format response
+    const formattedThread = {
+        ...thread,
+        likesCount: thread._count.reactions,
+        commentsCount: thread._count.comments,
+        isLiked: !!userReaction
+    };
+
+    delete formattedThread._count;
+
+    logger.info('Thread fetched', { threadId, userId });
+
+    return successResponse(res, formattedThread, 'Thread fetched successfully');
+});
+
 // Threads basic CRUD.
 
 
 export const createThread = asyncHandler(async (req, res) => {
-
     const userId = req.user.userId;
+    // content is in req.body
+    const { content } = req.body;
 
-    const { content, media } = req.body;
+    // Check for uploaded files
+    const files = req.files || [];
+
+    // Debug logging
+    logger.info('CreateThread request', {
+        userId,
+        contentLength: content?.length,
+        filesCount: files.length,
+        files: files.map(f => ({ originalname: f.originalname, mimetype: f.mimetype, size: f.size }))
+    });
 
     // Validate content
     if (!content || content.trim().length === 0) {
-        return res.status(400).json({ message: 'Content is required' });
+        // If files were uploaded but content is missing, we should probably delete the files
+        // But for now let's just return error
+        return errorResponse(res, 'Content is required', 400);
     }
 
-    // Sanitize content to prevent XSS attacks
+    // Sanitize content
     const trimmedContent = validator.escape(content.trim());
     if (trimmedContent.length > 500) {
-        return res.status(400).json({ message: 'Content must be 500 characters or less' });
+        return errorResponse(res, 'Content must be 500 characters or less', 400);
     }
 
-    if (media && (!media.url || !media.type || !media.size)) {
-        return res.status(400).json({ message: 'Invalid media format' });
-    }
-
-    if (!!media) {
-
-        const fullThread = await prisma.$transaction(async (tx) => {
-
-
-            const thread = await tx.thread.create({
-                data: {
-                    userId,
-                    content: trimmedContent,
-                }
-            })
-
-            const threadMedia = await tx.media.create({
-                data: {
-                    userId,
-                    threadId: thread.id,
-                    url: media.url,
-                    size: media.size,
-                    type: media.type
-                }
-            })
-
-            return await tx.thread.findUnique({
-                where: {
-                    id: thread.id
-                },
-                include: {
-                    user: {
-                        select: {
-                            id: true,
-                            username: true,
-                            profile: {
-                                select: {
-                                    firstName: true,
-                                    lastName: true,
-                                    photoUrl: true
-                                }
-                            }
-                        }
-                    },
-                    media: {
-                        select: {
-                            id: true,
-                            type: true,
-                            url: true
-                        }
-                    }
-                }
-            })
-        })
-
-        logger.info('Thread created with media', { userId, threadId: fullThread.id });
-        return createdResponse(res, fullThread, 'Thread created successfully');
-    } else {
-
-        const thread = await prisma.thread.create({
+    const fullThread = await prisma.$transaction(async (tx) => {
+        // 1. Create the thread
+        const thread = await tx.thread.create({
             data: {
                 userId,
-                content: trimmedContent
-            },
+                content: trimmedContent,
+            }
+        });
+
+        // 2. Create media records if files exist
+        if (files.length > 0) {
+            const mediaData = files.map(file => ({
+                userId,
+                threadId: thread.id,
+                // Construct URL based on where upload middleware saves them
+                // Assuming uploads are served from /uploads/threads/
+                url: `/uploads/threads/${file.filename}`,
+                size: file.size,
+                type: file.mimetype.startsWith('image/') ? 'IMAGE' : 'VIDEO'
+            }));
+
+            await tx.media.createMany({
+                data: mediaData
+            });
+        }
+
+        // 3. Return the full thread with user and media
+        return await tx.thread.findUnique({
+            where: { id: thread.id },
             include: {
                 user: {
                     select: {
@@ -619,16 +721,21 @@ export const createThread = asyncHandler(async (req, res) => {
                             }
                         }
                     }
+                },
+                media: {
+                    select: {
+                        id: true,
+                        type: true,
+                        url: true
+                    }
                 }
             }
-        })
+        });
+    });
 
-
-        logger.info('Thread created', { userId, threadId: thread.id });
-
-        return createdResponse(res, thread, 'Thread created successfully');
-    }
-})
+    logger.info('Thread created successfully', { userId, threadId: fullThread.id, mediaCount: files.length });
+    return createdResponse(res, fullThread, 'Thread created successfully');
+});
 
 export const updateThread = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
@@ -668,6 +775,21 @@ export const updateThread = asyncHandler(async (req, res) => {
 
     // Case 1: Adding media to thread
     if (!!media) {
+        // Validate media object
+        if (!media.url || typeof media.url !== 'string') {
+            return errorResponse(res, 'Invalid media URL', 400);
+        }
+        if (!media.type || !['IMAGE', 'VIDEO'].includes(media.type)) {
+            return errorResponse(res, 'Invalid media type. Must be IMAGE or VIDEO', 400);
+        }
+        if (!media.size || typeof media.size !== 'number' || media.size <= 0) {
+            return errorResponse(res, 'Invalid media size', 400);
+        }
+        // Validate URL format (basic check for internal uploads)
+        if (!media.url.startsWith('/uploads/')) {
+            return errorResponse(res, 'Invalid media URL format', 400);
+        }
+
         const mediaUrl = media.url;
         const size = media.size;
         const type = media.type;

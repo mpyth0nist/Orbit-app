@@ -20,16 +20,10 @@ export const getMyNotifications = asyncHandler(async (req, res) => {
             cursorData = JSON.parse(decodedCursor);
 
             if (!cursorData.id || !cursorData.createdAt) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Invalid cursor format'
-                });
+                return errorResponse(res, 'Invalid cursor format', 400);
             }
         } catch (error) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid cursor encoding'
-            });
+            return errorResponse(res, 'Invalid cursor encoding', 400);
         }
     }
 
@@ -102,18 +96,60 @@ export const getMyNotifications = asyncHandler(async (req, res) => {
         nextCursor = Buffer.from(JSON.stringify(cursorObj)).toString('base64');
     }
 
-    // Format notifications to include entity info
-    const formattedNotifications = returnNotifications.map(notif => ({
-        id: notif.id,
-        type: notif.type,
-        isRead: notif.isRead,
-        createdAt: notif.createdAt,
-        actor: notif.actor,
-        entity: notif.entityId ? {
-            id: notif.entityId,
-            type: notif.entityType
-        } : null
-    }));
+    // Extract valid notifications
+    const validNotifications = returnNotifications; // We already sliced if needed
+
+    // Enrich notifications with follow status for FOLLOW_REQUESTs
+    // 1. Identify follow requests
+    const followRequests = validNotifications.filter(n => n.type === 'FOLLOW_REQUEST');
+
+    // 2. Fetch follow statuses
+    let followStatuses = {};
+    if (followRequests.length > 0) {
+        const followerIds = followRequests.map(n => n.actorId);
+
+        const follows = await prisma.follow.findMany({
+            where: {
+                followerId: { in: followerIds },
+                followedId: userId
+            },
+            select: {
+                followerId: true,
+                status: true
+            }
+        });
+
+        // Map followerId -> status
+        follows.forEach(f => {
+            followStatuses[f.followerId] = f.status;
+        });
+    }
+
+    // Format notifications to include entity info and request status
+    const formattedNotifications = validNotifications.map(notif => {
+        let additionalData = {};
+
+        if (notif.type === 'FOLLOW_REQUEST') {
+            // If check found a status, use it. If not found, it implies no relationship exists (maybe unfollowed/cancelled), 
+            // but for safety we can default to 'PENDING' or handle specifically. 
+            // Prisma enum for status is ACCEPTED, REFUSED, PENDING.
+            const status = followStatuses[notif.actorId];
+            additionalData.requestStatus = status || 'PENDING';
+        }
+
+        return {
+            id: notif.id,
+            type: notif.type,
+            isRead: notif.isRead,
+            createdAt: notif.createdAt,
+            actor: notif.actor,
+            entity: notif.entityId ? {
+                id: notif.entityId,
+                type: notif.entityType
+            } : null,
+            ...additionalData
+        };
+    });
 
     logger.info('Notifications retrieved', {
         userId,
@@ -122,7 +158,7 @@ export const getMyNotifications = asyncHandler(async (req, res) => {
         hasMore
     });
 
-    cursorPaginatedResponse(
+    return cursorPaginatedResponse(
         res,
         formattedNotifications,
         { nextCursor, limit },
@@ -143,7 +179,7 @@ export const getUnreadCount = asyncHandler(async (req, res) => {
 
     logger.info('Unread notification count retrieved', { userId, count });
 
-    successResponse(
+    return successResponse(
         res,
         { count },
         'Unread count retrieved successfully'
@@ -159,6 +195,11 @@ export const markAsRead = asyncHandler(async (req, res) => {
     // Validate notificationId
     if (isNaN(notificationId)) {
         return errorResponse(res, 'Invalid notification ID', 400);
+    }
+
+    // Validate isRead field
+    if (typeof isRead !== 'boolean') {
+        return errorResponse(res, 'isRead must be a boolean value', 400);
     }
 
     // Check if notification exists and belongs to user
@@ -201,7 +242,7 @@ export const markAsRead = asyncHandler(async (req, res) => {
         isRead
     });
 
-    successResponse(
+    return successResponse(
         res,
         updatedNotification,
         isRead ? 'Notification marked as read' : 'Notification marked as unread'
@@ -227,7 +268,7 @@ export const markAllAsRead = asyncHandler(async (req, res) => {
         count: result.count
     });
 
-    successResponse(
+    return successResponse(
         res,
         { count: result.count },
         result.count === 0
@@ -266,7 +307,7 @@ export const deleteNotification = asyncHandler(async (req, res) => {
 
     logger.info('Notification deleted', { notificationId, userId });
 
-    deletedResponse(res, 'Notification deleted successfully');
+    return deletedResponse(res, 'Notification deleted successfully');
 });
 
 // Delete all read notifications
@@ -286,7 +327,7 @@ export const deleteAllRead = asyncHandler(async (req, res) => {
         count: result.count
     });
 
-    successResponse(
+    return successResponse(
         res,
         { count: result.count },
         result.count === 0

@@ -35,8 +35,10 @@ const port = process.env.PORT || 3000;
 // Security Middleware
 // ============================================================================
 
-// Helmet - Security headers
-app.use(helmet());
+// Helmet - Security headers with cross-origin resource policy disabled for static files
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 
 // CORS - Configure allowed origins
 const allowedOrigins = process.env.CORS_ORIGIN
@@ -100,10 +102,13 @@ app.use('/api/threads/:threadId/comments', commentRoutes);  // Thread comments
 app.use('/api/comments', commentRoutes);  // Comment operations
 
 // ============================================================================
-// Static Files - Serve uploaded media
+// Static Files - Serve uploaded media with CORS headers
 // ============================================================================
 
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', (req, res, next) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+}, express.static('uploads'));
 
 // ============================================================================
 // Error Handling

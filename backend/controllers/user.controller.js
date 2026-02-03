@@ -45,8 +45,7 @@ export const getMyInfo = asyncHandler(async (req, res) => {
         firstName: user.profile?.firstName,
         lastName: user.profile?.lastName,
         bio: user.profile?.bio,
-        photoUrl: user.profile?.photoUrl,
-        gender: user.profile?.gender
+        photoUrl: user.profile?.photoUrl
     }, 'User information retrieved successfully');
 });
 
@@ -213,6 +212,7 @@ export const getFollowed = asyncHandler(async (req, res) => {
 export const follow = asyncHandler(async (req, res) => {
     const followedId = Number(req.params.followed);
     const followerId = req.user.userId;
+    console.log(followerId, followedId);
 
     // Validation
     if (!followedId || isNaN(followedId)) {
@@ -304,6 +304,20 @@ export const unfollow = asyncHandler(async (req, res) => {
         return errorResponse(res, 'Invalid user ID', 400);
     }
 
+    // Check if follow relationship exists
+    const existingFollow = await prisma.follow.findUnique({
+        where: {
+            followerId_followedId: {
+                followerId,
+                followedId
+            }
+        }
+    });
+
+    if (!existingFollow) {
+        return errorResponse(res, 'You are not following this user', 400);
+    }
+
     await prisma.follow.delete({
         where: {
             followerId_followedId: {
@@ -344,6 +358,20 @@ export const removeFollower = asyncHandler(async (req, res) => {
     // Validation
     if (!followerId || isNaN(followerId)) {
         return errorResponse(res, 'Invalid user ID', 400);
+    }
+
+    // Check if follow relationship exists
+    const existingFollow = await prisma.follow.findUnique({
+        where: {
+            followerId_followedId: {
+                followerId,
+                followedId
+            }
+        }
+    });
+
+    if (!existingFollow) {
+        return errorResponse(res, 'This user is not following you', 400);
     }
 
     await prisma.follow.delete({
@@ -463,20 +491,120 @@ export const getMyThreads = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @desc    Get posts that the current user has liked
+ * @route   GET /api/user/likes
+ * @access  Private
+ */
+export const getMyLikedPosts = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+
+    // Pagination support
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const [likedPosts, totalCount] = await Promise.all([
+        prisma.reaction.findMany({
+            where: {
+                userId,
+                threadId: { not: null }
+            },
+            select: {
+                id: true,
+                createdAt: true,
+                thread: {
+                    select: selectThreadWithUser
+                }
+            },
+            skip,
+            take: limit,
+            orderBy: { createdAt: 'desc' }
+        }),
+        prisma.reaction.count({
+            where: {
+                userId,
+                threadId: { not: null }
+            }
+        })
+    ]);
+
+    // Extract threads from reactions
+    const threads = likedPosts.map(r => r.thread).filter(Boolean);
+
+    logger.info('User liked posts retrieved', { userId, totalCount });
+
+    return paginatedResponse(
+        res,
+        threads,
+        { page, limit, total: totalCount },
+        `Retrieved ${threads.length} liked posts`
+    );
+});
+
+/**
+ * @desc    Get media files uploaded by the current user
+ * @route   GET /api/user/media
+ * @access  Private
+ */
+export const getMyMedia = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+
+    // Pagination support
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const [media, totalCount] = await Promise.all([
+        prisma.media.findMany({
+            where: {
+                userId,
+                threadId: { not: null } // Only media attached to threads
+            },
+            select: {
+                id: true,
+                url: true,
+                type: true,
+                uploadedAt: true,
+                thread: {
+                    select: selectThreadWithUser
+                }
+            },
+            skip,
+            take: limit,
+            orderBy: { uploadedAt: 'desc' }
+        }),
+        prisma.media.count({
+            where: {
+                userId,
+                threadId: { not: null }
+            }
+        })
+    ]);
+
+    logger.info('User media retrieved', { userId, totalCount });
+
+    return paginatedResponse(
+        res,
+        media,
+        { page, limit, total: totalCount },
+        `Retrieved ${media.length} media files`
+    );
+});
+
+/**
  * @desc    Update user profile
  * @route   PATCH /api/user/profile
  * @access  Private
  */
 export const updateProfile = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
-    const { firstName, lastName, bio, gender } = req.body;
+    const { firstName, lastName, bio } = req.body;
 
     // Build update data object with only provided fields
     const updateData = {};
     if (firstName !== undefined) updateData.firstName = firstName;
     if (lastName !== undefined) updateData.lastName = lastName;
     if (bio !== undefined) updateData.bio = bio;
-    if (gender !== undefined) updateData.gender = gender;
 
     const updatedProfile = await prisma.profile.update({
         where: { userId },
@@ -696,7 +824,7 @@ export const getUserStats = asyncHandler(async (req, res) => {
  */
 export const checkRelationship = asyncHandler(async (req, res) => {
     const currentUserId = req.user.userId;
-    const targetUserId = Number(req.params.id);
+    const targetUserId = Number(req.params.userId);
 
     if (!targetUserId || isNaN(targetUserId)) {
         return errorResponse(res, 'Invalid user ID', 400);
@@ -775,4 +903,93 @@ export const getUserByUsername = asyncHandler(async (req, res) => {
     logger.info('User retrieved by username', { username, userId: user.id });
 
     return successResponse(res, { user }, 'User retrieved successfully');
+});
+
+/**
+ * @desc    Get a user's threads (with privacy check)
+ * @route   GET /api/user/:userId/threads
+ * @access  Private
+ */
+export const getUserThreads = asyncHandler(async (req, res) => {
+    const targetUserId = Number(req.params.userId);
+    const currentUserId = req.user.userId;
+
+    // Validation
+    if (!targetUserId || isNaN(targetUserId)) {
+        return errorResponse(res, 'Invalid user ID', 400);
+    }
+
+    // Get target user to check account type
+    const targetUser = await prisma.user.findUnique({
+        where: { id: targetUserId },
+        select: {
+            id: true,
+            username: true,
+            type: true
+        }
+    });
+
+    if (!targetUser) {
+        return errorResponse(res, 'User not found', 404);
+    }
+
+    // Check if current user can view threads
+    let canViewThreads = false;
+
+    // User can always view their own threads
+    if (currentUserId === targetUserId) {
+        canViewThreads = true;
+    }
+    // Public accounts are visible to everyone
+    else if (targetUser.type === 'PUBLIC') {
+        canViewThreads = true;
+    }
+    // For private accounts, check if following
+    else {
+        const followStatus = await prisma.follow.findUnique({
+            where: {
+                followerId_followedId: {
+                    followerId: currentUserId,
+                    followedId: targetUserId
+                }
+            },
+            select: { status: true }
+        });
+        canViewThreads = followStatus?.status === 'ACCEPTED';
+    }
+
+    if (!canViewThreads) {
+        return errorResponse(res, 'This account is private', 403);
+    }
+
+    // Pagination
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 20, 50);
+    const skip = (page - 1) * limit;
+
+    const [threads, totalCount] = await Promise.all([
+        prisma.thread.findMany({
+            where: { userId: targetUserId },
+            select: selectThreadWithUser,
+            skip,
+            take: limit,
+            orderBy: { createdAt: 'desc' }
+        }),
+        prisma.thread.count({
+            where: { userId: targetUserId }
+        })
+    ]);
+
+    logger.info('User threads retrieved', {
+        currentUserId,
+        targetUserId,
+        threadsCount: threads.length
+    });
+
+    return paginatedResponse(
+        res,
+        threads,
+        { page, limit, total: totalCount },
+        `Retrieved ${threads.length} threads`
+    );
 });

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import apiClient from '../api/apiClient';
@@ -10,6 +11,7 @@ import Header from '../componants/layout/Header';
 import MobileNav from '../componants/layout/MobileNav';
 
 export default function Feed() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
@@ -36,8 +38,8 @@ export default function Feed() {
     }
   }, [InView, hasNextPage, fetchNextPage]);
 
-  // Flatten pages into a single array of posts
-  const posts = data?.pages.flatMap((page) => page.data) || [];
+  // Flatten pages into a single array of posts, filtering out any undefined/null items
+  const posts = data?.pages.flatMap((page) => page.data).filter(Boolean) || [];
 
   // Fetch notifications count
   const { data: notificationsData } = useQuery({
@@ -46,23 +48,56 @@ export default function Feed() {
     enabled: !!user?.email,
   });
 
-  const unreadNotifications = notificationsData?.count || 0; // Adjust based on backend response
+  const unreadNotifications = notificationsData?.count || 0;
 
-  // Like post mutation
+  // Like post mutation with optimistic update
   const likePostMutation = useMutation({
     mutationFn: async (post) => {
-      // Optimistic update logic handles UI immediately, this is just the API call
       return apiClient.reactions.toggle('thread', post.id);
     },
-    onSuccess: () => {
+    onMutate: async (postToLike) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['threads'] });
+
+      // Snapshot the previous value
+      const previousData = queryClient.getQueryData(['threads']);
+
+      // Optimistically update the cache
+      queryClient.setQueryData(['threads'], (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map(page => ({
+            ...page,
+            data: page.data.map(post =>
+              post.id === postToLike.id
+                ? {
+                  ...post,
+                  isLiked: !post.isLiked,
+                  likesCount: post.isLiked
+                    ? (post.likesCount || 1) - 1
+                    : (post.likesCount || 0) + 1,
+                }
+                : post
+            ),
+          })),
+        };
+      });
+
+      return { previousData };
+    },
+    onError: (err, postToLike, context) => {
+      // Rollback on error
+      if (context?.previousData) {
+        queryClient.setQueryData(['threads'], context.previousData);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
   });
 
-  const handlePostClick = (post) => {
-    // Navigate to thread detail
-    window.location.href = `/thread/${post.id}`;
-  };
+  const handlePostClick = (post) => navigate(`/thread/${post.id}`);
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'}`}>

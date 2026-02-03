@@ -55,8 +55,7 @@ export const selectUser = {
             firstName: true,
             lastName: true,
             bio: true,
-            photoUrl: true,
-            gender: true
+            photoUrl: true
         }
     }
     // passwordHash is explicitly NOT included
@@ -75,8 +74,7 @@ export const selectPublicUser = {
             firstName: true,
             lastName: true,
             bio: true,
-            photoUrl: true,
-            gender: true
+            photoUrl: true
         }
     }
     // email and passwordHash are NOT included

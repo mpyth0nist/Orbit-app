@@ -12,6 +12,7 @@ import {
     getFeed,
     getMostLikedAccountsThreads,
     searchThreads,
+    getThreadById,
     createThread,
     updateThread,
     deleteThread
@@ -36,7 +37,7 @@ const router = express.Router();
  * 
  * @example GET /api/threads/feed?page=1&limit=20
  */
-router.get('/feed', protect, validatePagination, getFeed);
+router.get('/feed', protect, getFeed);
 
 /**
  * @route   GET /api/threads/most-liked
@@ -59,17 +60,34 @@ router.get('/most-liked', protect, getMostLikedAccountsThreads);
  */
 router.get('/search', protect, validateSearchThreads, searchThreads);
 
+import {
+    uploadThreadMedia,
+    handleUploadError
+} from '../middleware/upload.js';
+
+/**
+ * @route   GET /api/threads/:id
+ * @desc    Get a single thread by ID
+ * @access  Private
+ * @param   id - Thread ID
+ */
+router.get('/:id', protect, validateIdParam, getThreadById);
+
 /**
  * @route   POST /api/threads
  * @desc    Create a new thread with optional media attachments
  * @access  Private
- * @body    content - Thread content (1-500 characters, required)
- * @body    mediaUrls - Array of media URLs (optional, max 4)
- * 
- * @example POST /api/threads
- * Body: { "content": "Hello world!", "mediaUrls": ["https://example.com/image.jpg"] }
+ * @body    content - Thread content (required)
+ * @body    media - Media files (optional, max 4)
  */
-router.post('/', protect, validateCreateThread, createThread);
+router.post(
+    '/',
+    protect,
+    uploadThreadMedia,
+    handleUploadError,
+    validateCreateThread,
+    createThread
+);
 
 /**
  * @route   PATCH /api/threads/:id

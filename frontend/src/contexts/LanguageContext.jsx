@@ -40,33 +40,46 @@ export const LanguageProvider = ({ children }) => {
       createPost: 'Create Post',
       thread: 'Thread',
       home: 'Home',
-      
+
       // Settings page
       language: 'Language',
       languageDesc: 'English (US)',
       manageAccount: 'Manage your account preferences',
       editProfile: 'Edit Profile',
+      editProfileDesc: 'Update your name, bio, and photo',
       privacy: 'Privacy',
+      privacyDesc: 'Manage who can see your content',
       security: 'Security',
+      securityDesc: 'Password, two-factor authentication',
       darkMode: 'Dark Mode',
       darkModeDesc: 'Switch between light and dark themes',
       helpCenter: 'Help Center',
+      helpCenterDesc: 'Get help with your account',
       sendFeedback: 'Send Feedback',
+      sendFeedbackDesc: 'Help us improve the app',
       termsOfService: 'Terms of Service',
       privacyPolicy: 'Privacy Policy',
       logout: 'Log Out',
-      
+      logoutDesc: 'Sign out of your account',
+      confirmLogout: 'Confirm Logout',
+      confirmLogoutMessage: 'Are you sure you want to log out of your account?',
+      account: 'Account',
+      preferences: 'Preferences',
+      support: 'Support',
+      dangerZone: 'Danger Zone',
+      notificationsDesc: 'Push, email, and in-app notifications',
+
       // General
       login: 'Login',
       register: 'Register',
-      
+
       // Feed page
       whatOnYourMind: "What's on your mind?",
       post: 'Post',
       shareYourThoughts: 'Share your thoughts with the community',
       noPostsYet: 'No posts yet',
       startConversation: 'Start a conversation',
-      
+
       // Search page
       searchPlaceholder: 'Search for posts, users, or communities...',
       recentSearches: 'Recent Searches',
@@ -74,36 +87,51 @@ export const LanguageProvider = ({ children }) => {
       suggestedUsers: 'Suggested Users',
       clear: 'Clear',
       searchResults: 'Search Results',
-      
+
       // Profile page
       posts: 'Posts',
       followers: 'Followers',
       following: 'Following',
       joinDate: 'Joined',
-      editProfile: 'Edit Profile',
       noPosts: 'No posts yet',
       noPostsMessage: 'Start sharing your journey with the community',
       defaultBio: '✨ Digital creator & tech enthusiast\n🌍 Exploring the world one pixel at a time\n💡 Building amazing things',
-      
+
       // Create post
       createNewPost: 'Create New Post',
       writeSomething: 'Write something interesting...',
-      
+
       // Notifications
       allNotifications: 'All Notifications',
       mentions: 'Mentions',
       likes: 'Likes',
-      comment: 'Comment',
-      follow: 'Follow',
+      comments: 'Comments',
+      follows: 'Follows',
       unread: 'unread',
       markAllAsRead: 'Mark all as read',
-      
+      noNotifications: 'No notifications yet',
+      noNotificationsMessage: "When someone interacts with you, you'll see it here",
+      likedYourPost: 'liked your post',
+      commentedOnYourPost: 'commented on your post',
+      startedFollowingYou: 'started following you',
+      requestedToFollowYou: 'requested to follow you',
+      acceptedYourFollowRequest: 'accepted your follow request',
+      accept: 'Accept',
+      decline: 'Decline',
+      requestAccepted: 'Request Accepted',
+      requestDeclined: 'Request Declined',
+      accept: 'Accept',
+      decline: 'Decline',
+      requestAccepted: 'Request Accepted',
+      requestDeclined: 'Request Declined',
+
       // Communities
       discoverCommunities: 'Discover Communities',
       yourCommunities: 'Your Communities',
       all: 'All',
-      
+
       // Actions
+      editProfile: 'Edit Profile',
       edit: 'Edit',
       save: 'Save',
       cancel: 'Cancel',
@@ -117,19 +145,19 @@ export const LanguageProvider = ({ children }) => {
       comment: 'Comment',
       share: 'Share',
       delete: 'Delete',
-      
+
       // Messages
       loading: 'Loading...',
       error: 'Error',
       success: 'Success',
       noResults: 'No results found',
-      
+
       // Time
       now: 'Now',
       minutesAgo: 'minutes ago',
       hoursAgo: 'hours ago',
       daysAgo: 'days ago',
-      
+
       // Auth
       fullName: 'Full Name',
       email: 'Email',
@@ -148,33 +176,46 @@ export const LanguageProvider = ({ children }) => {
       createPost: 'Créer une publication',
       thread: 'Fil de discussion',
       home: 'Accueil',
-      
+
       // Settings page
       language: 'Langue',
       languageDesc: 'Français',
       manageAccount: 'Gérez les préférences de votre compte',
       editProfile: 'Modifier le profil',
+      editProfileDesc: 'Mettre à jour votre nom, bio et photo',
       privacy: 'Confidentialité',
+      privacyDesc: 'Gérer qui peut voir votre contenu',
       security: 'Sécurité',
+      securityDesc: 'Mot de passe, authentification à deux facteurs',
       darkMode: 'Mode Sombre',
       darkModeDesc: 'Basculer entre les thèmes clair et sombre',
       helpCenter: 'Centre d\'aide',
+      helpCenterDesc: 'Obtenez de l\'aide avec votre compte',
       sendFeedback: 'Envoyer des commentaires',
+      sendFeedbackDesc: 'Aidez-nous à améliorer l\'application',
       termsOfService: 'Conditions d\'utilisation',
       privacyPolicy: 'Politique de confidentialité',
       logout: 'Déconnexion',
-      
+      logoutDesc: 'Se déconnecter de votre compte',
+      confirmLogout: 'Confirmer la déconnexion',
+      confirmLogoutMessage: 'Êtes-vous sûr de vouloir vous déconnecter de votre compte?',
+      account: 'Compte',
+      preferences: 'Préférences',
+      support: 'Support',
+      dangerZone: 'Zone de Danger',
+      notificationsDesc: 'Notifications push, email et dans l\'application',
+
       // General
       login: 'Connexion',
       register: 'S\'inscrire',
-      
+
       // Feed page
       whatOnYourMind: "Qu'est-ce qui vous préoccupe ?",
       post: 'Publier',
       shareYourThoughts: 'Partagez vos pensées avec la communauté',
       noPostsYet: 'Aucune publication pour le moment',
       startConversation: 'Commencez une conversation',
-      
+
       // Search page
       searchPlaceholder: 'Rechercher des publications, des utilisateurs ou des communautés...',
       recentSearches: 'Recherches récentes',
@@ -182,36 +223,47 @@ export const LanguageProvider = ({ children }) => {
       suggestedUsers: 'Utilisateurs suggérés',
       clear: 'Effacer',
       searchResults: 'Résultats de recherche',
-      
+
       // Profile page
       posts: 'Publications',
       followers: 'Abonnés',
       following: 'Abonnements',
       joinDate: 'Inscrit',
-      editProfile: 'Modifier le profil',
       noPosts: 'Aucune publication pour le moment',
       noPostsMessage: 'Commencez à partager votre parcours avec la communauté',
       defaultBio: '✨ Créateur numérique et passionné de technologie\n🌍 Explorer le monde pixel par pixel\n💡 Construire des choses incroyables',
-      
+
       // Create post
       createNewPost: 'Créer une nouvelle publication',
       writeSomething: 'Écrivez quelque chose d\'intéressant...',
-      
+
       // Notifications
       allNotifications: 'Toutes les notifications',
       mentions: 'Mentions',
       likes: 'J\'aime',
-      comment: 'Commenter',
-      follow: 'Suivre',
+      comments: 'Commentaires',
+      follows: 'Abonnements',
       unread: 'non lu',
       markAllAsRead: 'Marquer tout comme lu',
-      
+      noNotifications: 'Pas encore de notifications',
+      noNotificationsMessage: 'Quand quelqu\'un interagit avec vous, vous le verrez ici',
+      likedYourPost: 'a aimé votre publication',
+      commentedOnYourPost: 'a commenté votre publication',
+      startedFollowingYou: 'a commencé à vous suivre',
+      requestedToFollowYou: 'a demandé à vous suivre',
+      acceptedYourFollowRequest: 'a accepté votre demande de suivi',
+      accept: 'Accepter',
+      decline: 'Refuser',
+      requestAccepted: 'Demande acceptée',
+      requestDeclined: 'Demande refusée',
+
       // Communities
       discoverCommunities: 'Découvrir les communautés',
       yourCommunities: 'Vos communautés',
       all: 'Tous',
-      
+
       // Actions
+      editProfile: 'Modifier le profil',
       edit: 'Modifier',
       save: 'Enregistrer',
       cancel: 'Annuler',
@@ -225,19 +277,19 @@ export const LanguageProvider = ({ children }) => {
       comment: 'Commenter',
       share: 'Partager',
       delete: 'Supprimer',
-      
+
       // Messages
       loading: 'Chargement...',
       error: 'Erreur',
       success: 'Succès',
       noResults: 'Aucun résultat trouvé',
-      
+
       // Time
       now: 'Maintenant',
       minutesAgo: 'il y a minutes',
       hoursAgo: 'il y a heures',
       daysAgo: 'il y a jours',
-      
+
       // Auth
       fullName: 'Nom complet',
       email: 'Email',
@@ -256,33 +308,46 @@ export const LanguageProvider = ({ children }) => {
       createPost: 'إنشاء منشور',
       thread: 'المحادثة',
       home: 'الرئيسية',
-      
+
       // Settings page
       language: 'اللغة',
       languageDesc: 'العربية',
       manageAccount: 'إدارة تفضيلات حسابك',
       editProfile: 'تعديل الملف الشخصي',
+      editProfileDesc: 'تحديث اسمك، سيرتك الذاتية وصورتك',
       privacy: 'الخصوصية',
+      privacyDesc: 'إدارة من يمكنه رؤية محتواك',
       security: 'الأمان',
+      securityDesc: 'كلمة المرور، المصادقة الثنائية',
       darkMode: 'الوضع الليلي',
       darkModeDesc: 'التبديل بين الثيمات الفاتحة والداكنة',
       helpCenter: 'مركز المساعدة',
+      helpCenterDesc: 'احصل على المساعدة مع حسابك',
       sendFeedback: 'إرسال ملاحظات',
+      sendFeedbackDesc: 'ساعدنا في تحسين التطبيق',
       termsOfService: 'شروط الخدمة',
       privacyPolicy: 'سياسة الخصوصية',
       logout: 'تسجيل الخروج',
-      
+      logoutDesc: 'تسجيل الخروج من حسابك',
+      confirmLogout: 'تأكيد تسجيل الخروج',
+      confirmLogoutMessage: 'هل أنت متأكد أنك تريد تسجيل الخروج من حسابك؟',
+      account: 'الحساب',
+      preferences: 'التفضيلات',
+      support: 'الدعم',
+      dangerZone: 'منطقة الخطر',
+      notificationsDesc: 'إشعارات الدفع والبريد الإلكتروني والتطبيق',
+
       // General
       login: 'تسجيل الدخول',
       register: 'إنشاء حساب',
-      
+
       // Feed page
       whatOnYourMind: 'ما الذي يدور في ذهنك؟',
       post: 'نشر',
       shareYourThoughts: 'شارك أفكارك مع المجتمع',
       noPostsYet: 'لا توجد منشورات بعد',
       startConversation: 'ابدأ محادثة',
-      
+
       // Search page
       searchPlaceholder: 'البحث عن منشورات أو مستخدمين أو مجتمعات...',
       recentSearches: 'عمليات البحث الأخيرة',
@@ -290,36 +355,47 @@ export const LanguageProvider = ({ children }) => {
       suggestedUsers: 'المستخدمون المقترحون',
       clear: 'مسح',
       searchResults: 'نتائج البحث',
-      
+
       // Profile page
       posts: 'المنشورات',
       followers: 'المتابعون',
       following: 'المتابَعون',
       joinDate: 'انضم في',
-      editProfile: 'تعديل الملف الشخصي',
       noPosts: 'لا توجد منشورات بعد',
       noPostsMessage: 'ابدأ مشاركة رحلتك مع المجتمع',
       defaultBio: '✨ منشئ رقمي ومتحمس للتكنولوجيا\n🌍 استكشاف العالم بكسل بكسل\n💡 بناء أشياء مذهلة',
-      
+
       // Create post
       createNewPost: 'إنشاء منشور جديد',
       writeSomething: 'اكتب شيئاً مثيراً للاهتمام...',
-      
+
       // Notifications
       allNotifications: 'جميع الإشعارات',
       mentions: 'الإشارات',
       likes: 'الإعجابات',
-      comment: 'تعليق',
-      follow: 'متابعة',
+      comments: 'التعليقات',
+      follows: 'المتابعات',
       unread: 'غير مقروء',
       markAllAsRead: 'تعيين الكل كمقروء',
-      
+      noNotifications: 'لا توجد إشعارات بعد',
+      noNotificationsMessage: 'عندما يتفاعل معك شخص ما، ستراه هنا',
+      likedYourPost: 'أعجب بمنشورك',
+      commentedOnYourPost: 'علق على منشورك',
+      startedFollowingYou: 'بدأ بمتابعتك',
+      requestedToFollowYou: 'طلب متابعتك',
+      acceptedYourFollowRequest: 'قبل طلب المتابعة الخاص بك',
+      accept: 'قبول',
+      decline: 'رفض',
+      requestAccepted: 'تم قبول الطلب',
+      requestDeclined: 'تم رفض الطلب',
+
       // Communities
       discoverCommunities: 'اكتشاف المجتمعات',
       yourCommunities: 'مجتمعاتك',
       all: 'الكل',
-      
+
       // Actions
+      editProfile: 'تعديل الملف الشخصي',
       edit: 'تعديل',
       save: 'حفظ',
       cancel: 'إلغاء',
@@ -333,19 +409,19 @@ export const LanguageProvider = ({ children }) => {
       comment: 'تعليق',
       share: 'مشاركة',
       delete: 'حذف',
-      
+
       // Messages
       loading: 'جاري التحميل...',
       error: 'خطأ',
       success: 'نجح',
       noResults: 'لم يتم العثور على نتائج',
-      
+
       // Time
       now: 'الآن',
       minutesAgo: 'دقائق مضت',
       hoursAgo: 'ساعات مضت',
       daysAgo: 'أيام مضت',
-      
+
       // Auth
       fullName: 'الاسم الكامل',
       email: 'البريد الإلكتروني',
@@ -358,7 +434,7 @@ export const LanguageProvider = ({ children }) => {
   useEffect(() => {
     // Save language to localStorage
     localStorage.setItem('language', language);
-    
+
     // Update document language attribute for accessibility
     if (language === 'french') {
       document.documentElement.lang = 'fr';

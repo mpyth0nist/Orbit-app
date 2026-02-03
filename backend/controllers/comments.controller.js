@@ -51,6 +51,11 @@ export const createComment = asyncHandler(async (req, res) => {
         }
     }
 
+    // Validate content exists
+    if (!content || typeof content !== 'string' || content.trim().length === 0) {
+        return errorResponse(res, 'Content is required', 400);
+    }
+
     // Sanitize content
     const sanitizedContent = validator.escape(content.trim());
 
@@ -139,16 +144,10 @@ export const getThreadComments = asyncHandler(async (req, res) => {
             cursorData = JSON.parse(decodedCursor);
 
             if (!cursorData.id || !cursorData.createdAt) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Invalid cursor format'
-                });
+                return errorResponse(res, 'Invalid cursor format', 400);
             }
         } catch (error) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid cursor encoding'
-            });
+            return errorResponse(res, 'Invalid cursor encoding', 400);
         }
     }
 
@@ -286,16 +285,10 @@ export const getCommentReplies = asyncHandler(async (req, res) => {
             cursorData = JSON.parse(decodedCursor);
 
             if (!cursorData.id || !cursorData.createdAt) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Invalid cursor format'
-                });
+                return errorResponse(res, 'Invalid cursor format', 400);
             }
         } catch (error) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid cursor encoding'
-            });
+            return errorResponse(res, 'Invalid cursor encoding', 400);
         }
     }
 
@@ -461,6 +454,11 @@ export const updateComment = asyncHandler(async (req, res) => {
     // Check authorization - only comment author can update
     if (existingComment.userId !== userId) {
         return errorResponse(res, 'You are not authorized to update this comment', 403);
+    }
+
+    // Validate content exists
+    if (!content || typeof content !== 'string' || content.trim().length === 0) {
+        return errorResponse(res, 'Content is required', 400);
     }
 
     // Sanitize content

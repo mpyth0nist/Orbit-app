@@ -2,14 +2,14 @@ import React from 'react';
 import PostCard from './PostCard';
 import { Loader2 } from 'lucide-react';
 
-export default function FeedView({ 
-  posts, 
-  isLoading, 
-  onPostClick, 
-  onLike, 
-  onComment, 
+export default function FeedView({
+  posts,
+  isLoading,
+  onPostClick,
+  onLike,
+  onComment,
   onShare,
-  currentUserEmail 
+  currentUserEmail
 }) {
   if (isLoading) {
     return (
@@ -47,7 +47,7 @@ export default function FeedView({
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                     </svg>
                   ) : (
-                    <span className="text-2xl">{['✨', '🎨', '🎮', '✈️', '🎵'][i-1]}</span>
+                    <span className="text-2xl">{['✨', '🎨', '🎮', '✈️', '🎵'][i - 1]}</span>
                   )}
                 </div>
               </div>
@@ -58,17 +58,25 @@ export default function FeedView({
       </div>
 
       {/* Posts */}
-      {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          currentUserEmail={currentUserEmail}
-          onClick={() => onPostClick?.(post)}
-          onLike={onLike}
-          onComment={onComment}
-          onShare={onShare}
-        />
-      ))}
+      {posts && posts.length > 0 ? (
+        posts.map((post) => (
+          <PostCard
+            key={post.id}
+            post={post}
+            currentUserEmail={currentUserEmail}
+            onClick={() => onPostClick?.(post)}
+            onLike={onLike}
+            onComment={onComment}
+            onShare={onShare}
+            isLiked={post.isLiked}
+          />
+        ))
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">No posts to display</p>
+          <p className="text-gray-400 text-sm mt-2">Follow some users to see their posts here!</p>
+        </div>
+      )}
     </div>
   );
 }

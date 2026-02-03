@@ -33,18 +33,52 @@ export default function Register() {
       return;
     }
 
-    const success = await register({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      username: formData.handle,
-      password: formData.password
-    });
+    // Validate password requirements locally
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters');
+      return;
+    }
+    if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
+      setError('Password must contain at least one uppercase letter, one lowercase letter, and one number');
+      return;
+    }
 
-    if (success) {
-      // Navigation will be handled by route protection
-    } else {
-      setError('Registration failed. Please try again.');
+    // Strip @ symbol and ensure username is alphanumeric only
+    const cleanedUsername = formData.handle.replace(/[@\s]/g, '').toLowerCase();
+
+    if (cleanedUsername.length < 3) {
+      setError('Username must be at least 3 characters (excluding @)');
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9]+$/.test(cleanedUsername)) {
+      setError('Username can only contain letters and numbers');
+      return;
+    }
+
+    try {
+      const success = await register({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        username: cleanedUsername,
+        password: formData.password
+      });
+
+      if (!success) {
+        setError('Registration failed. Please try again.');
+      }
+    } catch (err) {
+      // Extract error message from backend
+      const errorMessage = err?.response?.data?.message || err?.message || 'Registration failed. Please try again.';
+      const errors = err?.response?.data?.errors;
+
+      if (errors && errors.length > 0) {
+        // Show first validation error
+        setError(errors[0].message);
+      } else {
+        setError(errorMessage);
+      }
     }
   };
 
@@ -52,7 +86,7 @@ export default function Register() {
     loginWithGoogle();
   };
 
-  
+
   return (
     <div className="min-h-screen bg-blue-600 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl max-w-6xl w-full overflow-hidden">
@@ -180,10 +214,11 @@ export default function Register() {
                     value={formData.handle}
                     onChange={handleChange}
                     className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="@username"
+                    placeholder="username"
                     required
                   />
                 </div>
+                <p className="text-xs text-gray-500 mt-1">Letters and numbers only, 3-30 characters</p>
               </div>
 
               {/* Password Field */}
@@ -216,6 +251,7 @@ export default function Register() {
                     )}
                   </button>
                 </div>
+                <p className="text-xs text-gray-500 mt-1">At least 8 characters with uppercase, lowercase, and a number</p>
               </div>
 
               {/* Confirm Password Field */}
@@ -292,7 +328,7 @@ export default function Register() {
             {/* Social Login */}
             <div className="flex justify-center space-x-4 mb-8">
               <button className="w-12 h-12 bg-white border border-gray-300 rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors"
-              onClick={handleGoogleLogin}
+                onClick={handleGoogleLogin}
               >
                 <svg className="w-6 h-6" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

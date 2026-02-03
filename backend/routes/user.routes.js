@@ -20,13 +20,16 @@ import {
     removeFollower,
     updateRequest,
     getMyThreads,
+    getMyLikedPosts,
+    getMyMedia,
     updateProfile,
     updateProfilePicture,
     getPendingFollowRequests,
     searchUsers,
     getUserStats,
     checkRelationship,
-    getUserByUsername
+    getUserByUsername,
+    getUserThreads
 } from "../controllers/user.controller.js";
 import {
     validateUpdateUser,
@@ -105,6 +108,20 @@ router.patch("/profile/picture", protect, validateUpdateProfilePicture, updatePr
  */
 router.get("/threads", protect, validatePagination, getMyThreads);
 
+/**
+ * @route   GET /api/user/likes
+ * @desc    Get posts that the current user has liked
+ * @access  Private
+ */
+router.get("/likes", protect, validatePagination, getMyLikedPosts);
+
+/**
+ * @route   GET /api/user/media
+ * @desc    Get media files uploaded by the current user
+ * @access  Private
+ */
+router.get("/media", protect, validatePagination, getMyMedia);
+
 // ============================================================================
 // Follow System
 // ============================================================================
@@ -175,6 +192,13 @@ router.get("/username/:username", protect, getUserByUsername);
  * @access  Private
  */
 router.get("/:userId/relationship", protect, validateUserId, checkRelationship);
+
+/**
+ * @route   GET /api/user/:userId/threads
+ * @desc    Get a user's threads (with privacy check)
+ * @access  Private
+ */
+router.get("/:userId/threads", protect, validateUserId, validatePagination, getUserThreads);
 
 /**
  * @route   GET /api/user/:userId

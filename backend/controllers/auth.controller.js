@@ -2,6 +2,7 @@ import { prisma } from '../utils/prisma.js';
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { successResponse, errorResponse, createdResponse } from '../utils/response.js';
 import logger from '../utils/logger.js';
+import validator from 'validator';
 import {
     hashPassword,
     comparePassword,
@@ -9,17 +10,53 @@ import {
     checkUserExists
 } from '../utils/authService.js';
 
+// Validation constants
+const PASSWORD_MIN_LENGTH = 8;
+const USERNAME_MIN_LENGTH = 3;
+const USERNAME_MAX_LENGTH = 30;
+const USERNAME_REGEX = /^[a-zA-Z0-9_]+$/;
+
 // Register a new user
 export const register = asyncHandler(async (req, res) => {
     const { firstName, lastName, username, email, password } = req.body;
 
+    // Validate required fields
+    if (!firstName || !lastName || !username || !email || !password) {
+        return errorResponse(res, 'All fields are required: firstName, lastName, username, email, password', 400);
+    }
+
+    // Validate email format
+    if (!validator.isEmail(email)) {
+        return errorResponse(res, 'Invalid email format', 400);
+    }
+
+    // Validate username
+    const trimmedUsername = username.trim().toLowerCase();
+    if (trimmedUsername.length < USERNAME_MIN_LENGTH || trimmedUsername.length > USERNAME_MAX_LENGTH) {
+        return errorResponse(res, `Username must be between ${USERNAME_MIN_LENGTH} and ${USERNAME_MAX_LENGTH} characters`, 400);
+    }
+    if (!USERNAME_REGEX.test(trimmedUsername)) {
+        return errorResponse(res, 'Username can only contain letters, numbers, and underscores', 400);
+    }
+
+    // Validate password strength
+    if (password.length < PASSWORD_MIN_LENGTH) {
+        return errorResponse(res, `Password must be at least ${PASSWORD_MIN_LENGTH} characters`, 400);
+    }
+
+    // Validate names
+    const trimmedFirstName = firstName.trim();
+    const trimmedLastName = lastName.trim();
+    if (trimmedFirstName.length === 0 || trimmedLastName.length === 0) {
+        return errorResponse(res, 'First name and last name cannot be empty', 400);
+    }
+
     // Check if user already exists
-    const existingUser = await checkUserExists(username, email);
+    const existingUser = await checkUserExists(trimmedUsername, email.toLowerCase());
 
     if (existingUser) {
         logger.warn('Registration failed - user exists', {
-            attemptedUsername: username,
-            attemptedEmail: email
+            attemptedUsername: trimmedUsername
         });
         return errorResponse(res, 'Username or email already exists', 400);
     }
@@ -30,13 +67,13 @@ export const register = asyncHandler(async (req, res) => {
     // Create user with profile
     const newUser = await prisma.user.create({
         data: {
-            username,
-            email,
+            username: trimmedUsername,
+            email: email.toLowerCase(),
             passwordHash: hashedPassword,
             profile: {
                 create: {
-                    firstName,
-                    lastName
+                    firstName: trimmedFirstName,
+                    lastName: trimmedLastName
                 }
             }
         },
@@ -84,9 +121,19 @@ export const register = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
+    // Validate required fields
+    if (!email || !password) {
+        return errorResponse(res, 'Email and password are required', 400);
+    }
+
+    // Validate email format
+    if (!validator.isEmail(email)) {
+        return errorResponse(res, 'Invalid email format', 400);
+    }
+
     // Find user by email
     const user = await prisma.user.findUnique({
-        where: { email },
+        where: { email: email.toLowerCase() },
         select: {
             id: true,
             username: true,
@@ -105,7 +152,7 @@ export const login = asyncHandler(async (req, res) => {
 
     // Check if user exists
     if (!user) {
-        logger.warn('Login failed - user not found', { email });
+        logger.warn('Login failed - user not found');
         return errorResponse(res, 'Invalid email or password', 401);
     }
 

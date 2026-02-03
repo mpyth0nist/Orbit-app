@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
@@ -11,19 +11,18 @@ import MobileNav from '../componants/layout/MobileNav';
 
 export default function Thread() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const [selectedPost, setSelectedPost] = useState(null);
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
 
   // Fetch specific post
-  const { data: postData, isLoading: postLoading } = useQuery({
+  const { data: post, isLoading: postLoading } = useQuery({
     queryKey: ['thread', id],
     queryFn: () => apiClient.threads.getById(id),
     enabled: !!id,
+    retry: false,
   });
-
-  const post = postData?.data; // Extract from backend response wrapper
 
   // Fetch notifications count
   const { data: notificationsData } = useQuery({
@@ -34,42 +33,63 @@ export default function Thread() {
 
   const unreadNotifications = notificationsData?.count || 0;
 
-  // Like post mutation
+  // Like post mutation with optimistic update
   const likePostMutation = useMutation({
     mutationFn: async (post) => {
       return apiClient.reactions.toggle('thread', post.id);
     },
-    onSuccess: () => {
+    onMutate: async (postToLike) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['thread', id] });
+
+      // Snapshot the previous value
+      const previousPost = queryClient.getQueryData(['thread', id]);
+
+      // Optimistically update the cache
+      queryClient.setQueryData(['thread', id], (old) => {
+        if (!old) return old;
+        const isCurrentlyLiked = old.isLiked;
+        return {
+          ...old,
+          isLiked: !isCurrentlyLiked,
+          likesCount: isCurrentlyLiked
+            ? (old.likesCount || 1) - 1
+            : (old.likesCount || 0) + 1,
+        };
+      });
+
+      return { previousPost };
+    },
+    onError: (err, postToLike, context) => {
+      // Rollback on error
+      if (context?.previousPost) {
+        queryClient.setQueryData(['thread', id], context.previousPost);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['thread', id] });
     },
   });
 
-  useEffect(() => {
-    if (post) {
-      setSelectedPost(post);
-    }
-  }, [post]);
-
   const handleLike = (post) => {
     likePostMutation.mutate(post);
-    // Optimistic update could go here, but invalidation is safer for now
   };
 
   if (postLoading) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'}`}>
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
 
-  if (!selectedPost) {
+  if (!post) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'}`}>
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Post not found</h2>
+          <h2 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>Post not found</h2>
           <button
-            onClick={() => window.location.href = '/'}
+            onClick={() => navigate('/')}
             className="text-indigo-600 hover:text-indigo-500"
           >
             Go back to feed
@@ -80,11 +100,9 @@ export default function Thread() {
   }
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
-      }`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'}`}>
       {/* Desktop Sidebar */}
-      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-100'
-        }`}>
+      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
         <Sidebar
           activeTab="thread"
           setActiveTab={() => { }}
@@ -100,17 +118,17 @@ export default function Thread() {
           user={user}
           unreadNotifications={unreadNotifications}
           onMenuClick={() => { }}
-          onSearchClick={() => window.location.href = '/search'}
-          onNotificationsClick={() => window.location.href = '/notifications'}
+          onSearchClick={() => navigate('/search')}
+          onNotificationsClick={() => navigate('/notifications')}
         />
 
         {/* Page Content */}
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">
           <ThreadDetailView
-            post={selectedPost}
+            post={post}
             user={user}
             currentUserEmail={user?.email}
-            onBack={() => window.location.href = '/'}
+            onBack={() => navigate('/')}
             onLike={handleLike}
           />
         </main>

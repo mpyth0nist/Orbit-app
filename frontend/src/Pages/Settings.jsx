@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
@@ -10,6 +11,7 @@ import Header from '../componants/layout/Header';
 import MobileNav from '../componants/layout/MobileNav';
 
 export default function Settings() {
+  const navigate = useNavigate();
   const { user, setUser } = useAuth();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const { isDarkMode } = useTheme();
@@ -56,8 +58,8 @@ export default function Settings() {
           user={user}
           unreadNotifications={unreadNotifications}
           onMenuClick={() => { }}
-          onSearchClick={() => window.location.href = '/search'}
-          onNotificationsClick={() => window.location.href = '/notifications'}
+          onSearchClick={() => navigate('/search')}
+          onNotificationsClick={() => navigate('/notifications')}
         />
 
         {/* Page Content */}

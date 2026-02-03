@@ -17,27 +17,32 @@ export default function Profile() {
   const { t, isDarkMode: themeDarkMode } = useLanguage();
 
   // Fetch user posts
-  const { data: userPosts = [] } = useQuery({
-    queryKey: ['userPosts', user?.email],
-    queryFn: () => [], // TODO: Replace with api.posts.getUserPosts(user?.email) when endpoint is ready
-    enabled: !!user?.email,
+  const { data: userPostsData, isLoading: postsLoading, error: postsError } = useQuery({
+    queryKey: ['userPosts', user?.id],
+    queryFn: async () => {
+      const response = await api.users.getMyThreads();
+      return response;
+    },
+    enabled: !!user?.id,
   });
+
+  const userPosts = userPostsData || [];
 
   // Fetch notifications count
   const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications', user?.email],
-    queryFn: () => api.notifications.getUserNotifications(user?.email),
-    enabled: !!user?.email,
+    queryKey: ['notifications'],
+    queryFn: () => api.notifications.getUserNotifications(),
+    enabled: !!user,
   });
 
   const handleUserUpdate = async (data) => {
     // Update user in context
     setUser({ ...user, ...data });
-    // Update user in backend
     try {
-      await api.users.update(user.id, data);
+      await api.users.updateMe(data);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     } catch (error) {
-      console.error('Failed to update user:', error);
+      console.error('Failed to update profile:', error);
     }
     setIsEditingProfile(false);
   };
@@ -45,16 +50,14 @@ export default function Profile() {
   const unreadNotifications = notifications?.length || 0;
 
   return (
-    <div className={`min-h-screen ${
-      isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
-    }`}>
-      {/* Desktop Sidebar */}
-      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${
-        isDarkMode ? 'border-gray-700' : 'border-gray-100'
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
       }`}>
+      {/* Desktop Sidebar */}
+      <aside className={`hidden lg:fixed lg:inset-y-0 lg:left-0 lg:w-72 lg:block border-r ${isDarkMode ? 'border-gray-700' : 'border-gray-100'
+        }`}>
         <Sidebar
           activeTab="profile"
-          setActiveTab={() => {}}
+          setActiveTab={() => { }}
           unreadNotifications={unreadNotifications}
           user={user}
         />
@@ -66,7 +69,7 @@ export default function Profile() {
         <Header
           user={user}
           unreadNotifications={unreadNotifications}
-          onMenuClick={() => {}}
+          onMenuClick={() => { }}
           onSearchClick={() => window.location.href = '/search'}
           onNotificationsClick={() => window.location.href = '/notifications'}
         />
@@ -85,6 +88,7 @@ export default function Profile() {
               onEditProfile={() => setIsEditingProfile(true)}
               onSettingsClick={() => window.location.href = '/settings'}
               userPosts={userPosts}
+              isLoading={postsLoading}
             />
           )}
         </main>
@@ -93,7 +97,7 @@ export default function Profile() {
       {/* Mobile Navigation */}
       <MobileNav
         activeTab="profile"
-        setActiveTab={() => {}}
+        setActiveTab={() => { }}
         unreadNotifications={unreadNotifications}
       />
     </div>

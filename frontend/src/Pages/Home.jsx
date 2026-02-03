@@ -20,7 +20,7 @@ import { XMarkIcon } from '../componants/ui/Icons';
 
 export default function Home() {
   const navigate = useNavigate();
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { user, setUser, isLoading, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState('feed');
   const [selectedPost, setSelectedPost] = useState(null);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -62,24 +62,18 @@ export default function Home() {
 
   // Fetch notifications count
   const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications', user?.email],
-    queryFn: () => api.notifications.getUserNotifications(user?.email),
-    enabled: !!user?.email,
+    queryKey: ['notifications'],
+    queryFn: () => api.notifications.getUserNotifications(),
+    enabled: !!user,
   });
 
   // Create post mutation
   const createPostMutation = useMutation({
     mutationFn: async (postData) => {
+      // Backend expects: { content: string, mediaUrls?: string[] }
       return api.posts.create({
-        ...postData,
-        author_name: user?.full_name || 'User',
-        author_handle: user?.handle || user?.email?.split('@')[0],
-        author_avatar: user?.avatar,
-        author_verified: user?.role === 'admin',
-        likes_count: 0,
-        comments_count: 0,
-        shares_count: 0,
-        liked_by: [],
+        content: postData.content,
+        mediaUrls: postData.mediaUrls || [],
       });
     },
     onSuccess: () => {
@@ -90,13 +84,8 @@ export default function Home() {
   // Like post mutation
   const likePostMutation = useMutation({
     mutationFn: async (post) => {
-      const isLiked = post.liked_by?.includes(user?.email);
-      
-      if (isLiked) {
-        return api.posts.unlike(post.id, user?.email);
-      } else {
-        return api.posts.like(post.id, user?.email);
-      }
+      // Use reactions toggle API (thread type, post ID)
+      return api.reactions.toggle('thread', post.id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
@@ -216,7 +205,7 @@ export default function Home() {
       {/* Mobile Sidebar Overlay */}
       {isMobileSidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 backdrop-blur-sm"
             onClick={() => setIsMobileSidebarOpen(false)}
           />

@@ -80,13 +80,11 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await api.users.login({ email, password });
+      const response = await api.auth.login({ email, password });
+      // Response structure: { user: {...}, token: '...' }
       if (response.token) {
         localStorage.setItem('authToken', response.token);
-
-        // Fetch user details
-        const userData = await api.users.getCurrent();
-        setUser(userData);
+        setUser(response.user);
         setIsAuthenticated(true);
         return true;
       }
@@ -99,11 +97,14 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await api.users.register(userData);
-      // If registration is successful, we try to login automatically
-      // Need password from userData to login
-      if (response) {
-        return await login(userData.email, userData.password);
+      const response = await api.auth.register(userData);
+      // Response structure: { user: {...}, token: '...' }
+      // If registration is successful, automatically log in
+      if (response && response.token) {
+        localStorage.setItem('authToken', response.token);
+        setUser(response.user);
+        setIsAuthenticated(true);
+        return true;
       }
       return false;
     } catch (error) {
@@ -133,15 +134,16 @@ export const AuthProvider = ({ children }) => {
     // Optional: api.auth.logout() if backend supports invalidating tokens
   };
 
-  const value = {
+  const value = React.useMemo(() => ({
     user,
+    setUser,
     isLoading,
     login,
     register,
     loginWithGoogle,
     logout,
     isAuthenticated
-  };
+  }), [user, isLoading, isAuthenticated]);
 
   return (
     <AuthContext.Provider value={value}>

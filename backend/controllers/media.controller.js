@@ -99,9 +99,13 @@ export const uploadProfilePicture = asyncHandler(async (req, res) => {
     // Delete old photo file if it exists and is different
     if (currentProfile?.photoUrl && currentProfile.photoUrl !== photoUrl) {
         const oldPhotoPath = path.join(__dirname, '..', currentProfile.photoUrl);
-        if (fs.existsSync(oldPhotoPath)) {
-            fs.unlinkSync(oldPhotoPath);
-            logger.info('Old profile picture deleted', { userId, oldPath: currentProfile.photoUrl });
+        try {
+            if (fs.existsSync(oldPhotoPath)) {
+                fs.unlinkSync(oldPhotoPath);
+                logger.info('Old profile picture deleted', { userId, oldPath: currentProfile.photoUrl });
+            }
+        } catch (err) {
+            logger.error('Failed to delete old profile picture', { userId, oldPath: currentProfile.photoUrl, error: err.message });
         }
     }
 
@@ -152,8 +156,12 @@ export const deleteMedia = asyncHandler(async (req, res) => {
 
     // Delete file from filesystem
     const filePath = path.join(__dirname, '..', media.url);
-    if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
+    try {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+    } catch (err) {
+        logger.error('Failed to delete media file from filesystem', { mediaId, filePath, error: err.message });
     }
 
     logger.info('Media deleted', { userId, mediaId });

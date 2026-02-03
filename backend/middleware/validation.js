@@ -34,8 +34,12 @@ export const validate = (schema, property = 'body') => {
             });
         }
 
-        // Replace request property with validated value
-        req[property] = value;
+        // Merge validated values into request property (don't replace the object)
+        if (property === 'query' || property === 'params') {
+            Object.assign(req[property], value);
+        } else {
+            req[property] = value;
+        }
         next();
     };
 };
@@ -146,8 +150,7 @@ export const updateUserSchema = Joi.object({
 export const updateProfileSchema = Joi.object({
     firstName: Joi.string().min(2).max(50).trim().optional(),
     lastName: Joi.string().min(2).max(50).trim().optional(),
-    bio: Joi.string().max(500).trim().allow('', null).optional(),
-    gender: Joi.string().valid('MALE', 'FEMALE').optional()
+    bio: Joi.string().max(500).trim().allow('', null).optional()
 }).min(1);
 
 /**

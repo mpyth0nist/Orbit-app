@@ -1,6 +1,22 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'http://localhost:8080/api';
+const MEDIA_BASE_URL = 'http://localhost:8080';
+
+/**
+ * Builds a full URL for media files (profile pictures, thread media, etc.)
+ * @param {string} path - Relative path like '/uploads/profiles/image.jpg'
+ * @returns {string|null} Full URL or null if path is empty
+ */
+export const getMediaUrl = (path) => {
+  if (!path) return null;
+  // If already a full URL, return as-is
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+  // Build full URL from relative path
+  return `${MEDIA_BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+};
 
 // Create axios instance
 const apiClient = axios.create({
@@ -24,9 +40,16 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor for error handling
+// Response interceptor for error handling and unwrapping backend responses
 apiClient.interceptors.response.use(
-  (response) => response.data,
+  (response) => {
+    // Backend returns {success: true, data: {...}, message: '...'} format
+    // Extract the data field if it exists, otherwise return the whole response
+    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
+      return response.data.data || response.data;
+    }
+    return response.data;
+  },
   (error) => {
     console.error('API Request failed:', error.response || error.message);
     // Optional: Handle 401 Unauthorized globally
@@ -55,8 +78,16 @@ export const threadsAPI = {
   // Get single thread
   getById: (id) => apiClient.get(`/threads/${id}`),
 
-  // Create thread
-  create: (data) => apiClient.post('/threads', data),
+  // Create thread (supports both JSON and FormData)
+  create: (data) => {
+    // If FormData, axios will auto-set Content-Type with boundary
+    if (data instanceof FormData) {
+      return apiClient.post('/threads', data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    }
+    return apiClient.post('/threads', data);
+  },
 
   // Update thread
   update: (id, data) => apiClient.patch(`/threads/${id}`, data),
@@ -72,6 +103,7 @@ export const postsAPI = {
   create: threadsAPI.create,
   update: threadsAPI.update,
   delete: threadsAPI.delete,
+  // Note: like/unlike have been removed - use reactionsAPI.toggle instead
 };
 
 // Comments API
@@ -152,15 +184,15 @@ export const notificationsAPI = {
   // Delete single
   delete: (id) => apiClient.delete(`/notifications/${id}`),
 
-  // Legacy wrapper
-  getUserNotifications: (userEmail) => apiClient.get('/notifications', { params: { filter: 'unread' } }),
+  // Legacy wrapper (userEmail parameter is ignored - backend uses authenticated user)
+  getUserNotifications: () => apiClient.get('/notifications'),
 };
 
-// Users & Auth API
+// Users API
 export const usersAPI = {
   getCurrent: () => apiClient.get('/user/'),
   getById: (id) => apiClient.get(`/user/${id}`),
-  update: (id, userData) => apiClient.patch(`/user/`, userData), // Uses /user/ (current user)
+  update: (userData) => apiClient.patch(`/user/`, userData), // Uses /user/ (current user)
   updateMe: (userData) => apiClient.patch(`/user/`, userData),
 
   // Profile
@@ -169,6 +201,18 @@ export const usersAPI = {
 
   // Threads
   getMyThreads: () => apiClient.get('/user/threads'),
+  getUserThreads: (userId, { page = 1, limit = 20 } = {}) =>
+    apiClient.get(`/user/${userId}/threads`, { params: { page, limit } }),
+
+  // Stats
+  getStats: () => apiClient.get('/user/stats'),
+
+  // Search
+  search: ({ q, page = 1, limit = 20 } = {}) =>
+    apiClient.get('/user/search', { params: { q, page, limit } }),
+
+  // Relationship
+  getRelationship: (userId) => apiClient.get(`/user/${userId}/relationship`),
 
   // Follow System
   follow: (userId) => apiClient.post(`/user/follow/${userId}`),
@@ -176,18 +220,31 @@ export const usersAPI = {
   getFollowers: () => apiClient.get('/user/followers'),
   getFollowing: () => apiClient.get('/user/following'),
   removeFollower: (userId) => apiClient.delete(`/user/followers/${userId}`),
-  updateFollowRequest: (userId, status) => apiClient.patch(`/user/follow-requests/${userId}`, { status }),
+  updateFollowRequest: (userId, isAccepted) => apiClient.patch(`/user/follow-requests/${userId}`, { isAccepted }),
 
-  // Auth
+  // Profile Tabs Data
+  getMyLikedPosts: ({ page = 1, limit = 20 } = {}) =>
+    apiClient.get('/user/likes', { params: { page, limit } }),
+  getMyMedia: ({ page = 1, limit = 20 } = {}) =>
+    apiClient.get('/user/media', { params: { page, limit } }),
+};
+
+// Auth API (separate from users)
+export const authAPI = {
   login: (credentials) => apiClient.post('/auth/login', credentials),
   register: (userData) => apiClient.post('/auth/register', userData),
-  logout: () => apiClient.post('/auth/logout'), // Note: Backend might not have this, check auth.routes.js if needed, otherwise client-side only
+  logout: () => {
+    // Client-side logout (backend doesn't have logout endpoint)
+    localStorage.removeItem('authToken');
+    return Promise.resolve({ success: true });
+  },
 };
 
 // Search API
 export const searchAPI = {
   searchThreads: ({ q, cursor, limit }) => threadsAPI.search({ q, cursor, limit }),
-  // searchUsers missing in provided routes, assuming removed or future impl
+  searchPosts: (query) => threadsAPI.search({ q: query, limit: 50 }), // Alias for threads search
+  searchUsers: (query) => usersAPI.search({ q: query, limit: 20 })
 };
 
 // Files API (Legacy wrapper for Media API)
@@ -203,7 +260,7 @@ export default {
   media: mediaAPI,
   notifications: notificationsAPI,
   users: usersAPI,
-  auth: usersAPI,
+  auth: authAPI,
   files: filesAPI,
   search: searchAPI,
 };
