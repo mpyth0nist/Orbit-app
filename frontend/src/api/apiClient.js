@@ -227,8 +227,14 @@ export const usersAPI = {
   // Follow System
   follow: (userId) => apiClient.post(`/user/follow/${userId}`),
   unfollow: (userId) => apiClient.delete(`/user/follow/${userId}`),
-  getFollowers: () => apiClient.get('/user/followers'),
-  getFollowing: () => apiClient.get('/user/following'),
+  getFollowers: (userId, { page = 1, limit = 20 } = {}) =>
+    userId
+      ? apiClient.get(`/user/${userId}/followers`, { params: { page, limit } })
+      : apiClient.get('/user/followers', { params: { page, limit } }),
+  getFollowing: (userId, { page = 1, limit = 20 } = {}) =>
+    userId
+      ? apiClient.get(`/user/${userId}/following`, { params: { page, limit } })
+      : apiClient.get('/user/following', { params: { page, limit } }),
   removeFollower: (userId) => apiClient.delete(`/user/followers/${userId}`),
   updateFollowRequest: (userId, isAccepted) => apiClient.patch(`/user/follow-requests/${userId}`, { isAccepted }),
 

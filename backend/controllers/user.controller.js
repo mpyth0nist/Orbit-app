@@ -105,12 +105,40 @@ export const getUser = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc    Get current user's followers
- * @route   GET /api/user/followers
+ * @desc    Get followers
+ * @route   GET /api/user/followers OR /api/user/:userId/followers
  * @access  Private
  */
 export const getFollowers = asyncHandler(async (req, res) => {
-    const userId = req.user.userId;
+    const currentUserId = req.user.userId;
+    const targetUserId = req.params.userId ? Number(req.params.userId) : currentUserId;
+
+    // Check if target user exists and if content is accessible
+    if (targetUserId !== currentUserId) {
+        const targetUser = await prisma.user.findUnique({
+            where: { id: targetUserId },
+            select: { type: true }
+        });
+
+        if (!targetUser) {
+            return errorResponse(res, 'User not found', 404);
+        }
+
+        if (targetUser.type === 'PRIVATE') {
+            const relationship = await prisma.follow.findUnique({
+                where: {
+                    followerId_followedId: {
+                        followerId: currentUserId,
+                        followedId: targetUserId
+                    }
+                }
+            });
+
+            if (!relationship || relationship.status !== 'ACCEPTED') {
+                return errorResponse(res, 'This account is private. Follow them to see their followers.', 403);
+            }
+        }
+    }
 
     // Pagination support
     const page = parseInt(req.query.page) || 1;
@@ -120,7 +148,7 @@ export const getFollowers = asyncHandler(async (req, res) => {
     const [followers, totalCount] = await Promise.all([
         prisma.follow.findMany({
             where: {
-                followedId: userId,
+                followedId: targetUserId,
                 status: 'ACCEPTED'
             },
             select: {
@@ -136,31 +164,57 @@ export const getFollowers = asyncHandler(async (req, res) => {
         }),
         prisma.follow.count({
             where: {
-                followedId: userId,
+                followedId: targetUserId,
                 status: 'ACCEPTED'
             }
         })
     ]);
 
-    const followersData = followers.map(f => f.follower);
+    const followersData = followers.map(f => f.follower).filter(Boolean);
 
     return paginatedResponse(
         res,
         followersData,
         { page, limit, total: totalCount },
-        followersData.length === 0
-            ? 'You have no followers yet'
-            : `Retrieved ${followersData.length} followers`
+        `Retrieved ${followersData.length} followers`
     );
 });
 
 /**
- * @desc    Get users that current user follows
- * @route   GET /api/user/following
+ * @desc    Get following
+ * @route   GET /api/user/following OR /api/user/:userId/following
  * @access  Private
  */
 export const getFollowed = asyncHandler(async (req, res) => {
-    const userId = req.user.userId;
+    const currentUserId = req.user.userId;
+    const targetUserId = req.params.userId ? Number(req.params.userId) : currentUserId;
+
+    // Check if target user exists and if content is accessible
+    if (targetUserId !== currentUserId) {
+        const targetUser = await prisma.user.findUnique({
+            where: { id: targetUserId },
+            select: { type: true }
+        });
+
+        if (!targetUser) {
+            return errorResponse(res, 'User not found', 404);
+        }
+
+        if (targetUser.type === 'PRIVATE') {
+            const relationship = await prisma.follow.findUnique({
+                where: {
+                    followerId_followedId: {
+                        followerId: currentUserId,
+                        followedId: targetUserId
+                    }
+                }
+            });
+
+            if (!relationship || relationship.status !== 'ACCEPTED') {
+                return errorResponse(res, 'This account is private. Follow them to see who they follow.', 403);
+            }
+        }
+    }
 
     // Pagination support
     const page = parseInt(req.query.page) || 1;
@@ -170,7 +224,7 @@ export const getFollowed = asyncHandler(async (req, res) => {
     const [followedRecords, totalCount] = await Promise.all([
         prisma.follow.findMany({
             where: {
-                followerId: userId,
+                followerId: targetUserId,
                 status: 'ACCEPTED'
             },
             select: {
@@ -186,21 +240,19 @@ export const getFollowed = asyncHandler(async (req, res) => {
         }),
         prisma.follow.count({
             where: {
-                followerId: userId,
+                followerId: targetUserId,
                 status: 'ACCEPTED'
             }
         })
     ]);
 
-    const followedAccounts = followedRecords.map(f => f.followed);
+    const followedAccounts = followedRecords.map(f => f.followed).filter(Boolean);
 
     return paginatedResponse(
         res,
         followedAccounts,
         { page, limit, total: totalCount },
-        followedAccounts.length === 0
-            ? 'You are not following any accounts'
-            : `Retrieved ${followedAccounts.length} accounts`
+        `Retrieved ${followedAccounts.length} following`
     );
 });
 
@@ -496,9 +548,15 @@ export const getMyThreads = asyncHandler(async (req, res) => {
         })
     ]);
 
+    // Format threads with isLiked field (always false for own threads)
+    const formattedThreads = threads.map(thread => ({
+        ...thread,
+        isLiked: false
+    }));
+
     return paginatedResponse(
         res,
-        threads,
+        formattedThreads,
         { page, limit, total: totalCount },
         `Retrieved ${threads.length} threads`
     );
@@ -542,8 +600,11 @@ export const getMyLikedPosts = asyncHandler(async (req, res) => {
         })
     ]);
 
-    // Extract threads from reactions
-    const threads = likedPosts.map(r => r.thread).filter(Boolean);
+    // Extract threads from reactions and add isLiked flag
+    const threads = likedPosts.map(r => ({
+        ...r.thread,
+        isLiked: true  // Always true since these are liked posts
+    })).filter(Boolean);
 
     logger.info('User liked posts retrieved', { userId, totalCount });
 
@@ -1031,6 +1092,32 @@ export const getUserThreads = asyncHandler(async (req, res) => {
         })
     ]);
 
+    // Get thread IDs to check which ones the current user has liked
+    const threadIds = threads.map(t => t.id);
+
+    // Fetch current user's reactions for these threads
+    const userReactions = await prisma.reaction.findMany({
+        where: {
+            userId: currentUserId,
+            threadId: { in: threadIds }
+        },
+        select: { threadId: true }
+    });
+
+    // Create a Set for quick lookup
+    const likedThreadIds = new Set(userReactions.map(r => r.threadId));
+
+    console.log(`[getUserThreads] User ${currentUserId} viewing user ${targetUserId}'s threads`);
+    console.log(`[getUserThreads] Found ${userReactions.length} liked threads:`, Array.from(likedThreadIds));
+
+    // Format threads with isLiked field
+    const formattedThreads = threads.map(thread => ({
+        ...thread,
+        isLiked: likedThreadIds.has(thread.id)
+    }));
+
+    console.log(`[getUserThreads] Formatted threads with isLiked:`, formattedThreads.map(t => ({ id: t.id, isLiked: t.isLiked, likesCount: t.likesCount })));
+
     logger.info('User threads retrieved', {
         currentUserId,
         targetUserId,
@@ -1039,7 +1126,7 @@ export const getUserThreads = asyncHandler(async (req, res) => {
 
     return paginatedResponse(
         res,
-        threads,
+        formattedThreads,
         { page, limit, total: totalCount },
         `Retrieved ${threads.length} threads`
     );

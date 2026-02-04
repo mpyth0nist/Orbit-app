@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeftIcon, CheckBadgeIcon, UserIcon, LockClosedIcon, CameraIcon, ImageIcon, HeartIcon } from '../ui/Icons';
+import FollowersModal from '../ui/FollowersModal';
 import PostCard from '../feed/PostCard';
 import api, { getMediaUrl } from '../../api/apiClient';
 import { Loader2 } from 'lucide-react';
@@ -27,6 +28,10 @@ export default function UserProfileView({
     const [isFollowLoading, setIsFollowLoading] = useState(false);
     const [error, setError] = useState(null);
     const [canViewContent, setCanViewContent] = useState(false);
+
+    // Modal state
+    const [modalType, setModalType] = useState(null); // 'followers' or 'following'
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Tab state
     const [activeTab, setActiveTab] = useState('posts');
@@ -105,7 +110,11 @@ export default function UserProfileView({
 
         try {
             const response = await api.users.getUserThreads(userId);
-            setThreads(response?.data || response || []);
+            console.log('getUserThreads response:', response);
+            console.log('First thread:', response?.[0]);
+            const threadsData = response?.data || response || [];
+            console.log('Threads data:', threadsData);
+            setThreads(threadsData);
         } catch (err) {
             if (err.response?.status !== 403) {
                 console.error('Failed to load threads:', err);
@@ -229,6 +238,12 @@ export default function UserProfileView({
         if (mediaItem.thread?.id) {
             navigate(`/thread/${mediaItem.thread.id}`);
         }
+    };
+
+    const openFollowersModal = (type) => {
+        if (!canViewContent) return;
+        setModalType(type);
+        setIsModalOpen(true);
     };
 
     // Render follow button based on relationship
@@ -393,7 +408,7 @@ export default function UserProfileView({
         <div className="max-w-2xl mx-auto">
             {/* Back Button */}
             <button
-                onClick={onBack}
+                onClick={() => onBack ? onBack() : navigate(-1)}
                 className={`flex items-center gap-2 mb-4 font-medium ${isDarkMode ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-gray-900'
                     }`}
             >
@@ -457,7 +472,10 @@ export default function UserProfileView({
                             {t('posts') || 'Posts'}
                         </p>
                     </div>
-                    <div className="text-center">
+                    <div
+                        className={`text-center ${canViewContent ? 'cursor-pointer hover:opacity-75 transition-opacity' : ''}`}
+                        onClick={() => openFollowersModal('followers')}
+                    >
                         <p className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
                             {stats.followers.toLocaleString()}
                         </p>
@@ -465,7 +483,10 @@ export default function UserProfileView({
                             {t('followers') || 'Followers'}
                         </p>
                     </div>
-                    <div className="text-center">
+                    <div
+                        className={`text-center ${canViewContent ? 'cursor-pointer hover:opacity-75 transition-opacity' : ''}`}
+                        onClick={() => openFollowersModal('following')}
+                    >
                         <p className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
                             {stats.following.toLocaleString()}
                         </p>
@@ -519,6 +540,15 @@ export default function UserProfileView({
                     )}
                 </div>
             </div>
+
+            {/* Followers/Following Modal */}
+            <FollowersModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                targetUserId={userId}
+                type={modalType}
+                onUserClick={(u) => navigate(`/user/${u.id}`)}
+            />
         </div>
     );
 }

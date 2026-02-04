@@ -9,7 +9,8 @@ export default function FeedView({
   onLike,
   onComment,
   onShare,
-  currentUserEmail
+  currentUserEmail,
+  currentUserId
 }) {
   if (isLoading) {
     return (
@@ -50,6 +51,7 @@ export default function FeedView({
             onComment={onComment}
             onShare={onShare}
             isLiked={post.isLiked}
+            isOwnPost={currentUserId === post.userId || currentUserId === post.user?.id}
           />
         ))
       ) : (

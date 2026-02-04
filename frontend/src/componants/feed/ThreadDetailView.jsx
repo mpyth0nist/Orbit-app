@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon } from '../ui/Icons';
 import api, { getMediaUrl } from '../../api/apiClient';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -25,6 +26,7 @@ export default function ThreadDetailView({
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
 
+  const navigate = useNavigate();
   const { isDarkMode } = useTheme();
   const { t } = useLanguage();
 
@@ -327,7 +329,7 @@ export default function ThreadDetailView({
       {/* Header */}
       <div className="flex items-center gap-4 mb-6">
         <button
-          onClick={onBack}
+          onClick={() => onBack ? onBack() : navigate(-1)}
           className={`p-2 -ml-2 rounded-xl transition-colors ${isDarkMode
             ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'

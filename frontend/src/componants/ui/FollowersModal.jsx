@@ -10,6 +10,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 export default function FollowersModal({
     isOpen,
     onClose,
+    targetUserId = null, // userId to fetch for (null = current user)
     type = 'followers', // 'followers' or 'following'
     onUserClick
 }) {
@@ -26,8 +27,8 @@ export default function FollowersModal({
 
         try {
             const response = type === 'followers'
-                ? await usersAPI.getFollowers()
-                : await usersAPI.getFollowing();
+                ? await usersAPI.getFollowers(targetUserId, { limit: 50 })
+                : await usersAPI.getFollowing(targetUserId, { limit: 50 });
 
             // Handle response format
             const userData = response?.data || response?.users || response || [];
@@ -38,7 +39,7 @@ export default function FollowersModal({
         } finally {
             setIsLoading(false);
         }
-    }, [isOpen, type]);
+    }, [isOpen, type, targetUserId]);
 
     useEffect(() => {
         fetchUsers();
@@ -98,8 +99,8 @@ export default function FollowersModal({
                     <button
                         onClick={onClose}
                         className={`p-2 rounded-full transition-colors ${isDarkMode
-                                ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
-                                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'
+                            ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
+                            : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'
                             }`}
                     >
                         <XMarkIcon className="w-5 h-5" />
@@ -126,8 +127,8 @@ export default function FollowersModal({
                             </div>
                             <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
                                 {type === 'followers'
-                                    ? "You don't have any followers yet"
-                                    : "You're not following anyone yet"}
+                                    ? "No followers found"
+                                    : "Not following anyone yet"}
                             </p>
                         </div>
                     ) : (
@@ -140,8 +141,8 @@ export default function FollowersModal({
                                         onClose();
                                     }}
                                     className={`flex items-center gap-4 px-6 py-3 cursor-pointer transition-colors ${isDarkMode
-                                            ? 'hover:bg-gray-800/50'
-                                            : 'hover:bg-gray-50'
+                                        ? 'hover:bg-gray-800/50'
+                                        : 'hover:bg-gray-50'
                                         }`}
                                 >
                                     {/* Avatar */}

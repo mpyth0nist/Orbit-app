@@ -405,10 +405,9 @@ const ProfileView = forwardRef(function ProfileView({
       <FollowersModal
         isOpen={modalType !== null}
         onClose={() => setModalType(null)}
+        targetUserId={currentUser?.id}
         type={modalType || 'followers'}
-        onUserClick={(user) => {
-          console.log('User clicked:', user);
-        }}
+        onUserClick={(u) => navigate(`/user/${u.id}`)}
       />
     </div>
   );

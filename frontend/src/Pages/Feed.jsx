@@ -76,9 +76,8 @@ export default function Feed() {
         if (!old) return old;
         return {
           ...old,
-          pages: old.pages.map(page => ({
-            ...page,
-            data: page.data.map(post =>
+          pages: old.pages.map(page =>
+            page.map(post =>
               post.id === postToLike.id
                 ? {
                   ...post,
@@ -88,8 +87,8 @@ export default function Feed() {
                     : (post.likesCount || 0) + 1,
                 }
                 : post
-            ),
-          })),
+            )
+          ),
         };
       });
 
@@ -159,6 +158,7 @@ export default function Feed() {
             posts={posts}
             isLoading={postsLoading}
             currentUserEmail={user?.email}
+            currentUserId={user?.id}
             onPostClick={handlePostClick}
             onLike={(post) => likePostMutation.mutate(post)}
             onComment={handlePostClick}

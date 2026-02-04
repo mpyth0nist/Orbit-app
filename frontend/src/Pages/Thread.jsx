@@ -122,7 +122,7 @@ export default function Thread() {
             post={post}
             user={user}
             currentUserEmail={user?.email}
-            onBack={() => navigate('/')}
+            onBack={() => navigate(-1)}
             onLike={handleLike}
           />
         </main>

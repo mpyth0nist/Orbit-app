@@ -140,12 +140,9 @@ router.post("/follow/:followed", protect, validateFollowedId, follow);
  */
 router.delete("/follow/:followed", protect, validateFollowedId, unfollow);
 
-/**
- * @route   GET /api/user/followers
- * @desc    Get current user's followers
- * @access  Private
- */
+// followers
 router.get("/followers", protect, validatePagination, getFollowers);
+router.get("/:userId/followers", protect, validateUserId, validatePagination, getFollowers);
 
 /**
  * @route   DELETE /api/user/followers/:follower
@@ -160,6 +157,7 @@ router.delete("/followers/:follower", protect, validateFollowerId, removeFollowe
  * @access  Private
  */
 router.get("/following", protect, validatePagination, getFollowed);
+router.get("/:userId/following", protect, validateUserId, validatePagination, getFollowed);
 
 /**
  * @route   PATCH /api/user/follow-requests/:follower
