@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon } from '../ui/Icons';
 import api, { getMediaUrl } from '../../api/apiClient';
 import { format, formatDistanceToNow } from 'date-fns';
+import ContentRenderer from '../ui/ContentRenderer';
 import { Loader2 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -372,10 +373,7 @@ export default function ThreadDetailView({
         </div>
 
         {/* Content */}
-        <p className={`text-xl leading-relaxed whitespace-pre-wrap mb-4 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'
-          }`}>
-          {post.content || post.text}
-        </p>
+        <ContentRenderer content={post.content || post.text} className="text-xl mb-4" />
 
         {/* Media Gallery */}
         {mediaItems.length > 0 && (

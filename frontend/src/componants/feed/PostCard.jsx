@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon } from '../ui/Icons';
 import { getMediaUrl } from '../../api/apiClient';
+import ContentRenderer from '../ui/ContentRenderer';
 import { useTheme } from '../../contexts/ThemeContext';
 import { format, formatDistanceToNow } from 'date-fns';
 
@@ -208,10 +209,7 @@ export default function PostCard({
 
       {/* Content */}
       <div className="mb-4">
-        <p className={`text-[15px] leading-relaxed whitespace-pre-wrap ${isDarkMode ? 'text-gray-200' : 'text-gray-800'
-          }`}>
-          {content}
-        </p>
+        <ContentRenderer content={content} />
       </div>
 
       {/* Media Gallery */}

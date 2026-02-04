@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ArrowLeftIcon, PhotoIcon, XMarkIcon, GlobeIcon } from '../ui/Icons';
+import { ArrowLeftIcon, PhotoIcon, XMarkIcon, GlobeIcon, CodeBracketIcon } from '../ui/Icons';
 import api from '../../api/apiClient';
 import { Loader2 } from 'lucide-react';
 
@@ -55,6 +55,37 @@ export default function CreatePostView({ onBack, onPost, user }) {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  const insertCodeBlock = () => {
+    const textarea = document.querySelector('textarea');
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = content;
+    const before = text.substring(0, start);
+    const selected = text.substring(start, end);
+    const after = text.substring(end);
+
+    const codeBlock = selected
+      ? `\`\`\`javascript\n${selected}\n\`\`\``
+      : "```javascript\n// Your code here\n```";
+
+    setContent(`${before}${codeBlock}${after}`);
+
+    setTimeout(() => {
+      textarea.focus();
+      if (selected) {
+        // Position cursor after the block
+        const newPos = start + codeBlock.length;
+        textarea.setSelectionRange(newPos, newPos);
+      } else {
+        // Select the placeholder text
+        const newCursorPos = start + 13;
+        textarea.setSelectionRange(newCursorPos, newCursorPos + 16);
+      }
+    }, 0);
   };
 
   const handlePost = async (e) => {
@@ -211,6 +242,16 @@ export default function CreatePostView({ onBack, onPost, user }) {
                 {files.length}/{MAX_FILES} files
               </span>
             )}
+
+            <button
+              onClick={insertCodeBlock}
+              className="p-2.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              title="Add code block"
+              disabled={isPosting}
+              type="button"
+            >
+              <CodeBracketIcon className="w-6 h-6" />
+            </button>
           </div>
 
           <div className="flex items-center gap-3">
