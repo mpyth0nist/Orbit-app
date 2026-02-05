@@ -29,7 +29,8 @@ import {
     getUserStats,
     checkRelationship,
     getUserByUsername,
-    getUserThreads
+    getUserThreads,
+    updatePassword
 } from "../controllers/user.controller.js";
 import {
     validateUpdateUser,
@@ -64,6 +65,13 @@ router.get("/", protect, getMyInfo);
  * @access  Private
  */
 router.patch("/", protect, validateUpdateUser, updateMyInfo);
+
+/**
+ * @route   PATCH /api/user/password
+ * @desc    Update current user password
+ * @access  Private
+ */
+router.patch("/password", protect, updatePassword);
 
 /**
  * @route   GET /api/user/stats

@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import SettingsView from '../componants/views/SettingsView';
 import EditProfileView from '../componants/views/EditProfileView';
+import SecurityView from '../componants/views/SecurityView';
 import Sidebar from '../componants/layout/Sidebar';
 import Header from '../componants/layout/Header';
 import MobileNav from '../componants/layout/MobileNav';
@@ -14,6 +15,7 @@ export default function Settings() {
   const navigate = useNavigate();
   const { user, setUser } = useAuth();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isEditingSecurity, setIsEditingSecurity] = useState(false);
   const { isDarkMode } = useTheme();
 
   // Fetch notifications count
@@ -64,10 +66,21 @@ export default function Settings() {
               onBack={() => setIsEditingProfile(false)}
               onSave={handleUserUpdate}
             />
+          ) : isEditingSecurity ? (
+            <SecurityView
+              onBack={() => setIsEditingSecurity(false)}
+            />
           ) : (
             <SettingsView
               user={user}
-              onEditProfile={() => setIsEditingProfile(true)}
+              onEditProfile={() => {
+                setIsEditingSecurity(false);
+                setIsEditingProfile(true);
+              }}
+              onEditSecurity={() => {
+                setIsEditingProfile(false);
+                setIsEditingSecurity(true);
+              }}
             />
           )}
         </main>

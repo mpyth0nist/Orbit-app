@@ -62,7 +62,7 @@ const SettingsItem = ({ icon: Icon, label, description, onClick, danger, toggle,
   </button>
 );
 
-export default function SettingsView({ user, onEditProfile }) {
+export default function SettingsView({ user, onEditProfile, onEditSecurity }) {
   const [notifications, setNotifications] = React.useState(true);
   const { isDarkMode, toggleTheme } = useTheme();
   const { language, changeLanguage, t } = useLanguage();
@@ -213,7 +213,9 @@ export default function SettingsView({ user, onEditProfile }) {
             icon={() => <span className="text-lg">🔐</span>}
             label={t('security')}
             description={t('securityDesc') || 'Password, two-factor authentication'}
-            onClick={() => { }}
+            onClick={() => {
+              if (onEditSecurity) onEditSecurity();
+            }}
             isDarkMode={isDarkMode}
           />
         </SettingsSection>

@@ -247,6 +247,7 @@ export const usersAPI = {
       : apiClient.get('/user/following', { params: { page, limit } }),
   removeFollower: (userId) => apiClient.delete(`/user/followers/${userId}`),
   updateFollowRequest: (userId, isAccepted) => apiClient.patch(`/user/follow-requests/${userId}`, { isAccepted }),
+  updatePassword: (data) => apiClient.patch('/user/password', data),
 
   // Profile Tabs Data
   getMyLikedPosts: ({ page = 1, limit = 20 } = {}) =>
