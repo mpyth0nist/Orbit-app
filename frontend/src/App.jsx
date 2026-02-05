@@ -9,6 +9,7 @@ import Thread from './Pages/Thread'
 import Search from './Pages/Search'
 import Notifications from './Pages/Notifications'
 import Communities from './Pages/Communities'
+import CommunityDetail from './Pages/CommunityDetail'
 import Profile from './Pages/Profile'
 import Settings from './Pages/Settings'
 import UserProfile from './Pages/UserProfile'
@@ -147,6 +148,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Communities />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/communities/:id"
+                  element={
+                    <ProtectedRoute>
+                      <CommunityDetail />
                     </ProtectedRoute>
                   }
                 />
