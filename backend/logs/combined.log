@@ -30592,3 +30592,2845 @@ SIGINT received. Starting graceful shutdown...
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
 }
+2026-02-05 12:34:46 [info]: 🚀 Server is running on port 8080
+2026-02-05 12:34:46 [info]: 🚀 Server is running on port 8080
+2026-02-05 12:34:46 [info]: 🚀 Server is running on port 8080
+2026-02-05 12:34:46 [info]: 📝 Environment: development
+2026-02-05 12:34:46 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 12:34:46 [info]: 🚀 Server is running on port 8080
+2026-02-05 12:34:46 [info]: 📝 Environment: development
+2026-02-05 12:34:46 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 12:34:46 [info]: 📝 Environment: development
+2026-02-05 12:34:46 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 12:34:46 [info]: 📝 Environment: development
+2026-02-05 12:34:46 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 12:35:17 [info]: User logged in successfully
+{
+  "userId": 2,
+  "username": "khoukhou",
+  "email": "khoudaabdelaaziz@gmail.com"
+}
+2026-02-05 12:35:17 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "39ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:17 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:35:18 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:20 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "10ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:24 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:29 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/trending?limit=10",
+  "status": 500,
+  "duration": "9ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:29 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:30 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/trending?limit=10",
+  "status": 500,
+  "duration": "9ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:31 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/trending?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:32 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:35:32 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:35:32 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:35:32 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "54ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:33 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:35 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:38 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/media?page=1&limit=50",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:39 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "11ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:40 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/media?page=1&limit=50",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:41 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/likes?page=1&limit=50",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:41 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/saved?page=1&limit=50",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:45 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/media?page=1&limit=50",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:45 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/likes?page=1&limit=50",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:47 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:47 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:35:47 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:35:47 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:35:48 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:50 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:35:54 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:36:01 [info]: 🚀 Server is running on port 8080
+2026-02-05 12:36:01 [info]: 📝 Environment: development
+2026-02-05 12:36:01 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 12:36:13 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "43ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:36:13 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:36:14 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:36:17 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "23ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:36:17 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:36:21 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:38:08 [info]: User logged in successfully
+{
+  "userId": 2,
+  "username": "khoukhou",
+  "email": "khoudaabdelaaziz@gmail.com"
+}
+2026-02-05 12:38:08 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "24ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:38:08 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:38:09 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "9ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:38:11 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:38:15 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:38:17 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "38ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:38:17 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:38:17 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:38:17 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:38:18 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:38:20 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:38:24 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:41:44 [info]: 🚀 Server is running on port 8080
+2026-02-05 12:41:44 [info]: 📝 Environment: development
+2026-02-05 12:41:44 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 12:42:06 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "162ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:42:06 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:42:07 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:42:09 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:42:13 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:42:50 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "38ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:42:50 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:42:51 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:42:53 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "13ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:42:53 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:42:57 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "9ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:43:01 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:43:01 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:43:01 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:43:01 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:43:02 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:43:04 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "13ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:43:08 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:43:35 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:43:35 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "46ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:43:36 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:43:38 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "9ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:43:42 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:44:13 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "20ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:44:13 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:44:14 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:44:16 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:44:20 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "10ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:51:13 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:51:13 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:51:13 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:51:13 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "35ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:52:06 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "35ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:52:06 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:52:08 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "17ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:52:12 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:52:14 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:52:14 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "39ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:52:15 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:52:17 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "16ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:52:21 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:17 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/trending?limit=10",
+  "status": 500,
+  "duration": "20ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:18 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/trending?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:18 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:19 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:20 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "16ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:20 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:53:20 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:53:20 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 12:53:21 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:23 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:23 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/likes?page=1&limit=50",
+  "status": 500,
+  "duration": "25ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:24 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/media?page=1&limit=50",
+  "status": 500,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:53:27 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:54:08 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:54:08 [info]: All notifications marked as read
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:54:08 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 12:54:08 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:54:08 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:54:11 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:54:11 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:54:13 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:54:13 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "15ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:54:14 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:54:16 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:54:20 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:24 [info]: 🚀 Server is running on port 8080
+2026-02-05 12:55:24 [info]: 📝 Environment: development
+2026-02-05 12:55:24 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 12:55:25 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:55:25 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "24ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:26 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:27 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:55:27 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:28 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:30 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "9ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:34 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:56 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 12:55:56 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "63ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:57 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "20ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:55:59 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:56:03 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:58:26 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "17ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 12:58:26 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:01:04 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "257ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:01:04 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:02:15 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:02:15 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "56ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:02:19 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:05:27 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:05:27 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:05:27 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:05:27 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:05:27 [info]: 📝 Environment: development
+2026-02-05 13:05:27 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:05:27 [info]: 📝 Environment: development
+2026-02-05 13:05:27 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:05:27 [info]: 📝 Environment: development
+2026-02-05 13:05:27 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:05:27 [info]: 📝 Environment: development
+2026-02-05 13:05:27 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:06:03 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 10,
+  "hasMore": true,
+  "followingCount": 2
+}
+2026-02-05 13:07:37 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:09:10 [info]: Trending threads fetched
+{
+  "userId": 2,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 13:10:21 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:10:21 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:10:21 [info]: 📝 Environment: development
+2026-02-05 13:10:21 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:10:21 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:10:21 [info]: 📝 Environment: development
+2026-02-05 13:10:21 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:10:21 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:10:21 [info]: 📝 Environment: development
+2026-02-05 13:10:21 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:10:21 [info]: 📝 Environment: development
+2026-02-05 13:10:21 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:10:42 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:10:42 [info]: 📝 Environment: development
+2026-02-05 13:10:42 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:10:42 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:10:42 [info]: 📝 Environment: development
+2026-02-05 13:10:42 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:10:42 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:10:42 [info]: 📝 Environment: development
+2026-02-05 13:10:42 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:10:42 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:10:42 [info]: 📝 Environment: development
+2026-02-05 13:10:42 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:10:56 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:10:56 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:10:56 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:10:56 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:10:56 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:02 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:11:02 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:11:02 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:02 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:02 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:05 [info]: Relationship checked
+{
+  "currentUserId": 2,
+  "targetUserId": 4,
+  "relationship": "MUTUAL"
+}
+2026-02-05 13:11:05 [info]: User threads retrieved
+{
+  "currentUserId": 2,
+  "targetUserId": 4,
+  "threadsCount": 7
+}
+2026-02-05 13:11:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:09 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:12 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:11:12 [info]: Thread fetched
+{
+  "threadId": 36,
+  "userId": 2
+}
+2026-02-05 13:11:12 [info]: Thread comments retrieved
+{
+  "threadId": 36,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 13:11:18 [info]: Relationship checked
+{
+  "currentUserId": 2,
+  "targetUserId": 4,
+  "relationship": "MUTUAL"
+}
+2026-02-05 13:11:18 [info]: User threads retrieved
+{
+  "currentUserId": 2,
+  "targetUserId": 4,
+  "threadsCount": 7
+}
+2026-02-05 13:11:18 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:27 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:11:27 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:11:36 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:11:36 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:11:36 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:11:39 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:11:39 [info]: Thread fetched
+{
+  "threadId": 15,
+  "userId": 2
+}
+2026-02-05 13:11:39 [info]: Thread comments retrieved
+{
+  "threadId": 15,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 13:11:42 [warn]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/reactions/thread/15",
+  "status": 403,
+  "duration": "29ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:11:42 [info]: Thread fetched
+{
+  "threadId": 15,
+  "userId": 2
+}
+2026-02-05 13:11:43 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:11:43 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:11:43 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:11:49 [info]: Thread saved
+{
+  "threadId": 15,
+  "userId": 2
+}
+2026-02-05 13:14:59 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:15:01 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:02 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:02 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:02 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:02 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:15:02 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:15:05 [info]: Trending threads fetched
+{
+  "userId": 2,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 13:15:06 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:06 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:06 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:15:07 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:12 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "20ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:12 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:15:15 [info]: User search performed
+{
+  "userId": 2,
+  "searchTerm": "la",
+  "resultsCount": 2
+}
+2026-02-05 13:15:16 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:17 [info]: Relationship checked
+{
+  "currentUserId": 2,
+  "targetUserId": 1,
+  "relationship": "MUTUAL"
+}
+2026-02-05 13:15:17 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:17 [info]: User threads retrieved
+{
+  "currentUserId": 2,
+  "targetUserId": 1,
+  "threadsCount": 3
+}
+2026-02-05 13:15:17 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:22 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "18ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:22 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:15:27 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:15:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:27 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:15:29 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:15:52 [info]: CreateThread request
+{
+  "userId": 2,
+  "contentLength": 29,
+  "repostId": null,
+  "filesCount": 1,
+  "files": [
+    {
+      "originalname": "fullstack stracture.jpeg",
+      "mimetype": "image/jpeg",
+      "size": 140385
+    }
+  ]
+}
+2026-02-05 13:15:52 [info]: Thread created successfully
+{
+  "userId": 2,
+  "threadId": 39,
+  "mediaCount": 1
+}
+2026-02-05 13:15:52 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:52 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:15:52 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:15:52 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:15:57 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:15:57 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:15:57 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:16:02 [info]: Thread saved
+{
+  "threadId": 39,
+  "userId": 2
+}
+2026-02-05 13:16:39 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:16:42 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:16:42 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:16:42 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:16:42 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:16:42 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:17:01 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:20:49 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:24:44 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:33:10 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:33:13 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:33:13 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:33:14 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:33:14 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:33:14 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:33:22 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:33:22 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:35:52 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:35:52 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:37:55 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:37:55 [info]: 📝 Environment: development
+2026-02-05 13:37:55 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:38:07 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:38:07 [info]: 📝 Environment: development
+2026-02-05 13:38:07 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:38:45 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 13:38:45 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:45 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 13:38:45 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:47 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 13:38:47 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:53 [info]: User logged in successfully
+{
+  "userId": 2,
+  "username": "khoukhou",
+  "email": "khoudaabdelaaziz@gmail.com"
+}
+2026-02-05 13:38:53 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:38:53 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:38:53 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:53 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:53 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:55 [info]: Trending threads fetched
+{
+  "userId": 2,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 13:38:56 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:56 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:56 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:38:57 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "11ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:57 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:38:57 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:38:57 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 13:38:57 [info]: All notifications marked as read
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:38:57 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:38:57 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:38:57 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 13:38:58 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:38:58 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:38:58 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:38:58 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:38:59 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:38:59 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:38:59 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 13:39:04 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:39:04 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:39:04 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 13:39:04 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:39:04 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:39:10 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:39:10 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:40:11 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:40:11 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:40:42 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:40:42 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:40:45 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:44:43 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:45:26 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:45:37 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:46:36 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:47:08 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:47:29 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:47:49 [info]: Profile updated
+{
+  "userId": 2
+}
+2026-02-05 13:48:06 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:06 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:06 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:06 [info]: 📝 Environment: development
+2026-02-05 13:48:06 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:06 [info]: 📝 Environment: development
+2026-02-05 13:48:06 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:06 [info]: 📝 Environment: development
+2026-02-05 13:48:06 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:06 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:06 [info]: 📝 Environment: development
+2026-02-05 13:48:06 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:22 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:22 [info]: 📝 Environment: development
+2026-02-05 13:48:22 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:22 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:22 [info]: 📝 Environment: development
+2026-02-05 13:48:22 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:22 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:22 [info]: 📝 Environment: development
+2026-02-05 13:48:22 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:22 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:22 [info]: 📝 Environment: development
+2026-02-05 13:48:22 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:28 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:28 [info]: 📝 Environment: development
+2026-02-05 13:48:28 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:28 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:28 [info]: 📝 Environment: development
+2026-02-05 13:48:28 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:28 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:28 [info]: 📝 Environment: development
+2026-02-05 13:48:28 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:28 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:48:28 [info]: 📝 Environment: development
+2026-02-05 13:48:28 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:48:35 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:50:01 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:50:37 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:51:40 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:51:48 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:51:59 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:52:27 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:54:47 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 13:55:40 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 14:11:54 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 14:13:00 [warn]: HTTP Request
+{
+  "method": "PATCH",
+  "url": "/api/user/password",
+  "status": 401,
+  "duration": "104ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 14:13:26 [info]: Password updated successfully
+{
+  "userId": 2
+}
+2026-02-05 14:13:43 [info]: User logged in successfully
+{
+  "userId": 2,
+  "username": "khoukhou",
+  "email": "khoudaabdelaaziz@gmail.com"
+}
+2026-02-05 14:13:43 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 14:13:43 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 14:13:43 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 14:13:43 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 14:13:43 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 14:13:52 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 14:13:52 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 14:13:52 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 14:13:52 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 14:52:52 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 14:52:52 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 14:52:57 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 14:52:57 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 15:42:27 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 15:42:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "80ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:27 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:28 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 15:42:28 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:28 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:28 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:30 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 15:42:30 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:30 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:30 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:30 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:30 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:31 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:31 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:33 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:33 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:37 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:37 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:46 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:46 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:46 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "94ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:46 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/mark-all-read"
+}
+2026-02-05 15:42:46 [warn]: HTTP Request
+{
+  "method": "PATCH",
+  "url": "/api/notifications/mark-all-read",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:46 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:42:46 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:47 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:47 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:47 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:42:47 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:48 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 15:42:48 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:48 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:48 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:48 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:49 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:49 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:49 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 15:42:49 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:51 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/mark-all-read"
+}
+2026-02-05 15:42:51 [warn]: HTTP Request
+{
+  "method": "PATCH",
+  "url": "/api/notifications/mark-all-read",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:51 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:42:51 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:52 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:42:52 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:53 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:42:53 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "14ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:54 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:42:54 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:42:58 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:42:58 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:01 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:43:01 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?filter=like&limit=50",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:01 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:43:01 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?filter=comment&limit=50",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:02 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:43:02 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?filter=follow&limit=50",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:03 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:43:03 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?filter=follow&limit=50",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:04 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:43:04 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:05 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:43:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:05 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 15:43:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:05 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:43:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:06 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 15:43:06 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:06 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:43:06 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:08 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/feed"
+}
+2026-02-05 15:43:08 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/feed?limit=10",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 15:43:08 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 15:43:08 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
