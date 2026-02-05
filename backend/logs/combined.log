@@ -33434,3 +33434,1125 @@ SIGINT received. Starting graceful shutdown...
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
 }
+2026-02-05 15:55:51 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 15:55:51 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "18ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:04:00 [info]: User logged in successfully
+{
+  "userId": 2,
+  "username": "khoukhou",
+  "email": "khoudaabdelaaziz@gmail.com"
+}
+2026-02-05 16:04:00 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:04:00 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:04:01 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:04:01 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:04:01 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:04:47 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:04:47 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:09:17 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:17 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:09:21 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:21 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:09:21 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:09:27 [info]: User liked posts retrieved
+{
+  "userId": 2,
+  "totalCount": 8
+}
+2026-02-05 16:09:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:09:32 [info]: User media retrieved
+{
+  "userId": 2,
+  "totalCount": 1
+}
+2026-02-05 16:09:33 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:42 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:09:42 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:09:42 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:43 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:44 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:44 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 16:09:44 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:09:44 [info]: All notifications marked as read
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:44 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:44 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 16:09:45 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:09:45 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:46 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:09:46 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:46 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:09:46 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:09:46 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:09:51 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:51 [info]: Thread fetched
+{
+  "threadId": 38,
+  "userId": 2
+}
+2026-02-05 16:09:56 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:09:56 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:09:56 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:09:56 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:10:00 [info]: Thread reposted
+{
+  "userId": 2,
+  "originalThreadId": 38,
+  "rootThreadId": 38,
+  "repostId": 40
+}
+2026-02-05 16:10:00 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:10:03 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:07 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:07 [info]: Thread fetched
+{
+  "threadId": 21,
+  "userId": 2
+}
+2026-02-05 16:10:13 [info]: CreateThread request
+{
+  "userId": 2,
+  "contentLength": 6,
+  "repostId": 21,
+  "filesCount": 0,
+  "files": []
+}
+2026-02-05 16:10:13 [info]: Thread created successfully
+{
+  "userId": 2,
+  "threadId": 41,
+  "mediaCount": 0
+}
+2026-02-05 16:10:13 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "9ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:13 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:13 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:13 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:10:14 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:19 [info]: Trending threads fetched
+{
+  "userId": 2,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 16:10:20 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:20 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:20 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:10:22 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:22 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:10:22 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:10:23 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:24 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:10:24 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:10:24 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:39 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "24ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:39 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:41 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:41 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "15ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:41 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:41 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:41 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:10:43 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:43 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:43 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:10:43 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:43 [info]: All notifications marked as read
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:43 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 16:10:43 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:43 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 16:10:43 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:44 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:10:44 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:10:44 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:10:46 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:22:11 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:26:00 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:26:07 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:26:07 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:26:07 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:26:11 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:14 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:14 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:16 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:16 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:19 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:19 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:21 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:21 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:23 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:26:23 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:26:23 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:23 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:23 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:24 [info]: Relationship checked
+{
+  "currentUserId": 2,
+  "targetUserId": 4,
+  "relationship": "MUTUAL"
+}
+2026-02-05 16:26:24 [info]: User threads retrieved
+{
+  "currentUserId": 2,
+  "targetUserId": 4,
+  "threadsCount": 7
+}
+2026-02-05 16:26:24 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "10ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:27 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:26:27 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:26:27 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:27:07 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:27:07 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:27:08 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:27:08 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 16:27:08 [info]: All notifications marked as read
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:27:08 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:27:08 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:27:08 [info]: Notifications retrieved
+{
+  "userId": 2,
+  "filter": "all",
+  "count": 7,
+  "originalCount": 7,
+  "hasMore": false
+}
+2026-02-05 16:27:12 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:27:13 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:27:13 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:27:13 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:28:45 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:28:52 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "15ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:28:52 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:28:53 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:28:53 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "13ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:28:53 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "11ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:28:53 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:28:53 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:29:04 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:29:07 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:29:07 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:29:07 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:29:37 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:29:38 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:29:47 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:29:47 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:29:47 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:29:47 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:29:47 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:30:10 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:30:10 [info]: Thread fetched
+{
+  "threadId": 38,
+  "userId": 2
+}
+2026-02-05 16:30:10 [info]: Thread comments retrieved
+{
+  "threadId": 38,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 16:30:16 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:30:16 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:30:16 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:30:16 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 16:30:18 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/profiles/favicon1-1770125921028-1-670776996.png",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:30:20 [info]: Trending threads fetched
+{
+  "userId": 2,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 16:30:46 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:30:48 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:30:48 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:30:48 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:38:30 [info]: 🚀 Server is running on port 8080
+2026-02-05 16:38:30 [info]: 🚀 Server is running on port 8080
+2026-02-05 16:38:30 [info]: 📝 Environment: development
+2026-02-05 16:38:30 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 16:38:30 [info]: 🚀 Server is running on port 8080
+2026-02-05 16:38:30 [info]: 📝 Environment: development
+2026-02-05 16:38:30 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 16:38:30 [info]: 📝 Environment: development
+2026-02-05 16:38:30 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 16:38:30 [info]: 🚀 Server is running on port 8080
+2026-02-05 16:38:30 [info]: 📝 Environment: development
+2026-02-05 16:38:30 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 16:39:09 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:39:13 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:39:13 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": true,
+  "followingCount": 2
+}
+2026-02-05 16:39:18 [info]: Trending threads fetched
+{
+  "userId": 2,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 16:39:19 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:39:19 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:39:19 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": true,
+  "followingCount": 2
+}
+2026-02-05 16:39:24 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:39:24 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:39:24 [info]: User stats retrieved
+{
+  "userId": 2
+}
+2026-02-05 16:39:27 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 16:39:27 [info]: Feed fetched
+{
+  "userId": 2,
+  "threadsCount": 10,
+  "hasMore": true,
+  "followingCount": 2
+}
+2026-02-05 16:39:28 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/fullstack%20stracture-1770156998848-4-226643002.jpeg",
+  "status": 404,
+  "duration": "1ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
+2026-02-05 16:39:28 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/uploads/threads/ecc4120e-4f54-4bcd-8b54-ecce8ca56913-cover-1770155498555-4-859584697.png",
+  "status": 404,
+  "duration": "0ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
