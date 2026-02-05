@@ -167,13 +167,21 @@ export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoa
       <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
         {/* Author */}
         <div className="flex items-center gap-3 mb-4">
-          <img
-            src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.full_name || 'User')}&background=6366f1&color=fff`}
-            alt="Profile"
-            className="w-12 h-12 rounded-full object-cover ring-2 ring-indigo-100"
-          />
+          <div className={`w-12 h-12 rounded-full overflow-hidden flex-shrink-0 ${!user?.photoUrl && !user?.profile?.photoUrl && 'bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white font-semibold shadow-lg'}`}>
+            {(user?.photoUrl || user?.profile?.photoUrl) ? (
+              <img
+                src={getMediaUrl(user?.photoUrl || user?.profile?.photoUrl)}
+                alt="Profile"
+                className="w-full h-full object-cover ring-2 ring-indigo-100"
+              />
+            ) : (
+              (user?.firstName || user?.profile?.firstName || 'U').charAt(0).toUpperCase()
+            )}
+          </div>
           <div>
-            <p className="font-semibold text-gray-900">{user?.full_name || 'User'}</p>
+            <p className="font-semibold text-gray-900">
+              {user?.firstName ? `${user.firstName} ${user.lastName || ''}` : user?.profile?.firstName ? `${user.profile.firstName} ${user.profile.lastName || ''}` : user?.full_name || 'User'}
+            </p>
             <div className="flex items-center gap-1.5 text-sm text-gray-500">
               <GlobeIcon className="w-4 h-4" />
               <span>Public</span>
