@@ -1606,6 +1606,7 @@ Error: write EPIPE
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
 }
+<<<<<<< HEAD
 2026-02-05 12:35:17 [error]: HTTP Request
 {
   "method": "GET",
@@ -2255,10 +2256,14 @@ Error: write EPIPE
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
 }
 2026-02-05 12:54:11 [error]: HTTP Request
+=======
+2026-02-05 12:16:38 [error]: HTTP Request
+>>>>>>> 99122707072ef928f0b5e6e1f90894523a6daf88
 {
   "method": "GET",
   "url": "/api/hashtags/trending?limit=10",
   "status": 500,
+<<<<<<< HEAD
   "duration": "3ms",
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
@@ -2435,12 +2440,20 @@ Error: write EPIPE
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
 }
 2026-02-05 13:15:22 [error]: HTTP Request
+=======
+  "duration": "12ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:12:59 [error]: HTTP Request
+>>>>>>> 99122707072ef928f0b5e6e1f90894523a6daf88
 {
   "method": "GET",
   "url": "/api/hashtags/trending?limit=10",
   "status": 500,
   "duration": "18ms",
   "ip": "::1",
+<<<<<<< HEAD
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
 }
 2026-02-05 13:38:57 [error]: HTTP Request
@@ -2460,4 +2473,7 @@ Error: write EPIPE
   "duration": "94ms",
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+=======
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+>>>>>>> 99122707072ef928f0b5e6e1f90894523a6daf88
 }

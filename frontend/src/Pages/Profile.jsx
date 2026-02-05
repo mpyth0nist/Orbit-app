@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -9,24 +9,34 @@ import EditProfileView from '../componants/views/EditProfileView';
 import Sidebar from '../componants/layout/Sidebar';
 import Header from '../componants/layout/Header';
 import MobileNav from '../componants/layout/MobileNav';
-
 export default function Profile() {
   const { user, setUser } = useAuth();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const { isDarkMode } = useTheme();
   const { t, isDarkMode: themeDarkMode } = useLanguage();
+  const queryClient = useQueryClient();
 
-  // Fetch user posts
-  const { data: userPostsData, isLoading: postsLoading, error: postsError } = useQuery({
+  // Fetch user posts with infinite scroll
+  const {
+    data: userPostsData,
+    isLoading: postsLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
     queryKey: ['userPosts', user?.id],
-    queryFn: async () => {
-      const response = await api.users.getMyThreads();
+    queryFn: async ({ pageParam = 1 }) => {
+      const response = await api.users.getMyThreads({ page: pageParam });
       return response;
+    },
+    getNextPageParam: (lastPage) => {
+      const pagination = lastPage.pagination;
+      return pagination?.hasNextPage ? pagination.currentPage + 1 : undefined;
     },
     enabled: !!user?.id,
   });
 
-  const userPosts = userPostsData || [];
+  const userPosts = userPostsData?.pages.flatMap(page => Array.isArray(page) ? page : page.data || []) || [];
 
   // Fetch notifications count
   const { data: unreadData } = useQuery({
@@ -83,6 +93,9 @@ export default function Profile() {
               onSettingsClick={() => window.location.href = '/settings'}
               userPosts={userPosts}
               isLoading={postsLoading}
+              onLoadMore={() => fetchNextPage()}
+              hasMore={!!hasNextPage}
+              loadingMore={isFetchingNextPage}
             />
           )}
         </main>
