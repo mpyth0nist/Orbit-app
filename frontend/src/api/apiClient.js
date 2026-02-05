@@ -220,7 +220,7 @@ export const usersAPI = {
   updateProfilePicture: (data) => apiClient.patch('/user/profile/picture', data),
 
   // Threads
-  getMyThreads: () => apiClient.get('/user/threads'),
+  getMyThreads: ({ page = 1, limit = 20 } = {}) => apiClient.get('/user/threads', { params: { page, limit } }),
   getUserThreads: (userId, { page = 1, limit = 20 } = {}) =>
     apiClient.get(`/user/${userId}/threads`, { params: { page, limit } }),
 
@@ -247,6 +247,7 @@ export const usersAPI = {
       : apiClient.get('/user/following', { params: { page, limit } }),
   removeFollower: (userId) => apiClient.delete(`/user/followers/${userId}`),
   updateFollowRequest: (userId, isAccepted) => apiClient.patch(`/user/follow-requests/${userId}`, { isAccepted }),
+  updatePassword: (data) => apiClient.patch('/user/password', data),
 
   // Profile Tabs Data
   getMyLikedPosts: ({ page = 1, limit = 20 } = {}) =>

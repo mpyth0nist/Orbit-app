@@ -19,6 +19,54 @@ import {
 } from '../utils/response.js';
 import { createFollowNotification, deleteNotification } from '../utils/notificationService.js';
 import { normalizeThread, normalizeThreads } from '../utils/threads.js';
+import { comparePassword, hashPassword } from '../utils/authService.js';
+
+/**
+ * @desc    Update user password
+ * @route   PATCH /api/user/password
+ * @access  Private
+ */
+export const updatePassword = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+        return errorResponse(res, 'Current and new password are required', 400);
+    }
+
+    if (newPassword.length < 8) {
+        return errorResponse(res, 'New password must be at least 8 characters long', 400);
+    }
+
+    // Find user to get current password hash
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { passwordHash: true }
+    });
+
+    if (!user) {
+        return errorResponse(res, 'User not found', 404);
+    }
+
+    // Verify current password
+    const isPasswordValid = await comparePassword(currentPassword, user.passwordHash);
+    if (!isPasswordValid) {
+        return errorResponse(res, 'Invalid current password', 401);
+    }
+
+    // Hash new password
+    const hashedNewPassword = await hashPassword(newPassword);
+
+    // Update password
+    await prisma.user.update({
+        where: { id: userId },
+        data: { passwordHash: hashedNewPassword }
+    });
+
+    logger.info('Password updated successfully', { userId });
+
+    return successResponse(res, null, 'Password updated successfully');
+});
 
 /**
  * @desc    Get current user's information
