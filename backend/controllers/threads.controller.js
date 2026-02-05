@@ -88,24 +88,14 @@ export const getFeed = asyncHandler(async (req, res) => {
         }
     });
 
-    // Extract the user IDs
+    // Extract the user IDs and include the current user's ID
     const followedUserIds = followedUsers.map(follow => follow.followedId);
-
-    // If user doesn't follow anyone, return empty feed
-    if (followedUserIds.length === 0) {
-        logger.info('Empty feed - user follows no one', { userId });
-        return cursorPaginatedResponse(
-            res,
-            [],
-            { nextCursor: null, limit },
-            'Your feed is empty. Start following users to see their threads!'
-        );
-    }
+    const feedUserIds = [...followedUserIds, userId];
 
     // Build where clause based on cursor
     const whereClause = {
         userId: {
-            in: followedUserIds
+            in: feedUserIds
         }
     };
 
