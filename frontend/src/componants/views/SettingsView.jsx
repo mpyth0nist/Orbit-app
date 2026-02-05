@@ -62,7 +62,7 @@ const SettingsItem = ({ icon: Icon, label, description, onClick, danger, toggle,
   </button>
 );
 
-export default function SettingsView({ user, onEditProfile, onEditSecurity }) {
+export default function SettingsView({ user, onEditProfile, onEditSecurity, onHelpCenter, onFeedback }) {
   const [notifications, setNotifications] = React.useState(true);
   const { isDarkMode, toggleTheme } = useTheme();
   const { language, changeLanguage, t } = useLanguage();
@@ -266,28 +266,17 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity }) {
             icon={() => <span className="text-lg">❓</span>}
             label={t('helpCenter')}
             description={t('helpCenterDesc') || 'Get help with your account'}
-            onClick={() => { }}
+            onClick={onHelpCenter}
             isDarkMode={isDarkMode}
           />
           <SettingsItem
             icon={() => <span className="text-lg">📝</span>}
             label={t('sendFeedback')}
             description={t('sendFeedbackDesc') || 'Help us improve the app'}
-            onClick={() => { }}
+            onClick={onFeedback}
             isDarkMode={isDarkMode}
           />
-          <SettingsItem
-            icon={() => <span className="text-lg">📋</span>}
-            label={t('termsOfService')}
-            onClick={() => { }}
-            isDarkMode={isDarkMode}
-          />
-          <SettingsItem
-            icon={() => <span className="text-lg">🔏</span>}
-            label={t('privacyPolicy')}
-            onClick={() => { }}
-            isDarkMode={isDarkMode}
-          />
+
         </SettingsSection>
 
         {/* Danger Zone */}

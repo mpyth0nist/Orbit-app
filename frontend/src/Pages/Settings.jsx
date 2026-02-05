@@ -7,6 +7,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import SettingsView from '../componants/views/SettingsView';
 import EditProfileView from '../componants/views/EditProfileView';
 import SecurityView from '../componants/views/SecurityView';
+import HelpCenterView from '../componants/views/HelpCenterView';
+import FeedbackView from '../componants/views/FeedbackView';
 import Sidebar from '../componants/layout/Sidebar';
 import Header from '../componants/layout/Header';
 import MobileNav from '../componants/layout/MobileNav';
@@ -16,6 +18,8 @@ export default function Settings() {
   const { user, setUser } = useAuth();
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isEditingSecurity, setIsEditingSecurity] = useState(false);
+  const [isHelpCenter, setIsHelpCenter] = useState(false);
+  const [isSendingFeedback, setIsSendingFeedback] = useState(false);
   const { isDarkMode } = useTheme();
 
   // Fetch notifications count
@@ -70,16 +74,40 @@ export default function Settings() {
             <SecurityView
               onBack={() => setIsEditingSecurity(false)}
             />
+          ) : isHelpCenter ? (
+            <HelpCenterView
+              onBack={() => setIsHelpCenter(false)}
+            />
+          ) : isSendingFeedback ? (
+            <FeedbackView
+              onBack={() => setIsSendingFeedback(false)}
+            />
           ) : (
             <SettingsView
               user={user}
               onEditProfile={() => {
                 setIsEditingSecurity(false);
+                setIsHelpCenter(false);
+                setIsSendingFeedback(false);
                 setIsEditingProfile(true);
               }}
               onEditSecurity={() => {
                 setIsEditingProfile(false);
+                setIsHelpCenter(false);
+                setIsSendingFeedback(false);
                 setIsEditingSecurity(true);
+              }}
+              onHelpCenter={() => {
+                setIsEditingProfile(false);
+                setIsEditingSecurity(false);
+                setIsSendingFeedback(false);
+                setIsHelpCenter(true);
+              }}
+              onFeedback={() => {
+                setIsEditingProfile(false);
+                setIsEditingSecurity(false);
+                setIsHelpCenter(false);
+                setIsSendingFeedback(true);
               }}
             />
           )}
