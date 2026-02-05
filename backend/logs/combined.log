@@ -35296,3 +35296,13 @@ SIGINT received. Starting graceful shutdown...
   "userId": 2,
   "count": 0
 }
+2026-02-05 17:32:52 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
+2026-02-05 17:33:12 [info]: Unread notification count retrieved
+{
+  "userId": 2,
+  "count": 0
+}
