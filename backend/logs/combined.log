@@ -30592,3 +30592,1257 @@ SIGINT received. Starting graceful shutdown...
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
 }
+2026-02-05 12:15:58 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 12:15:58 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:15:58 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/threads"
+}
+2026-02-05 12:15:58 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:15:59 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 12:15:59 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:15:59 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/threads"
+}
+2026-02-05 12:15:59 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:16:01 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 12:16:01 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:16:01 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/threads"
+}
+2026-02-05 12:16:01 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:16:05 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 12:16:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:16:05 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/threads"
+}
+2026-02-05 12:16:05 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 401,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:16:10 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/saved"
+}
+2026-02-05 12:16:10 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/saved?page=1&limit=50",
+  "status": 401,
+  "duration": "15ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:16:15 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 12:16:15 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:16:23 [info]: User logged in successfully
+{
+  "userId": 1,
+  "username": "pythonist01",
+  "email": "pythonist@gmail.com"
+}
+2026-02-05 12:16:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 12:16:23 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 12:16:38 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "12ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 12:16:38 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 12:16:41 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "youu",
+  "resultsCount": 0
+}
+2026-02-05 12:16:42 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "you",
+  "resultsCount": 1
+}
+2026-02-05 12:16:44 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "ka",
+  "resultsCount": 1
+}
+2026-02-05 12:16:45 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kadd",
+  "resultsCount": 1
+}
+2026-02-05 12:16:47 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "youssef",
+  "resultsCount": 1
+}
+2026-02-05 12:16:48 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "youssef ka",
+  "resultsCount": 0
+}
+2026-02-05 12:16:49 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "youssef kadd",
+  "resultsCount": 0
+}
+2026-02-05 12:16:50 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "youssef kaddi",
+  "resultsCount": 0
+}
+2026-02-05 12:16:50 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "youssef kaddioui",
+  "resultsCount": 0
+}
+2026-02-05 12:16:58 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "kaddioui",
+  "resultsCount": 1
+}
+2026-02-05 12:17:01 [info]: User search performed
+{
+  "userId": 1,
+  "searchTerm": "youse",
+  "resultsCount": 0
+}
+2026-02-05 12:17:08 [info]: Thread FTS search completed
+{
+  "userId": 1,
+  "searchQuery": "youse",
+  "resultsCount": 0,
+  "totalCount": 0
+}
+2026-02-05 12:17:11 [info]: Thread FTS search completed
+{
+  "userId": 1,
+  "searchQuery": "test",
+  "resultsCount": 11,
+  "totalCount": 11
+}
+2026-02-05 12:17:16 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 12:17:16 [info]: Thread fetched
+{
+  "threadId": 36,
+  "userId": 1
+}
+2026-02-05 12:17:16 [info]: Thread comments retrieved
+{
+  "threadId": 36,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 12:19:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:08:54 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:08:55 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:08:55 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:12:57 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:12:59 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "18ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:12:59 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:13:00 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:13:00 [info]: All notifications marked as read
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:13:00 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:13:00 [info]: Notifications retrieved
+{
+  "userId": 1,
+  "filter": "all",
+  "count": 2,
+  "originalCount": 2,
+  "hasMore": false
+}
+2026-02-05 13:17:19 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 13:17:19 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:19 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 13:17:19 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:20 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 13:17:20 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:20 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 13:17:20 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications?limit=50",
+  "status": 401,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:22 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/stats"
+}
+2026-02-05 13:17:22 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/stats",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:22 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/threads"
+}
+2026-02-05 13:17:22 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:22 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/stats"
+}
+2026-02-05 13:17:22 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/stats",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:22 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 13:17:22 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:23 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/threads"
+}
+2026-02-05 13:17:23 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 401,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:25 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/threads"
+}
+2026-02-05 13:17:25 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:26 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 13:17:26 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:29 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/threads"
+}
+2026-02-05 13:17:29 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/threads",
+  "status": 401,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:31 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 13:17:31 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:17:38 [info]: User logged in successfully
+{
+  "userId": 1,
+  "username": "pythonist01",
+  "email": "pythonist@gmail.com"
+}
+2026-02-05 13:17:38 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:17:38 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:17:43 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:17:43 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:17:43 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:17:51 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:17:51 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:17:53 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:17:55 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:17:55 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 13:17:55 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:17:56 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:18:06 [info]: Comment created
+{
+  "commentId": 5,
+  "userId": 1,
+  "threadId": 2,
+  "isReply": true
+}
+2026-02-05 13:18:06 [info]: Comment replies retrieved
+{
+  "commentId": 3,
+  "count": 2,
+  "hasMore": false
+}
+2026-02-05 13:18:14 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:18:14 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 13:18:14 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:18:16 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:22:13 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:22:13 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 13:22:13 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:22:34 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:22:34 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:22:34 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:22:44 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:22:44 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:22:44 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:23:55 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:23:55 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:23:55 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:24:40 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:24:40 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:24:40 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:24:49 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:24:49 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:26:11 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:26:11 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:26:11 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:28:01 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:28:01 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:28:01 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:29:45 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:30:06 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:30:06 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:31:14 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:31:14 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:31:14 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:31:51 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:31:51 [info]: Thread fetched
+{
+  "threadId": 13,
+  "userId": 1
+}
+2026-02-05 13:31:51 [info]: Thread comments retrieved
+{
+  "threadId": 13,
+  "count": 0,
+  "hasMore": false
+}
+2026-02-05 13:31:55 [info]: Thread saved
+{
+  "threadId": 13,
+  "userId": 1
+}
+2026-02-05 13:31:56 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:31:56 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:31:57 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:31:57 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:31:57 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:32:04 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:32:04 [info]: User stats retrieved
+{
+  "userId": 1
+}
+2026-02-05 13:32:04 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:32:11 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:32:11 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 13:43:30 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:43:31 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:43:31 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 13:43:31 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:43:33 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:43:41 [info]: Comment created
+{
+  "commentId": 6,
+  "userId": 1,
+  "threadId": 2,
+  "isReply": true
+}
+2026-02-05 13:43:41 [info]: Comment replies retrieved
+{
+  "commentId": 3,
+  "count": 3,
+  "hasMore": false
+}
+2026-02-05 13:43:48 [info]: Notification created
+{
+  "notificationId": 107,
+  "actorId": 1,
+  "receiverId": 11,
+  "type": "COMMENT"
+}
+2026-02-05 13:43:48 [info]: Comment created
+{
+  "commentId": 7,
+  "userId": 1,
+  "threadId": 2,
+  "isReply": true
+}
+2026-02-05 13:43:48 [info]: Comment replies retrieved
+{
+  "commentId": 4,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:44:56 [info]: 🚀 Server is running on port 8080
+2026-02-05 13:44:56 [info]: 📝 Environment: development
+2026-02-05 13:44:56 [info]: 🔗 API: http://localhost:8080/api
+2026-02-05 13:46:23 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:46:23 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 13:46:23 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:46:26 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:46:27 [info]: Comment replies retrieved
+{
+  "commentId": 3,
+  "count": 3,
+  "hasMore": false
+}
+2026-02-05 13:46:30 [info]: Comment replies retrieved
+{
+  "commentId": 4,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:46:36 [info]: Comment created
+{
+  "commentId": 8,
+  "userId": 1,
+  "threadId": 2,
+  "isReply": true
+}
+2026-02-05 13:46:36 [info]: Comment replies retrieved
+{
+  "commentId": 7,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:47:32 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:47:37 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:47:39 [info]: Comment replies retrieved
+{
+  "commentId": 3,
+  "count": 3,
+  "hasMore": false
+}
+2026-02-05 13:47:40 [info]: Comment replies retrieved
+{
+  "commentId": 4,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:47:42 [info]: Comment replies retrieved
+{
+  "commentId": 7,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:48:18 [info]: Comment replies retrieved
+{
+  "commentId": 7,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:48:21 [info]: Comment replies retrieved
+{
+  "commentId": 7,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:48:32 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:48:32 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 13:48:32 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:50:33 [warn]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/reactions/thread/2",
+  "status": 403,
+  "duration": "12ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 13:50:33 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 13:50:34 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:50:35 [info]: Comment replies retrieved
+{
+  "commentId": 3,
+  "count": 3,
+  "hasMore": false
+}
+2026-02-05 13:50:37 [info]: Comment replies retrieved
+{
+  "commentId": 4,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 13:50:41 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 13:50:41 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 13:50:41 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 14:55:39 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 14:55:39 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/2/comments?limit=20&sort=newest",
+  "status": 401,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 14:56:06 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/2"
+}
+2026-02-05 14:56:06 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/threads/2",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 14:56:06 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 14:56:06 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 14:56:07 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 14:56:07 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "7ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 14:56:09 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/unread-count"
+}
+2026-02-05 14:56:09 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/notifications/unread-count",
+  "status": 401,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 14:56:12 [warn]: Authentication failed - invalid token
+{
+  "ip": "::1",
+  "path": "/"
+}
+2026-02-05 14:56:12 [warn]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/user/",
+  "status": 401,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 14:56:20 [info]: User logged in successfully
+{
+  "userId": 1,
+  "username": "pythonist01",
+  "email": "pythonist@gmail.com"
+}
+2026-02-05 14:56:20 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 14:56:20 [info]: Feed fetched
+{
+  "userId": 1,
+  "threadsCount": 2,
+  "hasMore": false,
+  "followingCount": 2
+}
+2026-02-05 14:56:22 [info]: Trending threads fetched
+{
+  "userId": 1,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 14:56:24 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 14:56:24 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 14:56:24 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 14:56:25 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 14:56:27 [info]: Comment replies retrieved
+{
+  "commentId": 3,
+  "count": 3,
+  "hasMore": false
+}
+2026-02-05 14:56:30 [info]: Comment replies retrieved
+{
+  "commentId": 4,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 14:56:33 [info]: Comment replies retrieved
+{
+  "commentId": 4,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 14:56:37 [info]: Comment replies retrieved
+{
+  "commentId": 7,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 14:56:56 [info]: Comment created
+{
+  "commentId": 9,
+  "userId": 1,
+  "threadId": 2,
+  "isReply": true
+}
+2026-02-05 14:56:56 [info]: Comment replies retrieved
+{
+  "commentId": 6,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 15:00:21 [info]: Thread comments retrieved
+{
+  "threadId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 15:01:26 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 15:01:26 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 15:01:28 [info]: Unread notification count retrieved
+{
+  "userId": 1,
+  "count": 0
+}
+2026-02-05 15:01:28 [info]: Thread fetched
+{
+  "threadId": 2,
+  "userId": 1
+}
+2026-02-05 15:01:34 [info]: Comment replies retrieved
+{
+  "commentId": 2,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 15:01:35 [info]: Comment replies retrieved
+{
+  "commentId": 3,
+  "count": 3,
+  "hasMore": false
+}
+2026-02-05 15:01:37 [info]: Comment replies retrieved
+{
+  "commentId": 6,
+  "count": 1,
+  "hasMore": false
+}
+2026-02-05 15:01:40 [info]: Comment replies retrieved
+{
+  "commentId": 4,
+  "count": 1,
+  "hasMore": false
+}
