@@ -30592,3 +30592,6 @@ SIGINT received. Starting graceful shutdown...
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
 }
+2026-02-05 17:19:34 [info]: 🚀 Server is running on port 8080
+2026-02-05 17:19:34 [info]: 📝 Environment: development
+2026-02-05 17:19:34 [info]: 🔗 API: http://localhost:8080/api
