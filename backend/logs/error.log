@@ -2506,3 +2506,12 @@ Error: write EPIPE
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
 }
+2026-02-05 17:06:55 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "20ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+}
