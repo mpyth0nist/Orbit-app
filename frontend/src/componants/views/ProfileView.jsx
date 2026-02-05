@@ -9,6 +9,7 @@ import api, { usersAPI, getMediaUrl } from '../../api/apiClient';
 import { Loader2 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useInView } from 'react-intersection-observer';
 
 const ProfileView = forwardRef(function ProfileView({
   user,
@@ -17,7 +18,10 @@ const ProfileView = forwardRef(function ProfileView({
   onPostClick,  // Callback for post click navigation
   userPosts = [],
   isLoading = true,
-  isVisible = true  // Whether this view is currently visible/active
+  isVisible = true,  // Whether this view is currently visible/active
+  onLoadMore,
+  hasMore,
+  loadingMore
 }, ref) {
   const navigate = useNavigate();
   const [userStats, setUserStats] = useState({ followers: 0, following: 0, threads: 0 });
@@ -40,6 +44,14 @@ const ProfileView = forwardRef(function ProfileView({
 
   // State for optimistic updates on userPosts (received as prop, but we track changes locally)
   const [localUserPosts, setLocalUserPosts] = useState(userPosts);
+
+  const { ref: loadMoreRef, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasMore && !loadingMore && !isLoading) {
+      onLoadMore();
+    }
+  }, [inView, hasMore, loadingMore, isLoading, onLoadMore]);
 
 
 
@@ -269,6 +281,22 @@ const ProfileView = forwardRef(function ProfileView({
                   isOwnPost={currentUser?.id === post.user.id || currentUser?.id === post.userId}
                 />)
             })}
+
+            {/* Load More Indicator */}
+            {(hasMore || loadingMore) && (
+              <div ref={loadMoreRef} className="flex flex-col items-center justify-center py-4 gap-2">
+                {loadingMore ? (
+                  <Loader2 className="w-6 h-6 text-indigo-500 animate-spin" />
+                ) : (
+                  <button
+                    onClick={onLoadMore}
+                    className={`text-sm font-medium hover:underline ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}
+                  >
+                    Load more posts
+                  </button>
+                )}
+              </div>
+            )}
           </div>);
 
       case 'likes':

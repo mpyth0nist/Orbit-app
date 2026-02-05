@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
 import { ArrowLeftIcon, CheckBadgeIcon, UserIcon, LockClosedIcon, CameraIcon, ImageIcon, HeartIcon } from '../ui/Icons';
 import FollowersModal from '../ui/FollowersModal';
 import PostCard from '../feed/PostCard';
@@ -22,9 +23,9 @@ export default function UserProfileView({
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [relationship, setRelationship] = useState(null);
-    const [threads, setThreads] = useState([]);
+    // threads state managed by useInfiniteQuery now
     const [isLoading, setIsLoading] = useState(true);
-    const [isLoadingThreads, setIsLoadingThreads] = useState(false);
+    // isLoadingThreads replaced by isThreadsLoading from useInfiniteQuery
     const [isFollowLoading, setIsFollowLoading] = useState(false);
     const [error, setError] = useState(null);
     const [canViewContent, setCanViewContent] = useState(false);
@@ -45,21 +46,32 @@ export default function UserProfileView({
     // Like mutation with optimistic updates
     const likeMutation = useMutation({
         mutationFn: (post) => api.reactions.toggle('thread', post.id),
-        onMutate: (postToLike) => {
-            // Optimistically update local state
-            setThreads(prev => prev.map(p =>
-                p.id === postToLike.id
-                    ? { ...p, isLiked: !p.isLiked, likesCount: p.isLiked ? (p.likesCount || 1) - 1 : (p.likesCount || 0) + 1 }
-                    : p
-            ));
+        onMutate: async (postToLike) => {
+            await queryClient.cancelQueries({ queryKey: ['userThreads', userId] });
+            const previousData = queryClient.getQueryData(['userThreads', userId]);
+
+            queryClient.setQueryData(['userThreads', userId], (oldData) => {
+                if (!oldData) return oldData;
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page) => {
+                        const isArray = Array.isArray(page);
+                        const data = isArray ? page : page.data;
+                        const updatedData = data.map(p =>
+                            p.id === postToLike.id
+                                ? { ...p, isLiked: !p.isLiked, likesCount: p.isLiked ? (p.likesCount || 1) - 1 : (p.likesCount || 0) + 1 }
+                                : p
+                        );
+                        return isArray ? updatedData : { ...page, data: updatedData };
+                    })
+                };
+            });
+            return { previousData };
         },
-        onError: (err, postToLike) => {
-            // Rollback on error
-            setThreads(prev => prev.map(p =>
-                p.id === postToLike.id
-                    ? { ...p, isLiked: !p.isLiked, likesCount: p.isLiked ? (p.likesCount || 0) + 1 : (p.likesCount || 1) - 1 }
-                    : p
-            ));
+        onError: (err, postToLike, context) => {
+            if (context?.previousData) {
+                queryClient.setQueryData(['userThreads', userId], context.previousData);
+            }
         },
     });
 
@@ -67,8 +79,8 @@ export default function UserProfileView({
     const repostMutation = useMutation({
         mutationFn: (post) => api.threads.repost(post.id),
         onSuccess: () => {
-            // Refresh threads to show count update or new post if viewing current user
-            fetchThreads();
+            // Refresh threads and stats
+            queryClient.invalidateQueries({ queryKey: ['userThreads', userId] });
             fetchUserData(); // To refresh stats
         },
     });
@@ -80,19 +92,32 @@ export default function UserProfileView({
     // Bookmark mutation
     const bookmarkMutation = useMutation({
         mutationFn: (post) => api.threads.toggleSave(post.id),
-        onMutate: (postToBookmark) => {
-            setThreads(prev => prev.map(p =>
-                p.id === postToBookmark.id
-                    ? { ...p, isSaved: !p.isSaved }
-                    : p
-            ));
+        onMutate: async (postToBookmark) => {
+            await queryClient.cancelQueries({ queryKey: ['userThreads', userId] });
+            const previousData = queryClient.getQueryData(['userThreads', userId]);
+
+            queryClient.setQueryData(['userThreads', userId], (oldData) => {
+                if (!oldData) return oldData;
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map((page) => {
+                        const isArray = Array.isArray(page);
+                        const data = isArray ? page : page.data;
+                        const updatedData = data.map(p =>
+                            p.id === postToBookmark.id
+                                ? { ...p, isSaved: !p.isSaved }
+                                : p
+                        );
+                        return isArray ? updatedData : { ...page, data: updatedData };
+                    })
+                };
+            });
+            return { previousData };
         },
-        onError: (err, postToBookmark) => {
-            setThreads(prev => prev.map(p =>
-                p.id === postToBookmark.id
-                    ? { ...p, isSaved: !p.isSaved }
-                    : p
-            ));
+        onError: (err, postToBookmark, context) => {
+            if (context?.previousData) {
+                queryClient.setQueryData(['userThreads', userId], context.previousData);
+            }
         },
     });
 
@@ -139,28 +164,37 @@ export default function UserProfileView({
         }
     }, [userId]);
 
-    // Fetch user threads
-    const fetchThreads = useCallback(async () => {
-        if (!userId || !canViewContent) return;
+    // Infinite query for user threads
+    const {
+        data: threadsData,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading: isThreadsLoading
+    } = useInfiniteQuery({
+        queryKey: ['userThreads', userId],
+        queryFn: async ({ pageParam = 1 }) => {
+            return await api.users.getUserThreads(userId, { page: pageParam });
+        },
+        getNextPageParam: (lastPage) => {
+            const pagination = lastPage.pagination;
+            return pagination?.hasNextPage ? pagination.currentPage + 1 : undefined;
+        },
+        enabled: !!userId && canViewContent,
+    });
 
-        setIsLoadingThreads(true);
+    // Flatten pages
+    const threads = useMemo(() => {
+        return threadsData?.pages.flatMap(page => Array.isArray(page) ? page : page.data || []) || [];
+    }, [threadsData]);
 
-        try {
-            const response = await api.users.getUserThreads(userId);
-            console.log('getUserThreads response:', response);
-            console.log('First thread:', response?.[0]);
-            const threadsData = response?.data || response || [];
-            console.log('Threads data:', threadsData);
-            setThreads(threadsData);
-        } catch (err) {
-            if (err.response?.status !== 403) {
-                console.error('Failed to load threads:', err);
-            }
-            setThreads([]);
-        } finally {
-            setIsLoadingThreads(false);
+    const { ref: loadMoreRef, inView } = useInView();
+
+    useEffect(() => {
+        if (inView && hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
         }
-    }, [userId, canViewContent]);
+    }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     // Fetch media items
     const fetchMedia = useCallback(async () => {
@@ -170,7 +204,17 @@ export default function UserProfileView({
 
         try {
             // Get threads and extract media from them
-            const response = await api.users.getUserThreads(userId);
+            // Note: This logic for media tab is still manual and might need its own pagination later.
+            // For now, let's keep it as is or ideally update it too. but let's focus on threads tab first.
+            // The original code re-fetched ALL threads? No, it fetched default page.
+            // If we want media from all threads, we might need a dedicated endpoint or iterate pages.
+            // The API getMyMedia is for current user. For another user, we don't have getProfileMedia endpoint?
+            // "api.users.getUserThreads(userId)" only gets first page.
+            // So the original code for media was also broken (only showed media from first 20 threads).
+            // Users usually have a separate media tab endpoint or we query threads with media.
+            // For now, let's leave media tab logic as is (broken for pagination) or simple fallback.
+            // But strict replacement is safer.
+            const response = await api.users.getUserThreads(userId, { limit: 50 }); // Fetch more for media tab?
             const threadsData = response?.data || response || [];
 
             // Extract all media items with their thread reference
@@ -197,12 +241,6 @@ export default function UserProfileView({
     useEffect(() => {
         fetchUserData();
     }, [fetchUserData]);
-
-    useEffect(() => {
-        if (canViewContent) {
-            fetchThreads();
-        }
-    }, [canViewContent, fetchThreads]);
 
     useEffect(() => {
         if (canViewContent && activeTab === 'media') {
@@ -319,7 +357,7 @@ export default function UserProfileView({
 
     // Render tab content
     const renderTabContent = () => {
-        if (isLoadingTab || isLoadingThreads) {
+        if (isLoadingTab || isThreadsLoading) {
             return (
                 <div className="flex justify-center py-12">
                     <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
@@ -358,6 +396,22 @@ export default function UserProfileView({
                                 isBookmarked={thread.isSaved}
                             />
                         ))}
+
+                        {/* Load More Indicator */}
+                        {(hasNextPage || isFetchingNextPage) && (
+                            <div ref={loadMoreRef} className="flex flex-col items-center justify-center py-4 gap-2">
+                                {isFetchingNextPage ? (
+                                    <Loader2 className="w-6 h-6 text-indigo-500 animate-spin" />
+                                ) : (
+                                    <button
+                                        onClick={() => fetchNextPage()}
+                                        className={`text-sm font-medium hover:underline ${isDarkMode ? 'text-indigo-400' : 'text-indigo-600'}`}
+                                    >
+                                        Load more posts
+                                    </button>
+                                )}
+                            </div>
+                        )}
                     </div>
                 );
 
