@@ -24,6 +24,7 @@ model User {
   profile               Profile?
   reactions             Reaction[]
   threads               Thread[]
+  savedThreads          SavedThreads[]
 
   @@index([email])
   @@index([username])
@@ -51,12 +52,20 @@ model Thread {
   commentsCount  Int                      @default(0) @map("comments_count")
   likesCount     Int                      @default(0) @map("likes_count")
   updatedAt      DateTime                 @updatedAt @map("updated_at")
+  parentId       Int?                     @map("parent_id")
+  parentThread   Thread?                  @relation("ThreadReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  repostId       Int?                     @map("repost_id")
+  repostedThread Thread?                  @relation("ThreadReposts", fields: [repostId], references: [id], onDelete: Cascade)
   search_vector  Unsupported("tsvector")?
   comments       Comment[]
   media          Media[]
   reactions      Reaction[]
   user           User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
   ThreadHashtags ThreadHashtags[]
+  savedThreads   SavedThreads[]
+  threads        Thread[]                 @relation("ThreadReplies")
+  reposts        Thread[]                 @relation("ThreadReposts")
+  repostsCount   Int                      @default(0) @map("reposts_count")
 
   @@index([userId])
   @@index([createdAt(sort: Desc)])
@@ -177,6 +186,20 @@ model ThreadHashtags {
   @@map("_ThreadHashtags")
 }
 
+model SavedThreads {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  threadId  Int      @map("thread_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, threadId])
+  @@index([userId])
+  @@index([threadId])
+  @@map("saved_threads")
+}
+
 enum FollowStatus {
   ACCEPTED
   REFUSED
@@ -189,6 +212,7 @@ enum NotificationType {
   COMMENT
   LIKE
   FOLLOW_REQUEST
+  REPOST
 }
 
 enum MediaType {

@@ -191,6 +191,14 @@ export const createThreadSchema = Joi.object({
         .optional()
         .messages({
             'array.max': 'You can attach up to 4 media files'
+        }),
+
+    repostId: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .optional()
+        .messages({
+            'number.base': 'Repost ID must be a number',
+            'string.base': 'Repost ID must be a valid ID'
         })
 });
 

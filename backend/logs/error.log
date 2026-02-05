@@ -1318,3 +1318,291 @@ Error: write EPIPE
   "ip": "::1",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
 }
+2026-02-04 17:25:41 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "15ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:26:01 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:30:44 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "160ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:36:19 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:37:06 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "11ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:37:24 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:38:00 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "5ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:38:25 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:38:38 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:39:05 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "6ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:39:12 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=python&limit=20",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:39:19 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:39:38 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:39:42 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:46:05 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "3ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:48:47 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "2ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:48:59 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=has&limit=20",
+  "status": 500,
+  "duration": "8ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 17:49:02 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/search?q=hashtags&limit=20",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 22:33:28 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/auth/login",
+  "status": 500,
+  "duration": "126ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 22:35:39 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "10ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 22:36:00 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "10ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 23:32:09 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "226ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 23:32:17 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/threads/16/repost",
+  "status": 500,
+  "duration": "23ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 23:32:27 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/threads/16/repost",
+  "status": 500,
+  "duration": "49ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 23:33:07 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/threads/16/repost",
+  "status": 500,
+  "duration": "31ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 23:33:14 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/threads/16/repost",
+  "status": 500,
+  "duration": "58ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 23:43:42 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "32ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 23:44:01 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "15ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-04 23:44:07 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "11ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 11:05:38 [error]: HTTP Request
+{
+  "method": "POST",
+  "url": "/api/auth/login",
+  "status": 500,
+  "duration": "103ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 11:08:24 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "22ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}
+2026-02-05 11:31:33 [error]: HTTP Request
+{
+  "method": "GET",
+  "url": "/api/hashtags/trending?limit=10",
+  "status": 500,
+  "duration": "4ms",
+  "ip": "::1",
+  "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36"
+}

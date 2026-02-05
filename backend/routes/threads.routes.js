@@ -17,8 +17,13 @@ import {
     getThreadById,
     createThread,
     updateThread,
-    deleteThread
+    deleteThread,
+    repostThread
 } from '../controllers/threads.controller.js';
+import {
+    toggleSaveThread,
+    getSavedThreads
+} from '../controllers/savedThreads.controller.js';
 import protect from '../middleware/protect.js';
 import {
     validatePagination,
@@ -70,6 +75,15 @@ router.get('/most-liked', protect, getMostLikedAccountsThreads);
  */
 router.get('/search', protect, validateSearchThreads, searchThreads);
 
+/**
+ * @route   GET /api/threads/saved
+ * @desc    Get current user's saved threads (bookmarks)
+ * @access  Private
+ * @query   page - Page number (default: 1)
+ * @query   limit - Items per page (default: 20, max: 100)
+ */
+router.get('/saved', protect, getSavedThreads);
+
 import {
     uploadThreadMedia,
     handleUploadError
@@ -120,5 +134,22 @@ router.patch('/:id', protect, validateIdParam, validateUpdateThread, updateThrea
  * @example DELETE /api/threads/123
  */
 router.delete('/:id', protect, validateIdParam, deleteThread);
+
+/**
+ * @route   POST /api/threads/:id/repost
+ * @desc    Repost a thread
+ * @access  Private
+ * @param   id - Thread ID to repost
+ * @body    content - Optional quote content (max 500 characters)
+ */
+router.post('/:id/repost', protect, validateIdParam, repostThread);
+
+/**
+ * @route   POST /api/threads/:id/save
+ * @desc    Toggle save status of a thread
+ * @access  Private
+ * @param   id - Thread ID
+ */
+router.post('/:id/save', protect, validateIdParam, toggleSaveThread);
 
 export default router;

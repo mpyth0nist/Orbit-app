@@ -3,8 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../api/apiClient';
 import { Search, User, FileText, Hash, TrendingUp, Clock, X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import ContentRenderer from '../ui/ContentRenderer';
+import { getMediaUrl } from '../../api/apiClient';
+import PostCard from '../feed/PostCard';
 
-const SearchView = () => {
+const SearchView = ({ onLike, onShare, onBookmark }) => {
+
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
 
@@ -252,7 +256,7 @@ const SearchView = () => {
                   onClick={() => handleUserClick(user.id)}
                 >
                   <img
-                    src={user.profile?.photoUrl || '/default-avatar.png'}
+                    src={getMediaUrl(user.profile?.photoUrl) || '/default-avatar.png'}
                     alt={user.username}
                     className="w-12 h-12 rounded-full object-cover border border-gray-100 dark:border-gray-700"
                   />
@@ -278,30 +282,17 @@ const SearchView = () => {
               </div>
             ) : (
               threadResults.map(thread => (
-                <div
+                <PostCard
                   key={thread.id}
-                  className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors"
+                  post={thread}
+                  onLike={onLike}
+                  onShare={onShare}
+                  onBookmark={onBookmark}
                   onClick={() => handleThreadClick(thread.id)}
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <img
-                      src={thread.user.profile?.photoUrl || '/default-avatar.png'}
-                      alt={thread.user.username}
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                    <div>
-                      <span className="block font-semibold text-sm text-gray-900 dark:text-gray-100">
-                        {thread.user.profile?.firstName} {thread.user.profile?.lastName}
-                      </span>
-                      <span className="block text-xs text-gray-500 dark:text-gray-400">@{thread.user.username}</span>
-                    </div>
-                  </div>
-                  <p className="text-gray-800 dark:text-gray-200 mb-3 text-sm leading-relaxed line-clamp-3">{thread.content}</p>
-                  <div className="flex gap-4 text-xs font-medium text-gray-500 dark:text-gray-400">
-                    <span>{thread.likesCount} likes</span>
-                    <span>{thread.commentsCount} comments</span>
-                  </div>
-                </div>
+                  isLiked={thread.isLiked}
+                  isBookmarked={thread.isSaved}
+                  isOwnPost={currentUser?.id === thread.userId || currentUser?.id === thread.user?.id}
+                />
               ))
             )}
           </div>

@@ -102,8 +102,11 @@ export const selectThreadWithUser = {
     content: true,
     likesCount: true,
     commentsCount: true,
+    repostsCount: true,
     createdAt: true,
     updatedAt: true,
+    parentId: true,
+    repostId: true,
     user: {
         select: selectPublicUser
     },
@@ -112,6 +115,23 @@ export const selectThreadWithUser = {
             id: true,
             url: true,
             type: true
+        }
+    },
+    repostedThread: {
+        select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            user: {
+                select: selectPublicUser
+            },
+            media: {
+                select: {
+                    id: true,
+                    url: true,
+                    type: true
+                }
+            }
         }
     }
 };

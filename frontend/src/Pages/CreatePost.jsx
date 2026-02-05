@@ -1,17 +1,28 @@
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import CreatePostView from '../componants/feed/CreatePostView';
 import Sidebar from '../componants/layout/Sidebar';
-import Header from '../componants/layout/Header';
+import { useNavigate } from 'react-router-dom';
 import MobileNav from '../componants/layout/MobileNav';
 
 export default function CreatePost() {
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const quoteId = searchParams.get('quoteId');
+
+  // Fetch quoted post if it exists
+  const { data: quotedPost } = useQuery({
+    queryKey: ['thread', quoteId],
+    queryFn: () => apiClient.threads.getById(quoteId),
+    enabled: !!quoteId,
+  });
 
   // Fetch notifications count
   const { data: unreadData } = useQuery({
@@ -25,19 +36,13 @@ export default function CreatePost() {
   // Create post mutation
   const createPostMutation = useMutation({
     mutationFn: async (postData) => {
-      // Only send what backend expects. Author info is derived from token.
-      const payload = {
-        content: postData.content,
-        // If postData has media object with url/type/size, include it
-        media: postData.media
-      };
-
-      return apiClient.posts.create(payload);
+      // CreatePostView provides the full data (including FormData with media/content/repostId)
+      return apiClient.threads.create(postData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
-      // Redirect to feed after successful post
-      window.location.href = '/';
+      // Navigate to feed after successful post
+      navigate('/');
     },
   });
 
@@ -68,8 +73,11 @@ export default function CreatePost() {
         <main className="p-4 pb-24 lg:pb-8 max-w-4xl mx-auto">
           <CreatePostView
             user={user}
-            onBack={() => window.location.href = '/'}
+            onBack={() => navigate('/')}
             onPost={handlePost}
+            isLoading={createPostMutation.isPending}
+            error={createPostMutation.error?.response?.data?.message || createPostMutation.error?.message}
+            quotedPost={quotedPost?.data || quotedPost}
           />
         </main>
       </div>

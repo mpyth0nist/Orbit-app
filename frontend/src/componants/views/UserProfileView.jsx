@@ -63,6 +63,43 @@ export default function UserProfileView({
         },
     });
 
+    // Repost mutation
+    const repostMutation = useMutation({
+        mutationFn: (post) => api.threads.repost(post.id),
+        onSuccess: () => {
+            // Refresh threads to show count update or new post if viewing current user
+            fetchThreads();
+            fetchUserData(); // To refresh stats
+        },
+    });
+
+    const handleRepost = (post) => {
+        repostMutation.mutate(post);
+    };
+
+    // Bookmark mutation
+    const bookmarkMutation = useMutation({
+        mutationFn: (post) => api.threads.toggleSave(post.id),
+        onMutate: (postToBookmark) => {
+            setThreads(prev => prev.map(p =>
+                p.id === postToBookmark.id
+                    ? { ...p, isSaved: !p.isSaved }
+                    : p
+            ));
+        },
+        onError: (err, postToBookmark) => {
+            setThreads(prev => prev.map(p =>
+                p.id === postToBookmark.id
+                    ? { ...p, isSaved: !p.isSaved }
+                    : p
+            ));
+        },
+    });
+
+    const handleBookmark = (post) => {
+        bookmarkMutation.mutate(post);
+    };
+
     const handleLike = (post) => {
         likeMutation.mutate(post);
     };
@@ -248,7 +285,10 @@ export default function UserProfileView({
 
     // Render follow button based on relationship
     const renderFollowButton = () => {
-        if (relationship === 'SELF') return null;
+        // If viewing self, render a spacer to maintain layout consistency
+        if (relationship === 'SELF') {
+            return <div className="px-6 py-2.5 font-semibold invisible">Spacer</div>;
+        }
 
         const buttonConfigs = {
             NONE: { text: t('follow') || 'Follow', className: 'bg-indigo-600 text-white hover:bg-indigo-700' },
@@ -312,7 +352,10 @@ export default function UserProfileView({
                                 post={thread}
                                 onClick={() => handlePostClick(thread)}
                                 onLike={handleLike}
+                                onShare={handleRepost}
+                                onBookmark={handleBookmark}
                                 isLiked={thread.isLiked}
+                                isBookmarked={thread.isSaved}
                             />
                         ))}
                     </div>

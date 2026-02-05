@@ -145,9 +145,6 @@ export const deleteMedia = asyncHandler(async (req, res) => {
         return errorResponse(res, 'You are not authorized to delete this media', 403);
     }
 
-    if (media.threadId) {
-        return errorResponse(res, 'Cannot delete media attached to a thread. Delete the thread instead.', 400);
-    }
 
     // Delete from database
     await prisma.media.delete({

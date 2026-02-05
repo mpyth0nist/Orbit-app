@@ -8,8 +8,9 @@
 
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { successResponse, errorResponse } from '../utils/response.js';
-import { prisma } from '../utils/prisma.js';
+import { prisma, selectPublicUser } from '../utils/prisma.js';
 import logger from '../utils/logger.js';
+import { normalizeThreads } from '../utils/threads.js';
 
 /**
  * Search hashtags by tag name
@@ -139,6 +140,19 @@ export const getHashtagThreads = asyncHandler(async (req, res) => {
                             type: true,
                             url: true
                         }
+                    },
+                    _count: {
+                        select: {
+                            reactions: true,
+                            comments: true,
+                            reposts: true
+                        }
+                    },
+                    repostedThread: {
+                        include: {
+                            user: { select: selectPublicUser },
+                            media: { select: { id: true, url: true, type: true } }
+                        }
                     }
                 },
                 orderBy: {
@@ -191,7 +205,7 @@ export const getHashtagThreads = asyncHandler(async (req, res) => {
                 tag: hashtag.tag,
                 useCount: hashtag.useCount
             },
-            threads: hashtag.threads,
+            threads: normalizeThreads(hashtag.threads),
             pagination: {
                 page,
                 limit,

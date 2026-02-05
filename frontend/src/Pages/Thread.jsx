@@ -71,6 +71,15 @@ export default function Thread() {
     },
   });
 
+  // Repost mutation
+  const repostMutation = useMutation({
+    mutationFn: (post) => apiClient.threads.repost(post.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['thread', id] });
+      // navigate('/'); // Optional: redirect to home to see the new repost
+    },
+  });
+
   const handleLike = (post) => {
     likePostMutation.mutate(post);
   };
@@ -124,6 +133,7 @@ export default function Thread() {
             currentUserEmail={user?.email}
             onBack={() => navigate(-1)}
             onLike={handleLike}
+            onShare={(post) => repostMutation.mutate(post)}
           />
         </main>
       </div>

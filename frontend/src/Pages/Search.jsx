@@ -34,6 +34,29 @@ export default function Search() {
     },
   });
 
+  // Repost mutation
+  const repostThreadMutation = useMutation({
+    mutationFn: (post) => api.threads.repost(post.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['threads'] });
+    },
+  });
+
+  // Bookmark mutation
+  const bookmarkThreadMutation = useMutation({
+    mutationFn: (post) => api.threads.toggleSave(post.id),
+    onSuccess: () => {
+      // Invalidate search queries? Search queries depend on 'q'.
+      // Usually we just invalidate all 'search' or 'threads' queries.
+      // But queryKey might be dynamic in SearchView.
+      // For now, let's just invalidate 'threads' to be safe, although SearchView manages its own data usually?
+      // SearchView says "SearchView component handles its own search queries".
+      // We might need to handle optimistic updates in SearchView or signal it to refetch.
+      // For now, simpler approach:
+      queryClient.invalidateQueries({ queryKey: ['search'] }); // Assuming SearchView uses this key prefix
+    },
+  });
+
   const handlePostClick = (post) => {
     window.location.href = `/thread/${post.id}`;
   };
@@ -65,6 +88,8 @@ export default function Search() {
             currentUserEmail={user?.email}
             onPostClick={handlePostClick}
             onLike={(post) => likePostMutation.mutate(post)}
+            onShare={(post) => repostThreadMutation.mutate(post)}
+            onBookmark={(post) => bookmarkThreadMutation.mutate(post)}
           />
         </main>
       </div>

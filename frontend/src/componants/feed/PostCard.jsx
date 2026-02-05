@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon } from '../ui/Icons';
-import { getMediaUrl } from '../../api/apiClient';
+import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon } from '../ui/Icons';
+import { getMediaUrl, threadsAPI } from '../../api/apiClient';
 import ContentRenderer from '../ui/ContentRenderer';
 import { useTheme } from '../../contexts/ThemeContext';
+import EditThreadModal from './EditThreadModal';
 import { format, formatDistanceToNow } from 'date-fns';
 
 /**
@@ -18,11 +20,17 @@ export default function PostCard({
   onShare,
   onBookmark,
   onClick,
+  onDelete,
+  onUpdate,
   isLiked = false,
   isBookmarked = false,
   isOwnPost = false,
 }) {
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
+  const [showRepostMenu, setShowRepostMenu] = useState(false);
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // Memoized user/profile data extraction
   const user = post.user || {};
@@ -72,7 +80,7 @@ export default function PostCard({
   // Memoized counts
   const likesCount = post.likesCount ?? post.likes_count ?? 0;
   const commentsCount = post.commentsCount ?? post.comments_count ?? 0;
-  const sharesCount = post.sharesCount ?? post.shares_count ?? 0;
+  const repostsCount = post.repostsCount ?? post.reposts_count ?? 0;
 
   // Memoized time display
   const timeAgo = useMemo(() => {
@@ -104,7 +112,26 @@ export default function PostCard({
 
   const handleShare = (e) => {
     e.stopPropagation();
+    setShowRepostMenu(!showRepostMenu);
+  };
+
+  const handleRepost = (e) => {
+    e.stopPropagation();
+    setShowRepostMenu(false);
     onShare?.(post);
+  };
+
+  const handleQuote = (e) => {
+    e.stopPropagation();
+    setShowRepostMenu(false);
+    navigate(`/create?quoteId=${post.id}`);
+  };
+
+  const handleOriginalPostClick = (e) => {
+    e.stopPropagation();
+    if (post.originalPost) {
+      navigate(`/thread/${post.originalPost.id}`);
+    }
   };
 
   const handleBookmark = (e) => {
@@ -114,7 +141,26 @@ export default function PostCard({
 
   const handleOptionsClick = (e) => {
     e.stopPropagation();
-    // TODO: Implement options menu
+    setShowOptionsMenu(!showOptionsMenu);
+  };
+
+  const handleEditResult = (updatedThread) => {
+    if (onUpdate) onUpdate(updatedThread);
+    // If no callback, logic to update local state is handled by parent or query cache invalidation should occur
+  };
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    setShowOptionsMenu(false);
+
+    if (window.confirm('Are you sure you want to delete this thread?')) {
+      try {
+        await threadsAPI.delete(post.id);
+        if (onDelete) onDelete(post.id);
+      } catch (error) {
+        console.error('Failed to delete thread:', error);
+      }
+    }
   };
 
   // Render media gallery (supports 1-4 images)
@@ -157,6 +203,59 @@ export default function PostCard({
     );
   };
 
+  // Render original thread if this is a repost
+  const renderRepostedThread = () => {
+    if (!post.originalPost) return null;
+
+    const originalThread = post.originalPost;
+    const originalAuthor = originalThread.user || {};
+    const originalProfile = originalAuthor.profile || {};
+    const originalDisplayName = `${originalProfile.firstName || ''} ${originalProfile.lastName || ''}`.trim() || originalAuthor.username || 'User';
+
+    const originalTimeAgo = originalThread.createdAt
+      ? formatDistanceToNow(new Date(originalThread.createdAt), { addSuffix: true })
+      : '';
+
+    return (
+      <div
+        onClick={handleOriginalPostClick}
+        className={`mt-3 p-4 rounded-2xl border ${isDarkMode
+          ? 'bg-gray-900/50 border-gray-700/50'
+          : 'bg-gray-50/50 border-gray-200/50'
+          } hover:border-indigo-500/30 transition-colors cursor-pointer`}>
+        <div className="flex items-center gap-2 mb-2">
+          <img
+            src={getMediaUrl(originalProfile.photoUrl || originalAuthor.photoUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(originalDisplayName)}&background=6366f1&color=fff`}
+            className="w-5 h-5 rounded-full object-cover"
+            alt=""
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/profile/${originalAuthor.id}`);
+            }}
+          />
+          <span className={`text-sm font-semibold truncate ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+            {originalDisplayName}
+          </span>
+          <span className="text-xs text-gray-500">@{originalAuthor.username}</span>
+          <span className="text-xs text-gray-500">·</span>
+          <span className="text-xs text-gray-500">{originalTimeAgo}</span>
+        </div>
+        <div className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+          <ContentRenderer content={originalThread.content} />
+        </div>
+        {originalThread.media && originalThread.media.length > 0 && (
+          <div className="mt-2 rounded-xl overflow-hidden border border-gray-200/10">
+            <img
+              src={getMediaUrl(originalThread.media[0].url)}
+              className="w-full h-32 object-cover"
+              alt="Original media"
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <article
       onClick={onClick}
@@ -167,8 +266,16 @@ export default function PostCard({
       role="article"
       aria-label={`Post by ${displayName}`}
     >
+      {/* Repost Indicator */}
+      {post.originalPost && !post.content && (
+        <div className="flex items-center gap-2 mb-3 px-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          <ShareIcon className="w-3.5 h-3.5" />
+          <span>Reposted by {displayName}</span>
+        </div>
+      )}
+
       {/* Author Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="relative flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <img
             src={avatarUrl}
@@ -176,6 +283,10 @@ export default function PostCard({
             className={`w-12 h-12 rounded-full object-cover ring-2 ${isDarkMode ? 'ring-gray-700' : 'ring-gray-100'
               }`}
             loading="lazy"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/profile/${post.userId}`);
+            }}
           />
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
@@ -205,7 +316,62 @@ export default function PostCard({
         >
           <EllipsisHorizontalIcon className="w-5 h-5" />
         </button>
+
+        {/* Options Menu */}
+        {showOptionsMenu && (
+          <>
+            <div
+              className="fixed inset-0 z-10"
+              onClick={(e) => { e.stopPropagation(); setShowOptionsMenu(false); }}
+            />
+            <div
+              className={`absolute right-4 top-12 w-48 rounded-2xl shadow-xl border overflow-hidden z-20 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {isOwnPost ? (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowOptionsMenu(false);
+                      setIsEditing(true);
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                      }`}
+                  >
+                    <PencilIcon className="w-4 h-4 text-indigo-500" />
+                    Edit Thread
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-red-50 text-red-500'
+                      }`}
+                  >
+                    <TrashIcon className="w-4 h-4" />
+                    Delete Thread
+                  </button>
+                </>
+              ) : (
+                <div className={`px-4 py-3 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                  No options available
+                </div>
+              )}
+            </div>
+          </>
+        )}
       </div>
+
+      {/* Edit Modal */}
+      {isEditing && (
+        <div onClick={(e) => e.stopPropagation()}>
+          <EditThreadModal
+            thread={post}
+            onClose={() => setIsEditing(false)}
+            onSuccess={handleEditResult}
+          />
+        </div>
+      )}
 
       {/* Content */}
       <div className="mb-4">
@@ -214,6 +380,9 @@ export default function PostCard({
 
       {/* Media Gallery */}
       {renderMedia()}
+
+      {/* Reposted Thread Content */}
+      {renderRepostedThread()}
 
       {/* Actions */}
       <div className={`flex items-center justify-between pt-3 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'
@@ -249,17 +418,46 @@ export default function PostCard({
             <span className="text-sm font-medium">{commentsCount}</span>
           </button>
 
-          <button
-            onClick={handleShare}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 ${isDarkMode
-              ? 'text-gray-500 hover:text-green-400 hover:bg-green-500/10'
-              : 'text-gray-500 hover:text-green-500 hover:bg-green-50'
-              }`}
-            aria-label="Share post"
-          >
-            <ShareIcon className="w-5 h-5" />
-            <span className="text-sm font-medium">{sharesCount}</span>
-          </button>
+          <div className="relative">
+            <button
+              onClick={handleShare}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 ${showRepostMenu
+                ? 'text-green-500 bg-green-500/10'
+                : isDarkMode
+                  ? 'text-gray-500 hover:text-green-400 hover:bg-green-500/10'
+                  : 'text-gray-500 hover:text-green-500 hover:bg-green-50'
+                }`}
+              aria-label="Repost"
+            >
+              <ShareIcon className="w-5 h-5" />
+              <span className="text-sm font-medium">{repostsCount}</span>
+            </button>
+
+            {showRepostMenu && (
+              <div
+                className={`absolute bottom-full mb-2 left-0 w-48 rounded-2xl shadow-xl border overflow-hidden z-50 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                  }`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={handleRepost}
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                    }`}
+                >
+                  <ShareIcon className="w-4 h-4 text-green-500" />
+                  Repost
+                </button>
+                <button
+                  onClick={handleQuote}
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                    }`}
+                >
+                  <ChatBubbleIcon className="w-4 h-4 text-indigo-500" />
+                  Quote
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         <button
@@ -329,6 +527,10 @@ PostCard.propTypes = {
   onBookmark: PropTypes.func,
   /** Callback when the card is clicked */
   onClick: PropTypes.func,
+  /** Callback when delete is successful */
+  onDelete: PropTypes.func,
+  /** Callback when update is successful */
+  onUpdate: PropTypes.func,
   /** Whether the current user has liked this post */
   isLiked: PropTypes.bool,
   /** Whether the current user has bookmarked this post */

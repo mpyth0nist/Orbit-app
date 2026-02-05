@@ -104,6 +104,16 @@ export const threadsAPI = {
 
   // Delete thread
   delete: (id) => apiClient.delete(`/threads/${id}`),
+
+  // Repost thread
+  repost: (id, data = {}) => apiClient.post(`/threads/${id}/repost`, data),
+
+  // Toggle save/bookmark
+  toggleSave: (id) => apiClient.post(`/threads/${id}/save`),
+
+  // Get saved threads
+  getSaved: ({ page = 1, limit = 20 } = {}) =>
+    apiClient.get(`/threads/saved`, { params: { page, limit } }),
 };
 
 // Aliased as postsAPI for backward compatibility during refactor

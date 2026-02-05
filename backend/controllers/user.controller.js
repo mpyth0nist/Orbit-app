@@ -18,6 +18,7 @@ import {
     deletedResponse
 } from '../utils/response.js';
 import { createFollowNotification, deleteNotification } from '../utils/notificationService.js';
+import { normalizeThread, normalizeThreads } from '../utils/threads.js';
 
 /**
  * @desc    Get current user's information
@@ -548,11 +549,8 @@ export const getMyThreads = asyncHandler(async (req, res) => {
         })
     ]);
 
-    // Format threads with isLiked field (always false for own threads)
-    const formattedThreads = threads.map(thread => ({
-        ...thread,
-        isLiked: false
-    }));
+    // Normalize threads (isLiked is usually false for own threads unless we want to show it)
+    const formattedThreads = normalizeThreads(threads);
 
     return paginatedResponse(
         res,
@@ -600,11 +598,8 @@ export const getMyLikedPosts = asyncHandler(async (req, res) => {
         })
     ]);
 
-    // Extract threads from reactions and add isLiked flag
-    const threads = likedPosts.map(r => ({
-        ...r.thread,
-        isLiked: true  // Always true since these are liked posts
-    })).filter(Boolean);
+    // Extract threads from reactions and normalize
+    const threads = normalizeThreads(likedPosts.map(r => r.thread).filter(Boolean), new Set(likedPosts.map(r => r.thread?.id).filter(Boolean)));
 
     logger.info('User liked posts retrieved', { userId, totalCount });
 
@@ -656,11 +651,17 @@ export const getMyMedia = asyncHandler(async (req, res) => {
         })
     ]);
 
+    // Normalize nested threads
+    const normalizedMedia = media.map(m => ({
+        ...m,
+        thread: normalizeThread(m.thread)
+    }));
+
     logger.info('User media retrieved', { userId, totalCount });
 
     return paginatedResponse(
         res,
-        media,
+        normalizedMedia,
         { page, limit, total: totalCount },
         `Retrieved ${media.length} media files`
     );
@@ -1110,13 +1111,8 @@ export const getUserThreads = asyncHandler(async (req, res) => {
     console.log(`[getUserThreads] User ${currentUserId} viewing user ${targetUserId}'s threads`);
     console.log(`[getUserThreads] Found ${userReactions.length} liked threads:`, Array.from(likedThreadIds));
 
-    // Format threads with isLiked field
-    const formattedThreads = threads.map(thread => ({
-        ...thread,
-        isLiked: likedThreadIds.has(thread.id)
-    }));
-
-    console.log(`[getUserThreads] Formatted threads with isLiked:`, formattedThreads.map(t => ({ id: t.id, isLiked: t.isLiked, likesCount: t.likesCount })));
+    // Format threads with normalization
+    const formattedThreads = normalizeThreads(threads, likedThreadIds);
 
     logger.info('User threads retrieved', {
         currentUserId,

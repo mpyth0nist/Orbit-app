@@ -1,15 +1,28 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { ArrowLeftIcon, PhotoIcon, XMarkIcon, GlobeIcon, CodeBracketIcon } from '../ui/Icons';
-import api from '../../api/apiClient';
+import api, { getMediaUrl } from '../../api/apiClient';
 import { Loader2 } from 'lucide-react';
+import ContentRenderer from '../ui/ContentRenderer';
 
-export default function CreatePostView({ onBack, onPost, user }) {
+export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoading, error: propError }) {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
-  const [isPosting, setIsPosting] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (propError) setError(propError);
+  }, [propError]);
+
+  // Cleanup object URLs to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      previews.forEach(preview => URL.revokeObjectURL(preview.url));
+    };
+  }, [previews]);
 
   const MAX_CONTENT_LENGTH = 500;
   const MAX_FILES = 4;
@@ -32,20 +45,17 @@ export default function CreatePostView({ onBack, onPost, user }) {
     }
 
     setError('');
-    setFiles(prev => [...prev, ...selectedFiles]);
+    const newFiles = [...files, ...selectedFiles];
+    setFiles(newFiles);
 
-    // Create previews
-    selectedFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviews(prev => [...prev, {
-          url: reader.result,
-          type: file.type.startsWith('image/') ? 'image' : 'video',
-          name: file.name
-        }]);
-      };
-      reader.readAsDataURL(file);
-    });
+    // Create object URLs for previews (faster & less memory than FileReader)
+    const newPreviews = selectedFiles.map(file => ({
+      url: URL.createObjectURL(file),
+      type: file.type.startsWith('image/') ? 'image' : 'video',
+      name: file.name
+    }));
+
+    setPreviews(prev => [...prev, ...newPreviews]);
   };
 
   const removeFile = (index) => {
@@ -58,7 +68,7 @@ export default function CreatePostView({ onBack, onPost, user }) {
   };
 
   const insertCodeBlock = () => {
-    const textarea = document.querySelector('textarea');
+    const textarea = textareaRef.current;
     if (!textarea) return;
 
     const start = textarea.selectionStart;
@@ -72,9 +82,11 @@ export default function CreatePostView({ onBack, onPost, user }) {
       ? `\`\`\`javascript\n${selected}\n\`\`\``
       : "```javascript\n// Your code here\n```";
 
-    setContent(`${before}${codeBlock}${after}`);
+    const newContent = `${before}${codeBlock}${after}`;
+    setContent(newContent);
 
-    setTimeout(() => {
+    // Need to wait for render to update selection position
+    requestAnimationFrame(() => {
       textarea.focus();
       if (selected) {
         // Position cursor after the block
@@ -85,10 +97,10 @@ export default function CreatePostView({ onBack, onPost, user }) {
         const newCursorPos = start + 13;
         textarea.setSelectionRange(newCursorPos, newCursorPos + 16);
       }
-    }, 0);
+    });
   };
 
-  const handlePost = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!content.trim()) {
@@ -101,34 +113,35 @@ export default function CreatePostView({ onBack, onPost, user }) {
       return;
     }
 
-    setIsPosting(true);
+    // setIsPosting(true); // Managed by parent
     setError('');
 
     try {
       const formData = new FormData();
       formData.append('content', content.trim());
 
-      // Backend expects 'media' field name (multer config: .array('media', 4))
+      // Backend expects 'media' field name
       files.forEach(file => {
         formData.append('media', file);
       });
 
-      await api.threads.create(formData);
-
-      // Cleanup
-      setContent('');
-      setFiles([]);
-      setPreviews([]);
-
-      if (onPost) {
-        onPost();
+      if (quotedPost) {
+        formData.append('repostId', quotedPost.id);
       }
 
-    } catch (error) {
-      console.error('Failed to post:', error);
-      setError(error.response?.data?.message || 'Failed to create post. Please try again.');
-    } finally {
-      setIsPosting(false);
+      if (onPost) {
+        await onPost(formData);
+      }
+
+      // Cleanup isn't strictly necessary if we redirect, 
+      // but good for hygiene if component stays mounted
+      setContent('');
+      setFiles([]);
+      // previews cleaned up by useEffect
+
+    } catch (err) {
+      console.error('Failed to post:', err);
+      setError(err.response?.data?.message || 'Failed to create post. Please try again.');
     }
   };
 
@@ -170,13 +183,34 @@ export default function CreatePostView({ onBack, onPost, user }) {
 
         {/* Textarea */}
         <textarea
+          ref={textareaRef}
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="What's on your mind?"
           className="w-full min-h-[150px] resize-none text-lg text-gray-800 placeholder-gray-400 focus:outline-none"
           maxLength={maxChars}
-          disabled={isPosting}
+          disabled={isLoading}
         />
+
+        {/* Quoted Post Preview */}
+        {quotedPost && (
+          <div className="mt-4 p-4 rounded-2xl border border-gray-100 bg-gray-50/50">
+            <div className="flex items-center gap-2 mb-2">
+              <img
+                src={getMediaUrl(quotedPost.user?.profile?.photoUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(quotedPost.user?.username)}&background=6366f1&color=fff`}
+                className="w-5 h-5 rounded-full object-cover"
+                alt=""
+              />
+              <span className="text-sm font-semibold text-gray-800">
+                {quotedPost.user?.profile?.firstName || quotedPost.user?.username}
+              </span>
+              <span className="text-xs text-gray-500">@{quotedPost.user?.username}</span>
+            </div>
+            <div className="text-sm text-gray-600 line-clamp-3">
+              <ContentRenderer content={quotedPost.content} />
+            </div>
+          </div>
+        )}
 
         {/* Media Preview Grid */}
         {previews.length > 0 && (
@@ -199,7 +233,6 @@ export default function CreatePostView({ onBack, onPost, user }) {
                 <button
                   onClick={() => removeFile(index)}
                   className="absolute top-2 right-2 p-1.5 bg-black/50 backdrop-blur-sm text-white rounded-full hover:bg-black/70 transition-colors"
-                  disabled={isPosting}
                   type="button"
                 >
                   <XMarkIcon className="w-4 h-4" />
@@ -226,13 +259,12 @@ export default function CreatePostView({ onBack, onPost, user }) {
               multiple
               onChange={handleFileSelect}
               className="hidden"
-              disabled={isPosting || files.length >= MAX_FILES}
             />
             <button
               onClick={() => fileInputRef.current?.click()}
               className="p-2.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               title={`Add media (${files.length}/${MAX_FILES})`}
-              disabled={isPosting || files.length >= MAX_FILES}
+              disabled={isLoading || files.length >= MAX_FILES}
               type="button"
             >
               <PhotoIcon className="w-6 h-6" />
@@ -247,7 +279,7 @@ export default function CreatePostView({ onBack, onPost, user }) {
               onClick={insertCodeBlock}
               className="p-2.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               title="Add code block"
-              disabled={isPosting}
+              disabled={isLoading}
               type="button"
             >
               <CodeBracketIcon className="w-6 h-6" />
@@ -285,12 +317,12 @@ export default function CreatePostView({ onBack, onPost, user }) {
             </div>
 
             <button
-              onClick={handlePost}
-              disabled={!content.trim() || isPosting}
+              onClick={handleSubmit}
+              disabled={!content.trim() || isLoading}
               type="submit"
               className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
-              {isPosting && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isLoading && <Loader2 className="w-4 h-4 animate-spin" />}
               Post
             </button>
           </div>
@@ -299,3 +331,25 @@ export default function CreatePostView({ onBack, onPost, user }) {
     </div>
   );
 }
+
+CreatePostView.propTypes = {
+  onBack: PropTypes.func.isRequired,
+  onPost: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    full_name: PropTypes.string,
+    username: PropTypes.string,
+    avatar: PropTypes.string,
+    profile: PropTypes.shape({
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+      photoUrl: PropTypes.string
+    })
+  }),
+  quotedPost: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    content: PropTypes.string,
+    user: PropTypes.object
+  }),
+  isLoading: PropTypes.bool,
+  error: PropTypes.string
+};

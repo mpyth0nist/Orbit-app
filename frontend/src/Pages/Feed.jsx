@@ -105,6 +105,58 @@ export default function Feed() {
     },
   });
 
+  // Repost thread mutation
+  const repostThreadMutation = useMutation({
+    mutationFn: async (post) => {
+      // For now, instant repost (no quote content)
+      return apiClient.threads.repost(post.id);
+    },
+    onSuccess: () => {
+      // Refetch threads to show the new repost
+      queryClient.invalidateQueries({ queryKey: ['threads', activeFeedTab] });
+      // Optional: show success toast
+    },
+    onError: (err) => {
+      console.error('Repost failed:', err);
+      // Optional: show error toast
+    }
+  });
+
+  // Bookmark thread mutation with optimistic update
+  const bookmarkThreadMutation = useMutation({
+    mutationFn: async (post) => {
+      return apiClient.threads.toggleSave(post.id);
+    },
+    onMutate: async (postToBookmark) => {
+      await queryClient.cancelQueries({ queryKey: ['threads', activeFeedTab] });
+      const previousData = queryClient.getQueryData(['threads', activeFeedTab]);
+
+      queryClient.setQueryData(['threads', activeFeedTab], (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          pages: old.pages.map(page =>
+            page.map(post =>
+              post.id === postToBookmark.id
+                ? { ...post, isSaved: !post.isSaved }
+                : post
+            )
+          ),
+        };
+      });
+
+      return { previousData };
+    },
+    onError: (err, variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(['threads', activeFeedTab], context.previousData);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['threads', activeFeedTab] });
+    },
+  });
+
   const handlePostClick = (post) => navigate(`/thread/${post.id}`);
 
   return (
@@ -162,6 +214,8 @@ export default function Feed() {
             onPostClick={handlePostClick}
             onLike={(post) => likePostMutation.mutate(post)}
             onComment={handlePostClick}
+            onShare={(post) => repostThreadMutation.mutate(post)}
+            onBookmark={(post) => bookmarkThreadMutation.mutate(post)}
           />
 
           {/* Infinite scroll loader */}

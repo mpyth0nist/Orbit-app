@@ -27,6 +27,7 @@ const ProfileView = forwardRef(function ProfileView({
 
   // Tab content state
   const [likedPosts, setLikedPosts] = useState([]);
+  const [savedPosts, setSavedPosts] = useState([]);
   const [mediaItems, setMediaItems] = useState([]);
   const [isLoadingTab, setIsLoadingTab] = useState(false);
   const [tabError, setTabError] = useState(null);
@@ -35,9 +36,12 @@ const ProfileView = forwardRef(function ProfileView({
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
   const { user: currentUser } = useAuth();
+  const isOwnProfile = currentUser?.id === user?.id;
 
   // State for optimistic updates on userPosts (received as prop, but we track changes locally)
   const [localUserPosts, setLocalUserPosts] = useState(userPosts);
+
+
 
   // Sync localUserPosts when userPosts prop changes
   React.useEffect(() => {
@@ -75,9 +79,54 @@ const ProfileView = forwardRef(function ProfileView({
     },
   });
 
+  // Repost mutation
+  const repostMutation = useMutation({
+    mutationFn: (post) => api.threads.repost(post.id),
+    onSuccess: () => {
+      // Refresh posts and stats
+      loadUserStats();
+      queryClient.invalidateQueries({ queryKey: ['userPosts', user?.id] });
+    },
+  });
+
+  const handleRepost = (post) => {
+    repostMutation.mutate(post);
+  };
+
+  // Bookmark mutation
+  const bookmarkMutation = useMutation({
+    mutationFn: (post) => api.threads.toggleSave(post.id),
+    onMutate: (postToBookmark) => {
+      // Optimistically update local state
+      const updatePosts = (posts) => posts.map(p =>
+        p.id === postToBookmark.id
+          ? { ...p, isSaved: !p.isSaved }
+          : p
+      );
+
+      setLocalUserPosts(prev => updatePosts(prev));
+      setLikedPosts(prev => updatePosts(prev));
+    },
+    onError: (err, postToBookmark) => {
+      // Rollback
+      const updatePosts = (posts) => posts.map(p =>
+        p.id === postToBookmark.id
+          ? { ...p, isSaved: !p.isSaved }
+          : p
+      );
+      setLocalUserPosts(prev => updatePosts(prev));
+      setLikedPosts(prev => updatePosts(prev));
+    }
+  });
+
+  const handleBookmark = (post) => {
+    bookmarkMutation.mutate(post);
+  };
+
   const handleLike = (post) => {
     // Prevent liking own post
-    if (currentUser?.id === post.user?.id || currentUser?.id === post.userId) {
+
+    if (currentUser?.id === post.user_id || currentUser?.id === post.userId) {
       return;
     }
     likeMutation.mutate(post);
@@ -118,6 +167,10 @@ const ProfileView = forwardRef(function ProfileView({
         const response = await usersAPI.getMyMedia({ page: 1, limit: 50 });
         const data = response?.data || response || [];
         setMediaItems(Array.isArray(data) ? data : []);
+      } else if (tab === 'saved') {
+        const response = await api.threads.getSaved({ page: 1, limit: 50 });
+        const data = response?.data || response || [];
+        setSavedPosts(Array.isArray(data) ? data : []);
       }
     } catch (error) {
       console.error(`Failed to load ${tab}:`, error);
@@ -195,24 +248,28 @@ const ProfileView = forwardRef(function ProfileView({
         }
         return (
           <div className="space-y-4">
-            {localUserPosts.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                onClick={() => {
-                  if (onPostClick) {
-                    onPostClick(post);
-                  } else {
-                    navigate(`/thread/${post.id}`);
-                  }
-                }}
-                onLike={handleLike}
-                isLiked={post.isLiked}
-                isOwnPost={currentUser?.id === post.user?.id || currentUser?.id === post.userId}
-              />
-            ))}
-          </div>
-        );
+            {localUserPosts.map((post) => {
+
+              return (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  onClick={() => {
+                    if (onPostClick) {
+                      onPostClick(post);
+                    } else {
+                      navigate(`/thread/${post.id}`);
+                    }
+                  }}
+                  onLike={handleLike}
+                  onShare={handleRepost}
+                  onBookmark={handleBookmark}
+                  isLiked={post.isLiked}
+                  isBookmarked={post.isSaved}
+                  isOwnPost={currentUser?.id === post.user.id || currentUser?.id === post.userId}
+                />)
+            })}
+          </div>);
 
       case 'likes':
         if (likedPosts.length === 0) {
@@ -244,7 +301,10 @@ const ProfileView = forwardRef(function ProfileView({
                   }
                 }}
                 onLike={handleLike}
+                onShare={handleRepost}
+                onBookmark={handleBookmark}
                 isLiked={true}
+                isBookmarked={post.isSaved}
                 isOwnPost={currentUser?.id === post.user?.id || currentUser?.id === post.userId}
               />
             ))}
@@ -299,6 +359,46 @@ const ProfileView = forwardRef(function ProfileView({
                   </div>
                 )}
               </div>
+            ))}
+          </div>
+        );
+
+      case 'saved':
+        if (savedPosts.length === 0) {
+          return (
+            <div className={`text-center py-12 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                <CheckBadgeIcon className={`w-8 h-8 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+              </div>
+              <h3 className={`text-lg font-semibold mb-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+                {t('noSaved') || 'No saved posts'}
+              </h3>
+              <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
+                {t('noSavedMessage') || 'Posts you save will appear here'}
+              </p>
+            </div>
+          );
+        }
+        return (
+          <div className="space-y-4">
+            {savedPosts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                onClick={() => {
+                  if (onPostClick) {
+                    onPostClick(post);
+                  } else {
+                    navigate(`/thread/${post.id}`);
+                  }
+                }}
+                onLike={handleLike}
+                onShare={handleRepost}
+                onBookmark={handleBookmark}
+                isLiked={post.isLiked}
+                isBookmarked={true}
+                isOwnPost={currentUser?.id === post.user?.id || currentUser?.id === post.userId}
+              />
             ))}
           </div>
         );
@@ -379,7 +479,7 @@ const ProfileView = forwardRef(function ProfileView({
 
         {/* Tab Navigation */}
         <div className={`flex mt-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
-          {['posts', 'media', 'likes'].map((tab) => (
+          {['posts', 'media', 'likes', ...(isOwnProfile ? ['saved'] : [])].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

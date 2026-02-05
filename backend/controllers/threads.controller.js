@@ -9,10 +9,11 @@
 
 import { asyncHandler } from '../middleware/asyncHandler.js';
 import { successResponse, errorResponse, paginatedResponse, cursorPaginatedResponse, createdResponse, deletedResponse } from '../utils/response.js';
-import { prisma, selectThreadWithUser } from '../utils/prisma.js';
+import { prisma, selectPublicUser, selectThreadWithUser } from '../utils/prisma.js';
 import logger from '../utils/logger.js';
 import validator from 'validator';
 import { extractHashtags } from '../utils/hashtagParser.js';
+import { normalizeThread, normalizeThreads } from '../utils/threads.js';
 
 /**
  * Get personalized news feed
@@ -154,7 +155,32 @@ export const getFeed = asyncHandler(async (req, res) => {
             _count: {
                 select: {
                     reactions: true,
-                    comments: true
+                    comments: true,
+                    reposts: true
+                }
+            },
+            repostedThread: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                            profile: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    photoUrl: true
+                                }
+                            }
+                        }
+                    },
+                    media: {
+                        select: {
+                            id: true,
+                            type: true,
+                            url: true
+                        }
+                    }
                 }
             }
         },
@@ -172,26 +198,30 @@ export const getFeed = asyncHandler(async (req, res) => {
     // Get thread IDs to check which ones the user has liked
     const threadIds = returnThreads.map(t => t.id);
 
-    // Fetch user's reactions for these threads
-    const userReactions = await prisma.reaction.findMany({
-        where: {
-            userId,
-            threadId: { in: threadIds }
-        },
-        select: { threadId: true }
-    });
+    // Fetch user's reactions and saved status for these threads
+    const [userReactions, userSaved] = await Promise.all([
+        prisma.reaction.findMany({
+            where: {
+                userId,
+                threadId: { in: threadIds }
+            },
+            select: { threadId: true }
+        }),
+        prisma.savedThreads.findMany({
+            where: {
+                userId,
+                threadId: { in: threadIds }
+            },
+            select: { threadId: true }
+        })
+    ]);
 
-    // Create a Set for quick lookup
+    // Create Sets for quick lookup
     const likedThreadIds = new Set(userReactions.map(r => r.threadId));
+    const savedThreadIds = new Set(userSaved.map(s => s.threadId));
 
-    // Format threads with isLiked and counts
-    const formattedThreads = returnThreads.map(thread => ({
-        ...thread,
-        likesCount: thread._count.reactions,
-        commentsCount: thread._count.comments,
-        isLiked: likedThreadIds.has(thread.id),
-        _count: undefined // Remove _count from response
-    }));
+    // Normalize threads with isLiked and counts
+    const formattedThreads = normalizeThreads(returnThreads, likedThreadIds, savedThreadIds);
 
     // Generate next cursor if there are more results
     let nextCursor = null;
@@ -389,7 +419,35 @@ export const getMostLikedAccountsThreads = asyncHandler(async (req, res) => {
                 }
             },
             _count: {
-                select: { reactions: true }
+                select: {
+                    reactions: true,
+                    comments: true,
+                    reposts: true
+                }
+            },
+            repostedThread: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                            profile: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    photoUrl: true
+                                }
+                            }
+                        }
+                    },
+                    media: {
+                        select: {
+                            id: true,
+                            type: true,
+                            url: true
+                        }
+                    }
+                }
             }
         },
         orderBy: [
@@ -418,20 +476,44 @@ export const getMostLikedAccountsThreads = asyncHandler(async (req, res) => {
         nextCursor = Buffer.from(JSON.stringify(cursorObj)).toString('base64');
     }
 
+    // Check if user has liked these threads
+    const threadIds = returnThreads.map(t => t.id);
+    const [userReactions, userSaved] = await Promise.all([
+        prisma.reaction.findMany({
+            where: {
+                userId,
+                threadId: { in: threadIds }
+            },
+            select: { threadId: true }
+        }),
+        prisma.savedThreads.findMany({
+            where: {
+                userId,
+                threadId: { in: threadIds }
+            },
+            select: { threadId: true }
+        })
+    ]);
+    const likedThreadIds = new Set(userReactions.map(r => r.threadId));
+    const savedThreadIds = new Set(userSaved.map(s => s.threadId));
+
+    // Normalize threads
+    const formattedThreads = normalizeThreads(returnThreads, likedThreadIds, savedThreadIds);
+
     logger.info('Most liked accounts threads fetched', {
         userId,
         topAccountsCount: accountIds.length,
-        threadsCount: returnThreads.length,
+        threadsCount: formattedThreads.length,
         hasMore
     });
 
     return cursorPaginatedResponse(
         res,
-        returnThreads,
+        formattedThreads,
         { nextCursor, limit },
         'Recommended threads fetched successfully'
     );
-})
+});
 
 /**
  * Get trending threads (most liked in the last week)
@@ -535,7 +617,32 @@ export const getTrendingThreads = asyncHandler(async (req, res) => {
             _count: {
                 select: {
                     reactions: true,
-                    comments: true
+                    comments: true,
+                    reposts: true
+                }
+            },
+            repostedThread: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                            profile: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    photoUrl: true
+                                }
+                            }
+                        }
+                    },
+                    media: {
+                        select: {
+                            id: true,
+                            type: true,
+                            url: true
+                        }
+                    }
                 }
             }
         },
@@ -552,27 +659,31 @@ export const getTrendingThreads = asyncHandler(async (req, res) => {
 
     // Check if user has liked these threads
     const threadIds = threads.map(t => t.id);
-    const userReactions = await prisma.reaction.findMany({
-        where: {
-            userId,
-            threadId: { in: threadIds }
-        },
-        select: { threadId: true }
-    });
+    const [userReactions, userSaved] = await Promise.all([
+        prisma.reaction.findMany({
+            where: {
+                userId,
+                threadId: { in: threadIds }
+            },
+            select: { threadId: true }
+        }),
+        prisma.savedThreads.findMany({
+            where: {
+                userId,
+                threadId: { in: threadIds }
+            },
+            select: { threadId: true }
+        })
+    ]);
     const likedThreadIds = new Set(userReactions.map(r => r.threadId));
+    const savedThreadIds = new Set(userSaved.map(s => s.threadId));
 
     // Determine if there are more results
     const hasMore = threads.length > limit;
     const returnThreads = hasMore ? threads.slice(0, limit) : threads;
 
-    // Format threads
-    const formattedThreads = returnThreads.map(thread => ({
-        ...thread,
-        likesCount: thread._count.reactions || 0,
-        commentsCount: thread._count.comments || 0,
-        isLiked: likedThreadIds.has(thread.id),
-        _count: undefined
-    }));
+    // Normalize threads with isLiked and counts
+    const formattedThreads = normalizeThreads(returnThreads, likedThreadIds, savedThreadIds);
 
     // Generate next cursor
     let nextCursor = null;
@@ -676,6 +787,19 @@ export const searchThreads = asyncHandler(async (req, res) => {
                     type: true,
                     url: true
                 }
+            },
+            _count: {
+                select: {
+                    reactions: true,
+                    comments: true,
+                    reposts: true
+                }
+            },
+            repostedThread: {
+                include: {
+                    user: { select: selectPublicUser },
+                    media: { select: { id: true, url: true, type: true } }
+                }
             }
         }
     });
@@ -683,6 +807,26 @@ export const searchThreads = asyncHandler(async (req, res) => {
     // Sort by original rank order
     const threadMap = new Map(fullThreads.map(t => [t.id, t]));
     const orderedThreads = threadIds.map(id => threadMap.get(id)).filter(Boolean);
+
+    // Get user's reactions for these threads
+    const [userReactions, userSaved] = await Promise.all([
+        prisma.reaction.findMany({
+            where: {
+                userId,
+                threadId: { in: threadIds }
+            },
+            select: { threadId: true }
+        }),
+        prisma.savedThreads.findMany({
+            where: {
+                userId,
+                threadId: { in: threadIds }
+            },
+            select: { threadId: true }
+        })
+    ]);
+    const likedThreadIds = new Set(userReactions.map(r => r.threadId));
+    const savedThreadIds = new Set(userSaved.map(s => s.threadId));
 
     logger.info('Thread FTS search completed', {
         userId,
@@ -694,7 +838,7 @@ export const searchThreads = asyncHandler(async (req, res) => {
     return res.status(200).json({
         success: true,
         data: {
-            threads: orderedThreads,
+            threads: normalizeThreads(orderedThreads, likedThreadIds, savedThreadIds),
             pagination: {
                 page,
                 limit,
@@ -757,7 +901,32 @@ export const getThreadById = asyncHandler(async (req, res) => {
             _count: {
                 select: {
                     reactions: true,
-                    comments: true
+                    comments: true,
+                    reposts: true
+                }
+            },
+            repostedThread: {
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                            profile: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    photoUrl: true
+                                }
+                            }
+                        }
+                    },
+                    media: {
+                        select: {
+                            id: true,
+                            type: true,
+                            url: true
+                        }
+                    }
                 }
             }
         }
@@ -783,22 +952,23 @@ export const getThreadById = asyncHandler(async (req, res) => {
     }
 
     // Check if the current user has liked this thread
-    const userReaction = await prisma.reaction.findFirst({
-        where: {
-            userId,
-            threadId
-        }
-    });
+    const [userReaction, userSaved] = await Promise.all([
+        prisma.reaction.findFirst({
+            where: {
+                userId,
+                threadId
+            }
+        }),
+        prisma.savedThreads.findFirst({
+            where: {
+                userId,
+                threadId
+            }
+        })
+    ]);
 
-    // Format response
-    const formattedThread = {
-        ...thread,
-        likesCount: thread._count.reactions,
-        commentsCount: thread._count.comments,
-        isLiked: !!userReaction
-    };
-
-    delete formattedThread._count;
+    // Normalize thread response
+    const formattedThread = normalizeThread(thread, new Set(userReaction ? [threadId] : []), new Set(userSaved ? [threadId] : []));
 
     logger.info('Thread fetched', { threadId, userId });
 
@@ -811,7 +981,8 @@ export const getThreadById = asyncHandler(async (req, res) => {
 export const createThread = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
     // content is in req.body
-    const { content } = req.body;
+    const { content, repostId } = req.body;
+    const parsedRepostId = repostId ? parseInt(repostId) : null;
 
     // Check for uploaded files
     const files = req.files || [];
@@ -820,21 +991,58 @@ export const createThread = asyncHandler(async (req, res) => {
     logger.info('CreateThread request', {
         userId,
         contentLength: content?.length,
+        repostId: parsedRepostId,
         filesCount: files.length,
         files: files.map(f => ({ originalname: f.originalname, mimetype: f.mimetype, size: f.size }))
     });
 
     // Validate content
     if (!content || content.trim().length === 0) {
-        // If files were uploaded but content is missing, we should probably delete the files
-        // But for now let's just return error
         return errorResponse(res, 'Content is required', 400);
     }
 
     // Sanitize content
     const trimmedContent = validator.escape(content.trim());
-    if (trimmedContent.length > 500) {
-        return errorResponse(res, 'Content must be 500 characters or less', 400);
+    if (trimmedContent.length > 1200) {
+        return errorResponse(res, 'Content must be 1200 characters or less', 400);
+    }
+
+    // If reposting, find the root post to ensure consistency
+    let rootTargetId = parsedRepostId;
+    if (parsedRepostId) {
+        const targetThread = await prisma.thread.findUnique({
+            where: { id: parsedRepostId },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        type: true
+                    }
+                }
+            }
+        });
+
+        if (!targetThread) {
+            return errorResponse(res, 'Thread to quote not found', 404);
+        }
+
+        // Check private account access (Security Fix)
+        if (targetThread.user.type === 'PRIVATE' && targetThread.userId !== userId) {
+            const isFollowing = await prisma.follow.findFirst({
+                where: {
+                    followerId: userId,
+                    followedId: targetThread.userId,
+                    status: 'ACCEPTED'
+                }
+            });
+
+            if (!isFollowing) {
+                return errorResponse(res, 'You cannot quote a thread from a private account you do not follow', 403);
+            }
+        }
+
+        // Always point to the root post
+        rootTargetId = targetThread.repostId || targetThread.id;
     }
 
     const fullThread = await prisma.$transaction(async (tx) => {
@@ -843,8 +1051,39 @@ export const createThread = asyncHandler(async (req, res) => {
             data: {
                 userId,
                 content: trimmedContent,
+                repostId: rootTargetId
             }
         });
+
+        // If it's a quote repost, increment repostsCount on the root thread
+        if (rootTargetId) {
+            await tx.thread.update({
+                where: { id: rootTargetId },
+                data: { repostsCount: { increment: 1 } }
+            });
+
+            // Create notification for the person being quoted (the one whose ID was sent)
+            // Note: If we want to notify only the root owner, we'd use rootTargetId.
+            // However, usually you notify the person you actually replied to/quoted.
+            if (parsedRepostId) {
+                const targetThread = await tx.thread.findUnique({
+                    where: { id: parsedRepostId },
+                    select: { userId: true }
+                });
+
+                if (targetThread && targetThread.userId !== userId) {
+                    await tx.notification.create({
+                        data: {
+                            type: 'REPOST',
+                            actorId: userId,
+                            receiverId: targetThread.userId,
+                            entityId: thread.id,
+                            entityType: 'THREAD'
+                        }
+                    });
+                }
+            }
+        }
 
         // 2. Extract and process hashtags
         const hashtags = extractHashtags(content); // Use original content, not escaped
@@ -888,32 +1127,23 @@ export const createThread = asyncHandler(async (req, res) => {
         return await tx.thread.findUnique({
             where: { id: thread.id },
             include: {
-                user: {
-                    select: {
-                        id: true,
-                        username: true,
-                        profile: {
-                            select: {
-                                firstName: true,
-                                lastName: true,
-                                photoUrl: true
-                            }
-                        }
-                    }
-                },
-                media: {
-                    select: {
-                        id: true,
-                        type: true,
-                        url: true
+                user: { select: selectPublicUser },
+                media: { select: { id: true, url: true, type: true } },
+                repostedThread: {
+                    include: {
+                        user: { select: selectPublicUser },
+                        media: { select: { id: true, url: true, type: true } }
                     }
                 }
             }
         });
     });
 
+    // Normalize the response (Consistency Fix)
+    const normalizedThread = normalizeThread(fullThread);
+
     logger.info('Thread created successfully', { userId, threadId: fullThread.id, mediaCount: files.length });
-    return createdResponse(res, fullThread, 'Thread created successfully');
+    return createdResponse(res, normalizedThread, 'Thread created successfully');
 });
 
 export const updateThread = asyncHandler(async (req, res) => {
@@ -1082,49 +1312,118 @@ export const deleteThread = asyncHandler(async (req, res) => {
     return deletedResponse(res, 'Thread deleted successfully');
 });
 
-export const viewThreadDetails = asyncHandler(async (req, res) => {
+/**
+ * Repost a thread
+ * 
+ * Creates a new thread that references an original thread.
+ * Can be a simple repost (no content) or a quote repost (with content).
+ * 
+ * @route   POST /api/threads/:id/repost
+ * @access  Private
+ */
+export const repostThread = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
     const threadId = parseInt(req.params.id);
+    const { content } = req.body;
 
-    // Validate threadId
     if (isNaN(threadId)) {
-        return res.status(400).json({ message: 'Invalid thread ID' });
+        return errorResponse(res, 'Invalid thread ID', 400);
     }
 
-    const thread = await prisma.thread.findUnique({
+    // Check if original thread exists
+    const originalThread = await prisma.thread.findUnique({
         where: { id: threadId },
         include: {
             user: {
                 select: {
                     id: true,
-                    username: true,
-                    profile: {
-                        select: {
-                            firstName: true,
-                            lastName: true,
-                            photoUrl: true
-                        }
-                    }
-                }
-            },
-            media: {
-                select: {
-                    id: true,
-                    type: true,
-                    url: true
+                    type: true
                 }
             }
         }
+    });
 
-    })
-
-    if (!thread) {
-        return res.status(404).json({ message: 'Thread not found' });
+    if (!originalThread) {
+        return errorResponse(res, 'Thread not found', 404);
     }
 
-    logger.info('Thread details viewed', { threadId });
+    // Check private account access
+    if (originalThread.user.type === 'PRIVATE' && originalThread.userId !== userId) {
+        const isFollowing = await prisma.follow.findFirst({
+            where: {
+                followerId: userId,
+                followedId: originalThread.userId,
+                status: 'ACCEPTED'
+            }
+        });
 
-    return successResponse(res, thread, 'Thread retrieved successfully');
-})
+        if (!isFollowing) {
+            return errorResponse(res, 'You cannot repost a thread from a private account you do not follow', 403);
+        }
+    }
+
+    // Check if user is trying to repost their own repost of the same thread (optional, but good for UX)
+    // For now keep it simple.
+    const repost = await prisma.$transaction(async (tx) => {
+        // Determine the root target ID
+        const targetThreadId = originalThread.repostId || threadId;
+
+        // 1. Create the repost thread
+        const newThread = await tx.thread.create({
+            data: {
+                userId,
+                repostId: targetThreadId,
+                content: content ? validator.escape(content.trim()) : '',
+            }
+        });
+
+        // 2. Increment repostsCount on the ROOT thread
+        await tx.thread.update({
+            where: { id: targetThreadId },
+            data: { repostsCount: { increment: 1 } }
+        });
+
+        // 3. Create notification for original thread owner (the one we interacted with)
+        if (originalThread.userId !== userId) {
+            await tx.notification.create({
+                data: {
+                    type: 'REPOST',
+                    actorId: userId,
+                    receiverId: originalThread.userId,
+                    entityId: newThread.id,
+                    entityType: 'THREAD'
+                }
+            });
+        }
+
+        return newThread;
+    });
+
+    // Determine the root target ID (repeated because it's used in logging below)
+    const targetThreadId = originalThread.repostId || threadId;
+
+    // Return the full reposted thread with user and original thread info
+    const fullRepost = await prisma.thread.findUnique({
+        where: { id: repost.id },
+        include: {
+            user: { select: selectPublicUser },
+            media: { select: { id: true, url: true, type: true } },
+            repostedThread: {
+                include: {
+                    user: { select: selectPublicUser },
+                    media: { select: { id: true, url: true, type: true } }
+                }
+            }
+        }
+    });
+
+    const normalizedRepost = normalizeThread(fullRepost);
+
+    logger.info('Thread reposted', { userId, originalThreadId: threadId, rootThreadId: targetThreadId, repostId: repost.id });
+
+    return createdResponse(res, normalizedRepost, 'Thread reposted successfully');
+});
+
 
 export const deleteThreadMedia = asyncHandler(async (req, res) => {
     const userId = req.user.userId;

@@ -9,6 +9,7 @@ export default function FeedView({
   onLike,
   onComment,
   onShare,
+  onBookmark,
   currentUserEmail,
   currentUserId
 }) {
@@ -50,7 +51,9 @@ export default function FeedView({
             onLike={onLike}
             onComment={onComment}
             onShare={onShare}
+            onBookmark={onBookmark}
             isLiked={post.isLiked}
+            isBookmarked={post.isSaved}
             isOwnPost={currentUserId === post.userId || currentUserId === post.user?.id}
           />
         ))

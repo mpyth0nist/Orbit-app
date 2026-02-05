@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon } from '../ui/Icons';
-import api, { getMediaUrl } from '../../api/apiClient';
+import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon } from '../ui/Icons';
+import api, { getMediaUrl, threadsAPI, usersAPI } from '../../api/apiClient';
 import { format, formatDistanceToNow } from 'date-fns';
 import ContentRenderer from '../ui/ContentRenderer';
+import EditThreadModal from './EditThreadModal';
 import { Loader2 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -16,6 +17,7 @@ export default function ThreadDetailView({
   post,
   onBack,
   onLike,
+  onShare,
   onUserClick,
   user
 }) {
@@ -25,6 +27,9 @@ export default function ThreadDetailView({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
+  const [showRepostMenu, setShowRepostMenu] = useState(false);
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const navigate = useNavigate();
   const { isDarkMode } = useTheme();
@@ -66,8 +71,9 @@ export default function ThreadDetailView({
   // Get counts
   const likesCount = post?.likesCount ?? post?.likes_count ?? 0;
   const commentsCount = post?.commentsCount ?? post?.comments_count ?? 0;
-  const sharesCount = post?.sharesCount ?? post?.shares_count ?? 0;
+  const repostsCount = post?.repostsCount ?? post?.reposts_count ?? 0;
   const isLiked = post?.isLiked ?? false;
+  const isOwnPost = user?.id && post?.user?.id === user.id;
 
   // Format time
   const formattedTime = useMemo(() => {
@@ -322,6 +328,118 @@ export default function ThreadDetailView({
     );
   };
 
+  const handleRepost = (e) => {
+    e.stopPropagation();
+    setShowRepostMenu(false);
+    onShare?.(post);
+  };
+
+  const handleQuote = (e) => {
+    e.stopPropagation();
+    setShowRepostMenu(false);
+    navigate(`/create?quoteId=${post.id}`);
+  };
+
+  const handleOriginalPostClick = (e) => {
+    e.stopPropagation();
+    if (post.originalPost) {
+      navigate(`/thread/${post.originalPost.id}`);
+    }
+  };
+
+  const handleOptionsClick = (e) => {
+    e.stopPropagation();
+    setShowOptionsMenu(!showOptionsMenu);
+  };
+
+  const handleDelete = async () => {
+    setShowOptionsMenu(false);
+    if (window.confirm('Are you sure you want to delete this thread?')) {
+      try {
+        await threadsAPI.delete(post.id);
+        navigate(-1); // Go back after delete
+      } catch (error) {
+        console.error('Failed to delete thread:', error);
+      }
+    }
+  };
+
+  const handleEditResult = (updatedThread) => {
+    // In a real app, we'd update the local post state or invalidate queries
+    // For now, we'll reload the page to fetch fresh data or you can update local state if `post` was state
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    if (post) {
+      setIsBookmarked(post.isSaved || false);
+    }
+  }, [post?.isSaved]);
+
+  const handleBookmark = async () => {
+    const newVal = !isBookmarked;
+    setIsBookmarked(newVal);
+    try {
+      await threadsAPI.toggleSave(post.id);
+    } catch (error) {
+      console.error('Failed to toggle bookmark:', error);
+      setIsBookmarked(!newVal);
+    }
+  };
+
+  // Render original thread if this is a repost
+  const renderRepostedThread = () => {
+    if (!post?.originalPost) return null;
+
+    const originalThread = post.originalPost;
+    const originalAuthor = originalThread.user || {};
+    const originalProfile = originalAuthor.profile || {};
+    const originalDisplayName = `${originalProfile.firstName || ''} ${originalProfile.lastName || ''}`.trim() || originalAuthor.username || 'User';
+
+    const originalTimeAgo = originalThread.createdAt
+      ? formatDistanceToNow(new Date(originalThread.createdAt), { addSuffix: true })
+      : '';
+
+    return (
+      <div
+        onClick={handleOriginalPostClick}
+        className={`mt-3 p-5 rounded-2xl border ${isDarkMode
+          ? 'bg-gray-900/50 border-gray-700/50'
+          : 'bg-gray-50/50 border-gray-200/50'
+          } hover:border-indigo-500/30 transition-colors cursor-pointer`}>
+        <div className="flex items-center gap-2 mb-3">
+          <img
+            src={getMediaUrl(originalProfile.photoUrl || originalAuthor.photoUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(originalDisplayName)}&background=6366f1&color=fff`}
+            className="w-6 h-6 rounded-full object-cover"
+            alt=""
+
+          />
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1.5">
+              <span className={`text-sm font-bold truncate ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+                {originalDisplayName}
+              </span>
+              <span className="text-xs text-gray-500">@{originalAuthor.username}</span>
+            </div>
+            <span className="text-[10px] text-gray-500">{originalTimeAgo}</span>
+          </div>
+        </div>
+        <div className={`text-base leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <ContentRenderer content={originalThread.content} />
+        </div>
+        {originalThread.media && originalThread.media.length > 0 && (
+          <div className="mt-3 rounded-2xl overflow-hidden border border-white/5">
+            <img
+              src={getMediaUrl(originalThread.media[0].url)}
+              className="w-full max-h-64 object-cover"
+              alt="Original media"
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+
   if (!post) return null;
 
   return (
@@ -343,6 +461,15 @@ export default function ThreadDetailView({
         </h1>
       </div>
 
+      {/* Edit Modal */}
+      {isEditing && (
+        <EditThreadModal
+          thread={post}
+          onClose={() => setIsEditing(false)}
+          onSuccess={handleEditResult}
+        />
+      )}
+
       {/* Post Card */}
       <article className={`rounded-3xl p-6 shadow-lg border ${isDarkMode
         ? 'bg-gray-800 border-gray-700'
@@ -358,6 +485,10 @@ export default function ThreadDetailView({
             alt={author.name}
             className={`w-14 h-14 rounded-full object-cover ring-2 ${isDarkMode ? 'ring-gray-700' : 'ring-gray-100'
               }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/profile/${author.id}`);
+            }}
           />
           <div className="flex-1">
             <div className="flex items-center gap-1.5">
@@ -374,8 +505,19 @@ export default function ThreadDetailView({
           </div>
         </div>
 
+        {/* Repost Indicator for simple reposts (where content is empty) */}
+        {post.originalPost && !post.content && (
+          <div className="flex items-center gap-2 mb-4 px-1 text-xs font-bold text-green-500 uppercase tracking-widest">
+            <ShareIcon className="w-4 h-4" />
+            <span>Reposted</span>
+          </div>
+        )}
+
         {/* Content */}
         <ContentRenderer content={post.content || post.text} className="text-xl mb-4" />
+
+        {/* Reposted Thread Content */}
+        {renderRepostedThread()}
 
         {/* Media Gallery */}
         {mediaItems.length > 0 && (
@@ -481,9 +623,9 @@ export default function ThreadDetailView({
           </span>
           <span>
             <strong className={isDarkMode ? 'text-gray-100' : 'text-gray-900'}>
-              {sharesCount}
+              {repostsCount}
             </strong>
-            <span className={isDarkMode ? 'text-gray-500' : 'text-gray-500'}> {t('shares') || 'Shares'}</span>
+            <span className={isDarkMode ? 'text-gray-500' : 'text-gray-500'}> {t('reposts') || 'Reposts'}</span>
           </span>
         </div>
 
@@ -511,17 +653,47 @@ export default function ThreadDetailView({
           >
             <ChatBubbleIcon className="w-6 h-6" />
           </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowRepostMenu(!showRepostMenu)}
+              className={`flex items-center gap-2 p-3 rounded-xl transition-all duration-300 ${showRepostMenu
+                ? 'text-green-500 bg-green-500/10'
+                : isDarkMode
+                  ? 'text-gray-400 hover:text-green-400 hover:bg-green-500/10'
+                  : 'text-gray-500 hover:text-green-500 hover:bg-green-50'
+                }`}
+              aria-label="Repost"
+            >
+              <ShareIcon className="w-6 h-6" />
+            </button>
+
+            {showRepostMenu && (
+              <div
+                className={`absolute bottom-full mb-2 left-0 w-48 rounded-2xl shadow-xl border overflow-hidden z-50 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                  }`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={handleRepost}
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                    }`}
+                >
+                  <ShareIcon className="w-4 h-4 text-green-500" />
+                  Repost
+                </button>
+                <button
+                  onClick={handleQuote}
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                    }`}
+                >
+                  <ChatBubbleIcon className="w-4 h-4 text-indigo-500" />
+                  Quote
+                </button>
+              </div>
+            )}
+          </div>
           <button
-            className={`flex items-center gap-2 p-3 rounded-xl transition-all duration-300 ${isDarkMode
-              ? 'text-gray-400 hover:text-green-400 hover:bg-green-500/10'
-              : 'text-gray-500 hover:text-green-500 hover:bg-green-50'
-              }`}
-            aria-label="Share"
-          >
-            <ShareIcon className="w-6 h-6" />
-          </button>
-          <button
-            onClick={() => setIsBookmarked(!isBookmarked)}
+            onClick={handleBookmark}
             className={`p-3 rounded-xl transition-all duration-300 ${isBookmarked
               ? 'text-amber-500 bg-amber-500/10'
               : isDarkMode
@@ -548,6 +720,7 @@ export default function ThreadDetailView({
             alt="You"
             className={`w-10 h-10 rounded-full object-cover ring-2 ${isDarkMode ? 'ring-gray-700' : 'ring-gray-100'
               }`}
+
           />
           <input
             type="text"
@@ -597,6 +770,6 @@ export default function ThreadDetailView({
           ))
         )}
       </div>
-    </div>
+    </div >
   );
 }
