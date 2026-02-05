@@ -138,8 +138,8 @@ export default function ThreadDetailView({
     };
   };
 
-  /* Comment Item Component */
-  const CommentItem = ({ comment, threadId, onReplySuccess }) => {
+  /* CommentItem Component with Flattened Nesting */
+  const CommentItem = ({ comment, threadId, onReplySuccess, depth = 0, parentAuthor = null }) => {
     const [likesCount, setLikesCount] = useState(comment.likesCount || comment.likes_count || 0);
     const [isLiked, setIsLiked] = useState(comment.isLiked || false);
     const [isReplying, setIsReplying] = useState(false);
@@ -153,6 +153,13 @@ export default function ThreadDetailView({
 
     const commentAuthor = getCommentAuthor(comment);
     const commentTime = comment.createdAt || comment.created_date;
+
+    // Logic for flattening replies:
+    // We allow nesting for Depth 0 (Root) and Depth 1 (Level 1 replies).
+    // Starting from Depth 2 (Level 2), we flatten the children so they don't indent further.
+    // L0 -> L1 (Indented) -> L2 (Indented) -> L3 (Flat, needs tag).
+    const shouldIndentChildren = depth < 2;
+    const shouldShowTag = depth >= 3;
 
     const handleLike = async () => {
       // Optimistic update
@@ -218,112 +225,142 @@ export default function ThreadDetailView({
       }
     };
 
+    const isDeep = depth >= 2;
+
+    // Wrapper for the entire comment block (content + replies)
+    const wrapperClass = depth > 0 ? 'mt-3 w-full' : 'w-full';
+
+    // Styles specifically for the content part (the "card" or "row")
+    const contentClasses = !isDeep
+      ? `rounded-2xl p-4 shadow-sm border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`
+      : `py-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`;
+
     return (
-      <div className={`rounded-2xl p-4 shadow-sm border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
-        <div className="flex items-start gap-3">
-          <img
-            src={commentAuthor.avatar}
-            alt={commentAuthor.name}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-                {commentAuthor.name}
-              </span>
-              <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                @{commentAuthor.username}
-              </span>
-              <span className={isDarkMode ? 'text-gray-600' : 'text-gray-400'}>·</span>
-              <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                {commentTime
-                  ? formatDistanceToNow(new Date(commentTime), { addSuffix: true })
-                  : 'Just now'
-                }
-              </span>
-            </div>
-            <p className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
-              {comment.content}
-            </p>
+      <div className={wrapperClass}>
+        {/* Content Block */}
+        <div className={contentClasses}>
+          <div className="flex items-start gap-3">
+            <img
+              src={commentAuthor.avatar}
+              alt={commentAuthor.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+                  {commentAuthor.name}
+                </span>
+                <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                  @{commentAuthor.username}
+                </span>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-4 mt-2">
-              <button
-                onClick={handleLike}
-                className={`flex items-center gap-1 text-sm transition-colors ${isLiked
-                  ? 'text-rose-500'
-                  : isDarkMode ? 'text-gray-500 hover:text-rose-400' : 'text-gray-500 hover:text-rose-500'
-                  }`}
-              >
-                <HeartIcon className="w-4 h-4" filled={isLiked} />
-                {likesCount > 0 && likesCount}
-              </button>
+                {/* Replying To Tag for flattened deep replies */}
+                {shouldShowTag && parentAuthor && (
+                  <span className={`flex items-center gap-1 text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                    <span>·</span>
+                    <span className={isDarkMode ? 'text-gray-400' : 'text-gray-400'}>{t('replyingTo') || 'Replying to'}</span>
+                    <span className="text-indigo-500 font-medium">@{parentAuthor.username}</span>
+                  </span>
+                )}
 
-              <button
-                onClick={() => setIsReplying(!isReplying)}
-                className={`flex items-center gap-1 text-sm transition-colors ${isDarkMode ? 'text-gray-500 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-500'
-                  }`}
-              >
-                <ChatBubbleIcon className="w-4 h-4" />
-                {t('reply') || 'Reply'}
-              </button>
-
-              {replyCount > 0 && (
-                <button
-                  onClick={fetchReplies}
-                  className={`text-sm font-medium ${isDarkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
-                >
-                  {showReplies
-                    ? (t('hideReplies') || 'Hide Replies')
-                    : `${t('viewReplies') || 'View'} ${replyCount} ${t('replies') || 'Replies'}`
+                <span className={isDarkMode ? 'text-gray-600' : 'text-gray-400'}>·</span>
+                <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                  {commentTime
+                    ? formatDistanceToNow(new Date(commentTime), { addSuffix: true })
+                    : 'Just now'
                   }
-                </button>
-              )}
-            </div>
+                </span>
+              </div>
+              {/* Content using ContentRenderer to fix encoding and support styling */}
+              <ContentRenderer
+                content={comment.content}
+                className={`mt-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}
+              />
 
-            {/* Reply Input */}
-            {isReplying && (
-              <form onSubmit={handleReplySubmit} className="mt-3 flex gap-2">
-                <input
-                  type="text"
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder={t('writeReply') || "Write a reply..."}
-                  autoFocus
-                  className={`flex-1 px-3 py-2 text-sm rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 ${isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'
-                    }`}
-                />
+              {/* Action Buttons */}
+              <div className="flex items-center gap-4 mt-2">
                 <button
-                  type="submit"
-                  disabled={!replyContent.trim() || isSubmittingReply}
-                  className="p-2 bg-indigo-600 text-white rounded-xl disabled:opacity-50"
+                  onClick={handleLike}
+                  className={`flex items-center gap-1 text-sm transition-colors ${isLiked
+                    ? 'text-rose-500'
+                    : isDarkMode ? 'text-gray-500 hover:text-rose-400' : 'text-gray-500 hover:text-rose-500'
+                    }`}
                 >
-                  {isSubmittingReply ? <Loader2 className="w-4 h-4 animate-spin" /> : <SendIcon className="w-4 h-4" />}
+                  <HeartIcon className="w-4 h-4" filled={isLiked} />
+                  {likesCount > 0 && likesCount}
                 </button>
-              </form>
-            )}
 
-            {/* Nested Replies */}
-            {showReplies && (
-              <div className="mt-3 space-y-3 pl-4 border-l-2 border-gray-200 dark:border-gray-700">
-                {isLoadingReplies ? (
-                  <div className="flex justify-center py-2">
-                    <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />
-                  </div>
-                ) : (
-                  replies.map(reply => (
-                    <CommentItem
-                      key={reply.id}
-                      comment={reply}
-                      threadId={threadId}
-                      onReplySuccess={() => { }}
-                    />
-                  ))
+                <button
+                  onClick={() => setIsReplying(!isReplying)}
+                  className={`flex items-center gap-1 text-sm transition-colors ${isDarkMode ? 'text-gray-500 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-500'
+                    }`}
+                >
+                  <ChatBubbleIcon className="w-4 h-4" />
+                  {t('reply') || 'Reply'}
+                </button>
+
+                {replyCount > 0 && (
+                  <button
+                    onClick={fetchReplies}
+                    className={`text-sm font-medium ${isDarkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
+                  >
+                    {showReplies
+                      ? (t('hideReplies') || 'Hide Replies')
+                      : `${t('viewReplies') || 'View'} ${replyCount} ${t('replies') || 'Replies'}`
+                    }
+                  </button>
                 )}
               </div>
-            )}
+
+              {/* Reply Input */}
+              {isReplying && (
+                <form onSubmit={handleReplySubmit} className="mt-3 flex gap-2">
+                  <input
+                    type="text"
+                    value={replyContent}
+                    onChange={(e) => setReplyContent(e.target.value)}
+                    placeholder={t('writeReply') || "Write a reply..."}
+                    autoFocus
+                    className={`flex-1 px-3 py-2 text-sm rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 ${isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'
+                      }`}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!replyContent.trim() || isSubmittingReply}
+                    className="p-2 bg-indigo-600 text-white rounded-xl disabled:opacity-50"
+                  >
+                    {isSubmittingReply ? <Loader2 className="w-4 h-4 animate-spin" /> : <SendIcon className="w-4 h-4" />}
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
+
+        {/* Nested Replies - Outside the content block */}
+        {showReplies && (
+          <div className={`mt-2 ${shouldIndentChildren
+            ? 'pl-4 border-l-2 ml-4 border-gray-200 dark:border-gray-700'
+            : ''
+            }`}>
+            {isLoadingReplies ? (
+              <div className="flex justify-center py-2">
+                <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />
+              </div>
+            ) : (
+              replies.map(reply => (
+                <CommentItem
+                  key={reply.id}
+                  comment={reply}
+                  threadId={threadId}
+                  onReplySuccess={() => { }}
+                  depth={depth + 1}
+                  parentAuthor={commentAuthor}
+                />
+              ))
+            )}
+          </div>
+        )}
       </div>
     );
   };

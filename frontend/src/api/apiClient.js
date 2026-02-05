@@ -220,7 +220,7 @@ export const usersAPI = {
   updateProfilePicture: (data) => apiClient.patch('/user/profile/picture', data),
 
   // Threads
-  getMyThreads: () => apiClient.get('/user/threads'),
+  getMyThreads: ({ page = 1, limit = 20 } = {}) => apiClient.get('/user/threads', { params: { page, limit } }),
   getUserThreads: (userId, { page = 1, limit = 20 } = {}) =>
     apiClient.get(`/user/${userId}/threads`, { params: { page, limit } }),
 

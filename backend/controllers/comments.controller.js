@@ -340,6 +340,9 @@ export const getCommentReplies = asyncHandler(async (req, res) => {
                         }
                     }
                 }
+            },
+            _count: {
+                select: { comments: true }
             }
         },
         orderBy: [
