@@ -91,6 +91,7 @@ export const threadsAPI = {
   // Create thread (supports both JSON and FormData)
   create: (data) => {
     // If FormData, axios will auto-set Content-Type with boundary
+    console.log("data", data.communityId)
     if (data instanceof FormData) {
       return apiClient.post('/threads', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -337,6 +338,15 @@ export const communitiesAPI = {
   // Unban member
   unban: (communityId, userId) =>
     apiClient.delete(`/communities/${communityId}/members/${userId}/ban`),
+
+  // Upload banner
+  uploadBanner: (id, file) => {
+    const formData = new FormData();
+    formData.append('communityBanner', file);
+    return apiClient.post(`/communities/${id}/banner`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
 };
 
 // Files API (Legacy wrapper for Media API)

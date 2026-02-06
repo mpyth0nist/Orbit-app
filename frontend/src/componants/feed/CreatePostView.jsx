@@ -5,10 +5,11 @@ import api, { getMediaUrl } from '../../api/apiClient';
 import { Loader2 } from 'lucide-react';
 import ContentRenderer from '../ui/ContentRenderer';
 
-export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoading, error: propError }) {
+export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoading, error: propError, communityName }) {
   const [content, setContent] = useState('');
   const [files, setFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
+
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
@@ -102,7 +103,6 @@ export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoa
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!content.trim()) {
       setError('Content is required');
       return;
@@ -128,6 +128,7 @@ export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoa
       if (quotedPost) {
         formData.append('repostId', quotedPost.id);
       }
+
 
       if (onPost) {
         await onPost(formData);
@@ -185,6 +186,12 @@ export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoa
             <div className="flex items-center gap-1.5 text-sm text-gray-500">
               <GlobeIcon className="w-4 h-4" />
               <span>Public</span>
+              {communityName && (
+                <>
+                  <span>•</span>
+                  <span className="text-indigo-600 font-medium">{communityName}</span>
+                </>
+              )}
             </div>
           </div>
         </div>

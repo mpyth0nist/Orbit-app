@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { communitiesAPI, threadsAPI } from '../api/apiClient';
+import { communitiesAPI, threadsAPI, reactionsAPI } from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import Sidebar from '../componants/layout/Sidebar';
 import MobileNav from '../componants/layout/MobileNav';
 import PostCard from '../componants/feed/PostCard';
-import { Loader2, ArrowLeft, Settings, Users, Pin, Crown, Shield } from 'lucide-react';
-import api from '../api/apiClient';
+import CreatePostView from '../componants/feed/CreatePostView';
+import { Loader2, ArrowLeft, Settings, Users, Pin, Crown, Shield, Plus, Camera } from 'lucide-react';
+import api, { getMediaUrl } from '../api/apiClient';
+import { toast } from 'sonner'
 
 export default function CommunityDetail() {
     const { id } = useParams();
@@ -17,6 +19,8 @@ export default function CommunityDetail() {
     const { isDarkMode } = useTheme();
     const queryClient = useQueryClient();
     const [showMembers, setShowMembers] = useState(false);
+    const [showCreatePost, setShowCreatePost] = useState(false);
+    const bannerInputRef = React.useRef(null);
 
     // Fetch community details
     const { data: community, isLoading: communityLoading } = useQuery({
@@ -25,7 +29,7 @@ export default function CommunityDetail() {
     });
 
     // Fetch community threads
-    const { data: threadsData, isLoading: threadsLoading } = useQuery({
+    const { data: threadsData, isLoading: threadsLoading, error: threadsError } = useQuery({
         queryKey: ['community-threads', id],
         queryFn: () => communitiesAPI.getThreads(id),
         enabled: !!community,
@@ -69,6 +73,66 @@ export default function CommunityDetail() {
             queryClient.invalidateQueries({ queryKey: ['community-threads', id] });
         },
     });
+
+    // Create post mutation
+    const createPostMutation = useMutation({
+        mutationFn: (formData) => {
+            formData.append('communityId', id);
+            console.log("communityId", id)
+            return threadsAPI.create(formData);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['community-threads', id] });
+            setShowCreatePost(false);
+        },
+    });
+
+    // Upload banner mutation
+    const uploadBannerMutation = useMutation({
+        mutationFn: (file) => communitiesAPI.uploadBanner(id, file),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['community', id] });
+        },
+    });
+
+    const repostMutation = useMutation({
+        mutationFn: (post) => threadsAPI.repost(post.id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['community-threads', id] });
+            toast.success('Post reposted successfully');
+        },
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (threadId) => threadsAPI.delete(threadId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['community-threads', id] });
+            toast.success('Post deleted successfully');
+        },
+    });
+
+    const likeMutation = useMutation({
+        mutationFn: (threadId) => reactionsAPI.toggle('thread', threadId),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['community-threads', id] });
+            // toast.success('Post liked successfully'); // Removed toast to act like Twitter/social apps (silent like)
+        },
+    });
+
+    const handleLike = (post) => {
+        likeMutation.mutate(post.id)
+    }
+
+    const handleBannerUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            uploadBannerMutation.mutate(file);
+        }
+    };
+
+    const handleRepost = (post) => {
+        repostMutation.mutate(post);
+    };
 
     const unreadNotifications = unreadData?.count || 0;
     const threads = threadsData || [];
@@ -135,9 +199,37 @@ export default function CommunityDetail() {
                     </div>
 
                     {/* Community Banner */}
-                    <div className="relative h-32 bg-gradient-to-r from-indigo-500 to-purple-600">
-                        {community.photoUrl && (
-                            <img src={community.photoUrl} alt="" className="w-full h-full object-cover" />
+                    <div className="relative h-32 bg-gradient-to-r from-indigo-500 to-purple-600 group">
+                        {community.photoUrl ? (
+                            <img
+                                src={getMediaUrl(community.photoUrl)}
+                                alt="Community banner"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : null}
+                        {uploadBannerMutation.isPending && (
+                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                <Loader2 className="w-8 h-8 text-white animate-spin" />
+                            </div>
+                        )}
+                        {isAdmin && (
+                            <>
+                                <input
+                                    ref={bannerInputRef}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleBannerUpload}
+                                    className="hidden"
+                                />
+                                <button
+                                    onClick={() => bannerInputRef.current?.click()}
+                                    className="absolute bottom-3 right-3 p-2 bg-black/50 backdrop-blur-sm text-white rounded-full hover:bg-black/70 transition-all opacity-0 group-hover:opacity-100"
+                                    title="Upload banner"
+                                    disabled={uploadBannerMutation.isPending}
+                                >
+                                    <Camera className="w-5 h-5" />
+                                </button>
+                            </>
                         )}
                     </div>
 
@@ -166,10 +258,10 @@ export default function CommunityDetail() {
                                     onClick={() => isMember ? leaveMutation.mutate() : joinMutation.mutate()}
                                     disabled={joinMutation.isPending || leaveMutation.isPending}
                                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${isMember
-                                            ? isDarkMode
-                                                ? 'bg-gray-700 text-gray-300 hover:bg-red-600 hover:text-white'
-                                                : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-600'
-                                            : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                                        ? isDarkMode
+                                            ? 'bg-gray-700 text-gray-300 hover:bg-red-600 hover:text-white'
+                                            : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-600'
+                                        : 'bg-indigo-600 text-white hover:bg-indigo-700'
                                         }`}
                                 >
                                     {isMember ? 'Leave' : 'Join'}
@@ -185,32 +277,83 @@ export default function CommunityDetail() {
                                 Members ({members.length})
                             </h3>
                             <div className="space-y-2 max-h-60 overflow-y-auto">
-                                {members.map((member) => (
-                                    <div key={member.id} className="flex items-center justify-between py-2">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
-                                                {member.user?.username?.[0]?.toUpperCase() || '?'}
-                                            </div>
-                                            <div>
-                                                <span className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-                                                    {member.user?.username}
-                                                </span>
-                                                <div className="flex items-center gap-1 text-xs">
-                                                    {member.role === 'ADMIN' && (
-                                                        <span className="text-amber-500 flex items-center gap-1">
-                                                            {member.userId === community.creatorId ? <Crown className="w-3 h-3" /> : <Shield className="w-3 h-3" />}
-                                                            {member.role}
-                                                        </span>
+                                {members.map((member) => {
+                                    const fullName = member.profile?.firstName && member.profile?.lastName
+                                        ? `${member.profile.firstName} ${member.profile.lastName}`
+                                        : member.username;
+                                    const avatarLetter = member.profile?.firstName?.[0] || member.username?.[0] || '?';
+
+                                    return (
+                                        <div key={member.id} className="flex items-center justify-between py-2">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-sm font-bold overflow-hidden">
+                                                    {member.profile?.photoUrl ? (
+                                                        <img src={getMediaUrl(member.profile.photoUrl)} alt={fullName} className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        avatarLetter.toUpperCase()
                                                     )}
-                                                    {member.status === 'BANNED' && (
-                                                        <span className="text-red-500">Banned</span>
+                                                </div>
+                                                <div>
+                                                    <span className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                                        {fullName}
+                                                    </span>
+                                                    {member.profile?.firstName && (
+                                                        <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                            @{member.username}
+                                                        </div>
                                                     )}
+                                                    <div className="flex items-center gap-1 text-xs">
+                                                        {member.role === 'ADMIN' && (
+                                                            <span className="text-amber-500 flex items-center gap-1">
+                                                                {member.isCreator ? <Crown className="w-3 h-3" /> : <Shield className="w-3 h-3" />}
+                                                                {member.role}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
+                        </div>
+                    )}
+
+                    {/* Create Post Section */}
+                    {isMember && (
+                        <div className={`px-4 py-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
+                            {!showCreatePost ? (
+                                <button
+                                    onClick={() => setShowCreatePost(true)}
+                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl border-2 border-dashed transition-all ${isDarkMode
+                                        ? 'border-gray-700 hover:border-indigo-500 hover:bg-gray-800/50'
+                                        : 'border-gray-200 hover:border-indigo-500 hover:bg-gray-50'
+                                        }`}
+                                >
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center">
+                                        <Plus className="w-5 h-5 text-white" />
+                                    </div>
+                                    <div className="text-left">
+                                        <div className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                                            Share something with {community.name}
+                                        </div>
+                                        <div className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                            Create a post in this community
+                                        </div>
+                                    </div>
+                                </button>
+                            ) : (
+                                <div className="bg-white dark:bg-gray-800 rounded-2xl">
+                                    <CreatePostView
+                                        onBack={() => setShowCreatePost(false)}
+                                        onPost={(formData) => createPostMutation.mutate(formData)}
+                                        user={user}
+                                        isLoading={createPostMutation.isPending}
+                                        error={createPostMutation.error?.response?.data?.message}
+                                        communityName={community.name}
+                                    />
+                                </div>
+                            )}
                         </div>
                     )}
 
@@ -222,6 +365,11 @@ export default function CommunityDetail() {
                         {threadsLoading ? (
                             <div className="flex justify-center py-8">
                                 <Loader2 className="w-6 h-6 text-indigo-600 animate-spin" />
+                            </div>
+                        ) : threadsError ? (
+                            <div className={`text-center py-8 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+                                <p>Error loading posts: {threadsError.message}</p>
+                                <p className="text-sm mt-2">{threadsError.response?.data?.message || 'Please try again'}</p>
                             </div>
                         ) : threads.length === 0 ? (
                             <div className={`text-center py-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -241,14 +389,17 @@ export default function CommunityDetail() {
                                         <PostCard
                                             post={thread}
                                             showActions={true}
-                                            onPostClick={() => navigate(`/thread/${thread.id}`)}
+                                            onClick={() => navigate(`/thread/${thread.id}`)}
+                                            onShare={handleRepost}
+                                            onLike={handleLike}
+                                            onDelete={deleteMutation.mutate}
                                         />
                                         {isAdmin && (
                                             <button
                                                 onClick={() => pinMutation.mutate(thread.id)}
                                                 className={`absolute top-2 right-2 p-1.5 rounded-full text-xs ${thread.isPinned
-                                                        ? 'bg-amber-100 text-amber-700'
-                                                        : isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
+                                                    ? 'bg-amber-100 text-amber-700'
+                                                    : isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
                                                     }`}
                                                 title={thread.isPinned ? 'Unpin' : 'Pin'}
                                             >

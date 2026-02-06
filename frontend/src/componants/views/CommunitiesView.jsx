@@ -6,6 +6,7 @@ import { communitiesAPI } from '../../api/apiClient';
 import { Loader2, X, Plus } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { getMediaUrl } from '../../api/apiClient';
 
 export default function CommunitiesView({ currentUserId }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -87,8 +88,8 @@ export default function CommunitiesView({ currentUserId }) {
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search communities..."
           className={`w-full pl-12 pr-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDarkMode
-              ? 'bg-gray-800 text-gray-100 border-gray-700 placeholder-gray-500'
-              : 'bg-white text-gray-800 border-gray-200 placeholder-gray-400'
+            ? 'bg-gray-800 text-gray-100 border-gray-700 placeholder-gray-500'
+            : 'bg-white text-gray-800 border-gray-200 placeholder-gray-400'
             } border`}
         />
       </div>
@@ -132,7 +133,7 @@ export default function CommunitiesView({ currentUserId }) {
                 {/* Cover */}
                 <div className="relative h-24 bg-gradient-to-r from-indigo-500 to-purple-600">
                   {community.photoUrl && (
-                    <img src={community.photoUrl} alt="" className="w-full h-full object-cover" />
+                    <img src={getMediaUrl(community.photoUrl)} alt="" className="w-full h-full object-cover" />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 </div>
@@ -156,10 +157,10 @@ export default function CommunitiesView({ currentUserId }) {
                       }}
                       disabled={joinMutation.isPending || leaveMutation.isPending}
                       className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${isMember
-                          ? isDarkMode
-                            ? 'bg-gray-700 text-gray-300 hover:bg-red-600 hover:text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-600'
-                          : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                        ? isDarkMode
+                          ? 'bg-gray-700 text-gray-300 hover:bg-red-600 hover:text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-600'
+                        : 'bg-indigo-600 text-white hover:bg-indigo-700'
                         }`}
                     >
                       {isMember ? 'Leave' : 'Join'}
@@ -244,8 +245,8 @@ function CreateCommunityModal({ onClose, isDarkMode }) {
               placeholder="e.g., Tech Enthusiasts"
               maxLength={100}
               className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDarkMode
-                  ? 'bg-gray-700 border-gray-600 text-gray-100'
-                  : 'bg-white border-gray-300 text-gray-900'
+                ? 'bg-gray-700 border-gray-600 text-gray-100'
+                : 'bg-white border-gray-300 text-gray-900'
                 }`}
             />
           </div>
@@ -261,8 +262,8 @@ function CreateCommunityModal({ onClose, isDarkMode }) {
               maxLength={500}
               rows={3}
               className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none ${isDarkMode
-                  ? 'bg-gray-700 border-gray-600 text-gray-100'
-                  : 'bg-white border-gray-300 text-gray-900'
+                ? 'bg-gray-700 border-gray-600 text-gray-100'
+                : 'bg-white border-gray-300 text-gray-900'
                 }`}
             />
           </div>
@@ -272,8 +273,8 @@ function CreateCommunityModal({ onClose, isDarkMode }) {
               type="button"
               onClick={onClose}
               className={`flex-1 py-2 rounded-lg font-medium ${isDarkMode
-                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
             >
               Cancel
