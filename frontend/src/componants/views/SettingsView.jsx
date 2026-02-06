@@ -170,7 +170,7 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
             <img
               src={avatarUrl}
               alt={displayName}
-              className={`w-16 h-16 rounded-full object-cover ring-4 ${isDarkMode ? 'ring-indigo-900' : 'ring-indigo-100'
+              className={`w-16 h-16 rounded-full object-cover from-blue-400 to-blue-500 ring-4 ${isDarkMode ? 'ring-blue-900' : 'ring-blue-100'
                 }`}
             />
             <div className="flex-1">
