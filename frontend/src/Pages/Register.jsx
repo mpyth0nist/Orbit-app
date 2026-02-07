@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import { EyeIcon, EyeSlashIcon } from '../componants/ui/Icons';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -67,6 +68,9 @@ export default function Register() {
 
       if (!success) {
         setError('Registration failed. Please try again.');
+        toast.error('Registration failed. Please try again.');
+      } else {
+        toast.success('Registration successful! Welcome to Orbit.');
       }
     } catch (err) {
       // Extract error message from backend
@@ -76,8 +80,10 @@ export default function Register() {
       if (errors && errors.length > 0) {
         // Show first validation error
         setError(errors[0].message);
+        toast.error(errors[0].message);
       } else {
         setError(errorMessage);
+        toast.error(errorMessage);
       }
     }
   };

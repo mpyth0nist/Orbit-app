@@ -2,7 +2,9 @@ import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRe
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { CogIcon, CheckBadgeIcon, CameraIcon, ImageIcon, HeartIcon } from '../ui/Icons';
+import TierBadge from '../ui/TierBadge';
 import PostCard from '../feed/PostCard';
 import FollowersModal from '../ui/FollowersModal';
 import api, { usersAPI, getMediaUrl } from '../../api/apiClient';
@@ -88,6 +90,7 @@ const ProfileView = forwardRef(function ProfileView({
           ? { ...p, isLiked: !p.isLiked, likesCount: p.isLiked ? (p.likesCount || 0) + 1 : (p.likesCount || 1) - 1 }
           : p
       ));
+      toast.error('Failed to like post');
     },
   });
 
@@ -98,7 +101,11 @@ const ProfileView = forwardRef(function ProfileView({
       // Refresh posts and stats
       loadUserStats();
       queryClient.invalidateQueries({ queryKey: ['userPosts', user?.id] });
+      toast.success('Post reposted!');
     },
+    onError: () => {
+      toast.error('Failed to repost');
+    }
   });
 
   const handleRepost = (post) => {
@@ -128,6 +135,10 @@ const ProfileView = forwardRef(function ProfileView({
       );
       setLocalUserPosts(prev => updatePosts(prev));
       setLikedPosts(prev => updatePosts(prev));
+      toast.error('Failed to update bookmark');
+    },
+    onSuccess: (data, variables) => {
+      toast.success('Bookmark updated');
     }
   });
 
@@ -480,6 +491,7 @@ const ProfileView = forwardRef(function ProfileView({
           <div className="flex items-center gap-2">
             <h1 className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{`${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User'}</h1>
             {user?.verified && <CheckBadgeIcon className="w-6 h-6 text-indigo-500" />}
+            <TierBadge points={user?.points || 0} />
           </div>
           <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
             @{user?.username || user?.email?.split('@')[0]}

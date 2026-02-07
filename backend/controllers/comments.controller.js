@@ -3,7 +3,7 @@ import { successResponse, errorResponse, createdResponse, deletedResponse, curso
 import { prisma } from '../utils/prisma.js';
 import logger from '../utils/logger.js';
 import validator from 'validator';
-import { createCommentNotification, deleteNotification } from '../utils/notificationService.js';
+import { createCommentNotification, createHelpfulNotification, deleteNotification } from '../utils/notificationService.js';
 
 /**
  * Create a comment or reply
@@ -94,7 +94,8 @@ export const createComment = asyncHandler(async (req, res) => {
                             select: {
                                 firstName: true,
                                 lastName: true,
-                                photoUrl: true
+                                photoUrl: true,
+                                points: true
                             }
                         }
                     }
@@ -229,7 +230,8 @@ export const getThreadComments = asyncHandler(async (req, res) => {
                         select: {
                             firstName: true,
                             lastName: true,
-                            photoUrl: true
+                            photoUrl: true,
+                            points: true
                         }
                     }
                 }
@@ -353,7 +355,8 @@ export const getCommentReplies = asyncHandler(async (req, res) => {
                         select: {
                             firstName: true,
                             lastName: true,
-                            photoUrl: true
+                            photoUrl: true,
+                            points: true
                         }
                     }
                 }
@@ -570,4 +573,168 @@ export const deleteComment = asyncHandler(async (req, res) => {
     logger.info('Comment deleted', { commentId, userId });
 
     return deletedResponse(res, 'Comment deleted successfully');
+});
+
+/**
+ * Toggle helpful status of a comment
+ * 
+ * Only the thread author can mark comments as helpful on HELP threads.
+ * Increments/Decrements points for the comment author.
+ * 
+ * @route   POST /api/comments/:id/helpful
+ * @access  Private (Thread Author only)
+ */
+export const toggleHelpful = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+    const commentId = parseInt(req.params.id);
+    const { helpType } = req.body; // 'HELPFUL', 'BIG_HELP', or null
+
+    // Validate commentId
+    if (isNaN(commentId)) {
+        return errorResponse(res, 'Invalid comment ID', 400);
+    }
+
+    // Validate helpType
+    const validHelpTypes = ['HELPFUL', 'BIG_HELP', null];
+    if (helpType !== undefined && !validHelpTypes.includes(helpType)) {
+        return errorResponse(res, 'Invalid help type', 400);
+    }
+
+    // Find comment with thread info
+    const comment = await prisma.comment.findUnique({
+        where: { id: commentId },
+        include: {
+            thread: {
+                select: {
+                    id: true,
+                    userId: true,
+                    threadType: true
+                }
+            },
+            user: {
+                select: {
+                    id: true
+                }
+            }
+        }
+    });
+
+    if (!comment) {
+        return errorResponse(res, 'Comment not found', 404);
+    }
+
+    // Validation: Thread type must be HELP
+    if (comment.thread.threadType !== 'HELP') {
+        return errorResponse(res, 'Points can only be awarded on HELP threads', 400);
+    }
+
+    // Validation: User must be thread author
+    if (comment.thread.userId !== userId) {
+        return errorResponse(res, 'Only the thread author can mark comments as helpful', 403);
+    }
+
+    // Validation: Cannot mark own comment (though thread author shouldn't comment on own help thread expecting points, logic still holds)
+    if (comment.user.id === userId) {
+        return errorResponse(res, 'You cannot mark your own comment as helpful', 400);
+    }
+
+    // Transaction
+    const updatedComment = await prisma.$transaction(async (tx) => {
+        // Re-fetch comment to ensure current state (concurrency safety)
+        const currentComment = await tx.comment.findUnique({
+            where: { id: commentId },
+            select: { helpType: true, userId: true }
+        });
+
+        // Optimization: If no change, return immediately
+        if (currentComment.helpType === helpType) {
+            const c = await tx.comment.findUnique({
+                where: { id: commentId },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            username: true,
+                            profile: {
+                                select: {
+                                    firstName: true,
+                                    lastName: true,
+                                    photoUrl: true,
+                                    points: true
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            return { c, delta: 0 };
+        }
+
+        const POINTS = { 'HELPFUL': 1, 'BIG_HELP': 2, null: 0 };
+        const oldPoints = POINTS[currentComment.helpType] || 0;
+        const newPoints = POINTS[helpType] || 0;
+        const delta = newPoints - oldPoints;
+
+        // Update Comment
+        const c = await tx.comment.update({
+            where: { id: commentId },
+            data: { helpType },
+            include: {
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        profile: {
+                            select: {
+                                firstName: true,
+                                lastName: true,
+                                photoUrl: true,
+                                points: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Update User Points
+        if (delta !== 0) {
+            await tx.profile.update({
+                where: { userId: currentComment.userId },
+                data: {
+                    points: {
+                        increment: delta
+                    }
+                }
+            });
+        }
+
+        return { c, delta };
+    });
+
+    const { c: finalComment, delta: pointsDelta } = updatedComment;
+
+    // Handle Notifications (outside transaction to avoid blocking)
+    if (helpType) {
+        // Create notification
+        await createHelpfulNotification(userId, comment.user.id, commentId);
+    } else {
+        // Remove notification if unmarked
+        await deleteNotification({
+            actorId: userId,
+            receiverId: comment.user.id, // Notification receiver is comment author
+            type: 'HELP_MARK',
+            entityId: commentId,
+            entityType: 'COMMENT'
+        });
+    }
+
+    logger.info('Comment helpful status updated', {
+        commentId,
+        userId,
+        helpType,
+        pointsDelta
+    });
+
+    return successResponse(res, finalComment, 'Help status updated successfully');
 });

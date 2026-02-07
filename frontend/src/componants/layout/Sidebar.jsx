@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -62,6 +63,7 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
 
   const handleLogout = () => {
     logout();
+    toast.success('Logged out successfully');
     navigate('/login');
   };
 
@@ -69,7 +71,7 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
     <div className={`h-full flex flex-col ${isDarkMode ? 'bg-gray-900' : 'bg-white/80'
       } backdrop-blur-xl`}>
       {/* Logo */}
-       <div className="p-6 pt-2 pb-0">
+      <div className="p-6 pt-2 pb-0">
         <div className="flex items-center gap-3">
           <img
             className="w-36 h-19 transition-opacity duration-300"

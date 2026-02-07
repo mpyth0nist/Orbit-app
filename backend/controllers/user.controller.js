@@ -94,7 +94,8 @@ export const getMyInfo = asyncHandler(async (req, res) => {
         firstName: user.profile?.firstName,
         lastName: user.profile?.lastName,
         bio: user.profile?.bio,
-        photoUrl: user.profile?.photoUrl
+        photoUrl: user.profile?.photoUrl,
+        points: user.profile?.points
     }, 'User information retrieved successfully');
 });
 

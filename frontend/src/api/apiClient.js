@@ -146,6 +146,9 @@ export const commentsAPI = {
   // Update comment
   update: (id, data) => apiClient.patch(`/comments/${id}`, data),
 
+  // Toggle helpful (HELPFUL or BIG_HELP)
+  toggleHelpful: (id, helpType) => apiClient.post(`/comments/${id}/helpful`, { helpType }),
+
   // Delete comment
   delete: (id) => apiClient.delete(`/comments/${id}`),
 };
