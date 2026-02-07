@@ -98,10 +98,10 @@ export default function Register() {
               style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop')" }}>
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-8 z-20">
                 <div className="text-center">
-                  <img className='md:w-52' src="./logo/white-logo-tp.png" alt="logo" />
-                  <h1 className="text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                  <img className='w-94 pl-20' src="./logo/logo-dark.png" alt="logo" />
+                  {/* <h1 className="text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                     Join Orbit
-                  </h1>
+                  </h1> */}
                   <p className="text-lg lg:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
                     Start your journey with us and connect with amazing people around the world.
                   </p>
