@@ -20,7 +20,6 @@ import notificationRoutes from './routes/notifications.routes.js';
 import commentRoutes from './routes/comments.routes.js';
 import reactionRoutes from './routes/reactions.routes.js';
 import mediaRoutes from './routes/media.routes.js';
-import hashtagRoutes from './routes/hashtag.routes.js';
 import communityRoutes from './routes/communities.routes.js';
 
 // Middleware
@@ -100,7 +99,6 @@ app.use('/api/threads', threadRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/reactions', reactionRoutes);
 app.use('/api/media', mediaRoutes);
-app.use('/api/hashtags', hashtagRoutes);
 app.use('/api/communities', communityRoutes);
 app.use('/api/threads/:threadId/comments', commentRoutes);  // Thread comments
 app.use('/api/comments', commentRoutes);  // Comment operations

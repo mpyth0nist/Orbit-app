@@ -13,7 +13,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
   const { user: currentUser } = useAuth();
 
   // Tab and Search State
-  const [activeTab, setActiveTab] = useState('users'); // 'users', 'threads', 'hashtags'
+  const [activeTab, setActiveTab] = useState('users'); // 'users', 'threads'
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -23,8 +23,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
   // Results for each tab
   const [userResults, setUserResults] = useState([]);
   const [threadResults, setThreadResults] = useState([]);
-  const [hashtagResults, setHashtagResults] = useState([]);
-  const [trendingHashtags, setTrendingHashtags] = useState([]);
 
   // Recent searches from localStorage
   const [recentSearches, setRecentSearches] = useState([]);
@@ -41,18 +39,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
     }
   }, []);
 
-  // Load trending hashtags on mount
-  useEffect(() => {
-    const fetchTrendingHashtags = async () => {
-      try {
-        const data = await api.hashtags.trending({ limit: 10 });
-        setTrendingHashtags(data || []);
-      } catch (error) {
-        console.error('Error fetching trending hashtags:', error);
-      }
-    };
-    fetchTrendingHashtags();
-  }, []);
+
 
   // Debounce search query
   useEffect(() => {
@@ -67,7 +54,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
     if (!debouncedQuery || debouncedQuery.length < 2) {
       setUserResults([]);
       setThreadResults([]);
-      setHashtagResults([]);
       return;
     }
 
@@ -80,9 +66,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
         } else if (activeTab === 'threads') {
           const data = await api.search.searchThreads({ q: debouncedQuery, page: 1, limit: 20 });
           setThreadResults(data?.threads || []);
-        } else if (activeTab === 'hashtags') {
-          const data = await api.search.searchHashtags(debouncedQuery);
-          setHashtagResults(data || []);
         }
       } catch (error) {
         console.error('Search error:', error);
@@ -110,10 +93,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
     navigate(`/thread/${threadId}`);
   };
 
-  const handleHashtagClick = (tag) => {
-    setActiveTab('threads');
-    setSearchQuery(`#${tag}`);
-  };
 
   const clearRecentSearches = () => {
     setRecentSearches([]);
@@ -122,8 +101,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
 
   const tabs = [
     { id: 'users', label: 'Users', icon: User },
-    { id: 'threads', label: 'Threads', icon: FileText },
-    { id: 'hashtags', label: 'Hashtags', icon: Hash }
+    { id: 'threads', label: 'Threads', icon: FileText }
   ];
 
 
@@ -183,32 +161,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
           </div>
         )}
 
-        {/* Trending Hashtags (Empty State) */}
-        {!searchQuery && activeTab === 'hashtags' && trendingHashtags.length > 0 && (
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4 text-gray-900 dark:text-gray-100">
-              <TrendingUp size={20} />
-              <h3 className="text-lg font-bold">Trending Hashtags</h3>
-            </div>
-            <div className="flex flex-col gap-2">
-              {trendingHashtags.map(hashtag => (
-                <div
-                  key={hashtag.id}
-                  className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors group"
-                  onClick={() => handleHashtagClick(hashtag.tag)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
-                      <Hash size={18} />
-                    </div>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">#{hashtag.tag}</span>
-                  </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{hashtag.useCount} posts</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Recent Searches (Empty State) */}
         {!searchQuery && recentSearches.length > 0 && activeTab === 'users' && (
@@ -296,36 +248,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
               ))
             )}
           </div>
-        )}
-
-        {/* Hashtag Results */}
-        {!isSearching && searchQuery && activeTab === 'hashtags' && (
-          <div className="flex flex-col gap-2">
-            {hashtagResults.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                <Hash size={48} className="mb-4 text-gray-300 dark:text-gray-600" />
-                <p>No hashtags found for "{searchQuery}"</p>
-              </div>
-            ) : (
-              hashtagResults.map(hashtag => (
-                <div
-                  key={hashtag.id}
-                  className="flex items-center justify-between p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl cursor-pointer hover:border-indigo-500 dark:hover:border-indigo-500 transition-colors group"
-                  onClick={() => handleHashtagClick(hashtag.tag)}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-500 dark:text-gray-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
-                      <Hash size={18} />
-                    </div>
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">#{hashtag.tag}</span>
-                  </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">{hashtag.useCount} posts</span>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-      </div>
+        )}\n      </div>
     </div>
   );
 };

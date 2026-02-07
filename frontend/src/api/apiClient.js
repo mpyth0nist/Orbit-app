@@ -280,20 +280,12 @@ export const authAPI = {
   },
 };
 
-// Hashtags API
-export const hashtagsAPI = {
-  search: ({ q, limit = 20 }) => apiClient.get('/hashtags/search', { params: { q, limit } }),
-  trending: ({ limit = 10 } = {}) => apiClient.get('/hashtags/trending', { params: { limit } }),
-  getThreads: (tag, { page = 1, limit = 20 } = {}) =>
-    apiClient.get(`/hashtags/${tag}/threads`, { params: { page, limit } })
-};
 
 // Search API
 export const searchAPI = {
   searchThreads: ({ q, page, limit }) => apiClient.get('/threads/search', { params: { q, page, limit } }),
   searchPosts: (query) => threadsAPI.search({ q: query, limit: 50 }), // Legacy alias
-  searchUsers: (query) => usersAPI.search({ q: query, limit: 20 }),
-  searchHashtags: (query) => hashtagsAPI.search({ q: query, limit: 20 })
+  searchUsers: (query) => usersAPI.search({ q: query, limit: 20 })
 };
 
 // Communities API
@@ -380,6 +372,5 @@ export default {
   auth: authAPI,
   files: filesAPI,
   search: searchAPI,
-  hashtags: hashtagsAPI,
   communities: communitiesAPI,
 };
