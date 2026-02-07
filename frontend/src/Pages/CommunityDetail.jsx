@@ -143,6 +143,14 @@ export default function CommunityDetail() {
                     _optimistic: true, // Flag to identify optimistic updates
                 };
 
+                // If old is an array (which it should be based on apiClient)
+                if (Array.isArray(old)) {
+                    const newArray = [optimisticPost, ...old];
+                    newArray.pagination = old.pagination; // Preserve pagination info
+                    return newArray;
+                }
+
+                // Fallback if data structure is different
                 return {
                     ...old,
                     data: [optimisticPost, ...(old.data || [])],
@@ -156,6 +164,15 @@ export default function CommunityDetail() {
             // Replace optimistic post with real server data
             queryClient.setQueryData(QUERY_KEYS.communityThreads(id, threadsPage), (old) => {
                 if (!old) return old;
+
+                // If old is an array
+                if (Array.isArray(old)) {
+                    const newArray = old.map(thread =>
+                        thread._optimistic ? newThread : thread
+                    );
+                    newArray.pagination = old.pagination; // Preserve pagination info
+                    return newArray;
+                }
 
                 return {
                     ...old,
@@ -172,6 +189,7 @@ export default function CommunityDetail() {
             toast.success('Post created successfully');
         },
         onError: (error, variables, context) => {
+            console.error('Create post mutation error:', error);
             // Rollback to previous state on error
             if (context?.previousThreads) {
                 queryClient.setQueryData(
