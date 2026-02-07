@@ -256,7 +256,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
                   onClick={() => handleUserClick(user.id)}
                 >
                   <img
-                    src={getMediaUrl(user.profile?.photoUrl) || '/default-avatar.png'}
+                    src={getMediaUrl(user.profile?.photoUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=random&color=fff&size=128`}
                     alt={user.username}
                     className="w-12 h-12 rounded-full object-cover border border-gray-100 dark:border-gray-700"
                   />
