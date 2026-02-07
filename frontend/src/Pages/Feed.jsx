@@ -222,6 +222,7 @@ export default function Feed() {
             onComment={handlePostClick}
             onShare={(post) => repostThreadMutation.mutate(post)}
             onBookmark={(post) => bookmarkThreadMutation.mutate(post)}
+            currentTab={activeFeedTab}
           />
 
           {/* Infinite scroll loader */}

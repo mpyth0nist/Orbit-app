@@ -11,7 +11,8 @@ export default function FeedView({
   onShare,
   onBookmark,
   currentUserEmail,
-  currentUserId
+  currentUserId,
+  currentTab = "following",
 }) {
   if (isLoading) {
     return (
@@ -30,7 +31,7 @@ export default function FeedView({
           </svg>
         </div>
         <h3 className="text-lg font-semibold text-gray-900 mb-1">No posts yet</h3>
-        <p className="text-gray-500">Be the first to share something!</p>
+        <p className="text-gray-500">{currentTab === "following" ? "Be the first to share something!" : "No posts to display"}</p>
       </div>
     );
   }
