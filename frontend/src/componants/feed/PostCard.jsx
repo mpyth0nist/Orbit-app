@@ -161,17 +161,75 @@ export default function PostCard({
   const handleDelete = useCallback(async (e) => {
     e.stopPropagation();
     if (window.confirm('Are you sure you want to delete this post?')) {
+      setShowOptionsMenu(false);
+
+      // Optimistically remove from all caches
+      const previousCaches = new Map();
+
+      const removeThreadFromCache = (queryKey) => {
+        const oldData = queryClient.getQueryData(queryKey);
+        if (!oldData) return;
+
+        // Store previous data for rollback
+        previousCaches.set(JSON.stringify(queryKey), oldData);
+
+        queryClient.setQueryData(queryKey, (old) => {
+          if (!old) return old;
+
+          // Handle infinite query structure (pages array)
+          if (old.pages && Array.isArray(old.pages)) {
+            return {
+              ...old,
+              pages: old.pages.map(page =>
+                Array.isArray(page) ? page.filter(thread => thread.id !== post.id) : page
+              ),
+            };
+          }
+
+          // Handle paginated data structure
+          if (old.data && Array.isArray(old.data)) {
+            return {
+              ...old,
+              data: old.data.filter(thread => thread.id !== post.id),
+            };
+          }
+
+          // Handle simple array structure
+          if (Array.isArray(old)) {
+            return old.filter(thread => thread.id !== post.id);
+          }
+
+          return old;
+        });
+      };
+
+      // Remove from all query caches that might contain this thread
+      queryClient.getQueryCache().findAll().forEach((query) => {
+        const queryKey = query.queryKey;
+
+        // Update if it's a threads query (Feed, Profile, Communities, etc.)
+        if (queryKey[0] === 'threads' ||
+          queryKey[0] === 'community' && queryKey[2] === 'threads' ||
+          queryKey[0] === 'user' && queryKey.includes('posts')) {
+          removeThreadFromCache(queryKey);
+        }
+      });
+
       try {
         await threadsAPI.delete(post.id);
         onDelete?.(post.id);
-        setShowOptionsMenu(false);
         toast.success('Post deleted successfully');
       } catch (error) {
         console.error('Failed to delete post:', error);
         toast.error('Failed to delete post');
+
+        // Rollback all cache updates
+        previousCaches.forEach((data, key) => {
+          queryClient.setQueryData(JSON.parse(key), data);
+        });
       }
     }
-  }, [post.id, onDelete]);
+  }, [post.id, onDelete, queryClient]);
 
   const handleCopyLink = useCallback((e) => {
     e.stopPropagation();
@@ -193,6 +251,18 @@ export default function PostCard({
     const updateThreadInCache = (queryKey) => {
       queryClient.setQueryData(queryKey, (old) => {
         if (!old) return old;
+
+        // Handle infinite query structure (pages array)
+        if (old.pages && Array.isArray(old.pages)) {
+          return {
+            ...old,
+            pages: old.pages.map(page =>
+              Array.isArray(page)
+                ? page.map(thread => thread.id === updatedThread.id ? updatedThread : thread)
+                : page
+            ),
+          };
+        }
 
         // Handle paginated data structure
         if (old.data && Array.isArray(old.data)) {
