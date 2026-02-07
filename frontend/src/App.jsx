@@ -92,9 +92,9 @@ function App() {
                 <Route
                   path="/"
                   element={
-                    <ProtectedRoute>
+                  <ProtectedRoute>
                       <Feed />
-                    </ProtectedRoute>
+                  </ProtectedRoute>
                   }
                 />
                 <Route
@@ -125,9 +125,9 @@ function App() {
                   path="/thread/:id"
                   element={
                     <ProtectedRoute>
-                      <ErrorBoundary>
-                        <Thread />
-                      </ErrorBoundary>
+                    <ErrorBoundary>
+                      <Thread />
+                    </ErrorBoundary>
                     </ProtectedRoute>
                   }
                 />

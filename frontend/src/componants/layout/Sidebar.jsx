@@ -111,7 +111,7 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
         }`}>
         <div className="flex items-center gap-3 justify-between">
           <div className="flex items-center gap-3 min-w-0">
-            <div className={`flex-shrink-0 w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center text-white font-semibold shadow-lg overflow-hidden`}>
+            <div className={`flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-400 rounded-full flex items-center justify-center text-white font-semibold shadow-lg overflow-hidden`}>
               {user?.photoUrl ? (
                 <img src={getMediaUrl(user.photoUrl)} alt={user.firstName} className="w-full h-full object-cover" />
               ) : (
