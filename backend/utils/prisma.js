@@ -56,6 +56,7 @@ export const selectUser = {
             lastName: true,
             bio: true,
             photoUrl: true,
+            coverUrl: true,
             points: true
         }
     }
@@ -76,6 +77,7 @@ export const selectPublicUser = {
             lastName: true,
             bio: true,
             photoUrl: true,
+            coverUrl: true,
             points: true
         }
     }

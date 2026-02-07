@@ -516,6 +516,11 @@ export default function UserProfileView({
 
             {/* Cover Image */}
             <div className="relative h-48 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl overflow-hidden">
+                {user?.profile?.coverUrl ? (
+                    <img src={getMediaUrl(user.profile.coverUrl)} alt="Cover" className="w-full h-full object-cover" />
+                ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500" />
+                )}
                 <div className="absolute inset-0 bg-black/10" />
             </div>
 

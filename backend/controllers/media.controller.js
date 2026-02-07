@@ -119,6 +119,57 @@ export const uploadProfilePicture = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @desc    Upload/update profile banner
+ * @route   POST /api/media/profile-banner
+ * @access  Private
+ */
+export const uploadProfileBanner = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+
+    if (!req.file) {
+        return errorResponse(res, 'No file uploaded', 400);
+    }
+
+    const coverUrl = `/uploads/profiles/${req.file.filename}`;
+
+    // Get current profile
+    const currentProfile = await prisma.profile.findUnique({
+        where: { userId },
+        select: { coverUrl: true }
+    });
+
+    // Update profile with new banner URL
+    await prisma.profile.update({
+        where: { userId },
+        data: { coverUrl }
+    });
+
+    // Delete old banner file if it exists and is different
+    if (currentProfile?.coverUrl && currentProfile.coverUrl !== coverUrl) {
+        // Handle cases where path might be external URL
+        if (currentProfile.coverUrl.startsWith('/uploads')) {
+            const oldBannerPath = path.join(__dirname, '..', currentProfile.coverUrl);
+            try {
+                if (fs.existsSync(oldBannerPath)) {
+                    fs.unlinkSync(oldBannerPath);
+                    logger.info('Old profile banner deleted', { userId, oldPath: currentProfile.coverUrl });
+                }
+            } catch (err) {
+                logger.error('Failed to delete old profile banner', { userId, oldPath: currentProfile.coverUrl, error: err.message });
+            }
+        }
+    }
+
+    logger.info('Profile banner updated', { userId, coverUrl });
+
+    return successResponse(
+        res,
+        { coverUrl },
+        'Profile banner updated successfully'
+    );
+});
+
+/**
  * @desc    Delete media file
  * @route   DELETE /api/media/:id
  * @access  Private

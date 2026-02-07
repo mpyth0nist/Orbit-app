@@ -37,6 +37,7 @@ model Profile {
   userId    Int      @unique @map("user_id")
   bio       String?
   photoUrl  String?  @map("photo_url") @db.VarChar(255)
+  coverUrl  String?  @map("cover_url") @db.VarChar(255)
   firstName String   @map("first_name") @db.VarChar(100)
   lastName  String   @map("last_name") @db.VarChar(100)
   points    Int      @default(0)
