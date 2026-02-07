@@ -584,7 +584,10 @@ export const getMyThreads = asyncHandler(async (req, res) => {
 
     const [threads, totalCount] = await Promise.all([
         prisma.thread.findMany({
-            where: { userId },
+            where: {
+                userId,
+                communityId: null
+            },
             select: selectThreadWithUser,
             skip,
             take: limit,
@@ -593,7 +596,10 @@ export const getMyThreads = asyncHandler(async (req, res) => {
             }
         }),
         prisma.thread.count({
-            where: { userId }
+            where: {
+                userId,
+                communityId: null
+            }
         })
     ]);
 
@@ -1130,14 +1136,20 @@ export const getUserThreads = asyncHandler(async (req, res) => {
 
     const [threads, totalCount] = await Promise.all([
         prisma.thread.findMany({
-            where: { userId: targetUserId },
+            where: {
+                userId: targetUserId,
+                communityId: null
+            },
             select: selectThreadWithUser,
             skip,
             take: limit,
             orderBy: { createdAt: 'desc' }
         }),
         prisma.thread.count({
-            where: { userId: targetUserId }
+            where: {
+                userId: targetUserId,
+                communityId: null
+            }
         })
     ]);
 

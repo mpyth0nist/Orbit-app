@@ -380,15 +380,15 @@ export const pinThread = asyncHandler(async (req, res) => {
         return errorResponse(res, 'Invalid community or thread ID', 400);
     }
 
-    // Check if user is admin
+    // Check if user is admin or moderator
     const membership = await prisma.communityMember.findUnique({
         where: {
             communityId_userId: { communityId, userId }
         }
     });
 
-    if (!membership || membership.role !== 'ADMIN') {
-        return errorResponse(res, 'Only admins can pin threads', 403);
+    if (!membership || (membership.role !== 'ADMIN' && membership.role !== 'MODERATOR')) {
+        return errorResponse(res, 'Only admins and moderators can pin threads', 403);
     }
 
     // Check thread belongs to community
@@ -449,4 +449,54 @@ export const getMyCommunities = asyncHandler(async (req, res) => {
     }));
 
     return successResponse(res, result, 'Your communities retrieved successfully');
+});
+
+/**
+ * Upload community banner
+ * 
+ * @route   POST /api/communities/:id/banner
+ * @access  Private (Admin only)
+ */
+export const uploadBanner = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+    const communityId = parseInt(req.params.id);
+
+    if (isNaN(communityId)) {
+        return errorResponse(res, 'Invalid community ID', 400);
+    }
+
+    if (!req.file) {
+        return errorResponse(res, 'Banner image is required', 400);
+    }
+
+    // Check community exists
+    const community = await prisma.community.findUnique({
+        where: { id: communityId }
+    });
+
+    if (!community) {
+        return errorResponse(res, 'Community not found', 404);
+    }
+
+    // Check user is admin or creator
+    const membership = await prisma.communityMember.findUnique({
+        where: {
+            communityId_userId: { communityId, userId }
+        }
+    });
+
+    if (!membership || (membership.role !== 'ADMIN' && community.creatorId !== userId)) {
+        return errorResponse(res, 'Only admins can update the community banner', 403);
+    }
+
+    // Update community with new banner path
+    const photoUrl = `/uploads/communities/${req.file.filename}`;
+    const updated = await prisma.community.update({
+        where: { id: communityId },
+        data: { photoUrl }
+    });
+
+    logger.info('Community banner uploaded', { communityId, uploadedBy: userId, photoUrl });
+
+    return successResponse(res, { photoUrl: updated.photoUrl }, 'Community banner uploaded successfully');
 });

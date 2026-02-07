@@ -22,9 +22,10 @@ const __dirname = path.dirname(__filename);
 const UPLOADS_DIR = path.join(__dirname, '../uploads');
 const THREADS_DIR = path.join(UPLOADS_DIR, 'threads');
 const PROFILES_DIR = path.join(UPLOADS_DIR, 'profiles');
+const COMMUNITIES_DIR = path.join(UPLOADS_DIR, 'communities');
 
 // Create directories if they don't exist
-[UPLOADS_DIR, THREADS_DIR, PROFILES_DIR].forEach(dir => {
+[UPLOADS_DIR, THREADS_DIR, PROFILES_DIR, COMMUNITIES_DIR].forEach(dir => {
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
@@ -37,9 +38,12 @@ const PROFILES_DIR = path.join(UPLOADS_DIR, 'profiles');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         // Determine destination based on fieldname
-        const destination = file.fieldname === 'profilePicture'
-            ? PROFILES_DIR
-            : THREADS_DIR;
+        let destination = THREADS_DIR;
+        if (file.fieldname === 'profilePicture') {
+            destination = PROFILES_DIR;
+        } else if (file.fieldname === 'communityBanner') {
+            destination = COMMUNITIES_DIR;
+        }
         cb(null, destination);
     },
     filename: (req, file, cb) => {
@@ -86,6 +90,24 @@ export const uploadProfilePicture = multer({
         files: 1
     }
 }).single('profilePicture');
+
+// Community banner upload (single file)
+export const uploadCommunityBanner = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        // Only allow images for banners
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type. Only images (JPEG, PNG, GIF, WebP) are allowed for banners'), false);
+        }
+    },
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB for banners
+        files: 1
+    }
+}).single('communityBanner');
 
 // Thread media upload (multiple files)
 export const uploadThreadMedia = multer({

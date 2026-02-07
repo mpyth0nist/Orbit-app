@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon } from '../ui/Icons';
 import api, { getMediaUrl, threadsAPI, usersAPI } from '../../api/apiClient';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -19,7 +20,11 @@ export default function ThreadDetailView({
   onLike,
   onShare,
   onUserClick,
-  user
+  user,
+  // Community-specific props
+  communityId = null,        // ID of the community (if thread belongs to one)
+  isCommunityMember = true,  // Whether user is a member (defaults to true for non-community threads)
+  onJoinCommunity = null,    // Callback to join community
 }) {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -117,6 +122,12 @@ export default function ThreadDetailView({
       setNewComment('');
     } catch (error) {
       console.error('Failed to post comment:', error);
+      // Show user-friendly message for 403 (non-member trying to comment)
+      if (error.response?.status === 403) {
+        toast.error(error.response?.data?.message || 'You must be a community member to comment on this post');
+      } else {
+        toast.error('Failed to post comment. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -201,6 +212,12 @@ export default function ThreadDetailView({
         if (!showReplies) fetchReplies(); // Auto-open replies if not open
       } catch (error) {
         console.error('Failed to reply:', error);
+        // Show user-friendly message for 403 (non-member trying to reply)
+        if (error.response?.status === 403) {
+          toast.error(error.response?.data?.message || 'You must be a community member to comment on this post');
+        } else {
+          toast.error('Failed to post reply. Please try again.');
+        }
       } finally {
         setIsSubmittingReply(false);
       }
@@ -290,14 +307,17 @@ export default function ThreadDetailView({
                   {likesCount > 0 && likesCount}
                 </button>
 
-                <button
-                  onClick={() => setIsReplying(!isReplying)}
-                  className={`flex items-center gap-1 text-sm transition-colors ${isDarkMode ? 'text-gray-500 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-500'
-                    }`}
-                >
-                  <ChatBubbleIcon className="w-4 h-4" />
-                  {t('reply') || 'Reply'}
-                </button>
+                {/* Only show reply button if user can comment (member or non-community thread) */}
+                {isCommunityMember && (
+                  <button
+                    onClick={() => setIsReplying(!isReplying)}
+                    className={`flex items-center gap-1 text-sm transition-colors ${isDarkMode ? 'text-gray-500 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-500'
+                      }`}
+                  >
+                    <ChatBubbleIcon className="w-4 h-4" />
+                    {t('reply') || 'Reply'}
+                  </button>
+                )}
 
                 {replyCount > 0 && (
                   <button
@@ -745,44 +765,67 @@ export default function ThreadDetailView({
         </div>
       </article>
 
-      {/* Comment Input */}
-      <form
-        onSubmit={handleSubmitComment}
-        className={`rounded-3xl p-4 shadow-sm border mb-4 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
-          }`}
-      >
-        <div className="flex items-center gap-3">
-          <img
-            src={user?.avatar || getMediaUrl(user?.photoUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.firstName || user?.full_name || 'User')}&background=6366f1&color=fff`}
-            alt="You"
-            className={`w-10 h-10 rounded-full object-cover ring-2 ${isDarkMode ? 'ring-gray-700' : 'ring-gray-100'
-              }`}
-
-          />
-          <input
-            type="text"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder={t('writeComment') || 'Write a comment...'}
-            className={`flex-1 px-4 py-2.5 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDarkMode
-              ? 'bg-gray-700 text-gray-200 placeholder-gray-500'
-              : 'bg-gray-100 text-gray-800 placeholder-gray-500'
-              }`}
-          />
-          <button
-            type="submit"
-            disabled={!newComment.trim() || isSubmitting}
-            className="p-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-full disabled:opacity-50 transition-all hover:shadow-lg hover:shadow-indigo-500/30"
-            aria-label="Send comment"
-          >
-            {isSubmitting ? (
-              <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
-              <SendIcon className="w-5 h-5" />
-            )}
-          </button>
+      {/* Comment Input - Conditional based on community membership */}
+      {communityId && !isCommunityMember ? (
+        <div
+          className={`rounded-3xl p-6 shadow-sm border mb-4 text-center ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+            }`}
+        >
+          <p className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+            Join this community to participate
+          </p>
+          <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Only community members can comment on posts. Join to share your thoughts!
+          </p>
+          {onJoinCommunity && (
+            <button
+              onClick={onJoinCommunity}
+              className="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-full font-medium hover:shadow-lg hover:shadow-indigo-500/30 transition-all"
+            >
+              Join Community
+            </button>
+          )}
         </div>
-      </form>
+      ) : (
+        <form
+          onSubmit={handleSubmitComment}
+          className={`rounded-3xl p-4 shadow-sm border mb-4 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+            }`}
+        >
+          <div className="flex items-center gap-3">
+            <img
+              src={user?.avatar || getMediaUrl(user?.photoUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.firstName || user?.full_name || 'User')}&background=6366f1&color=fff`}
+              alt="You"
+              className={`w-10 h-10 rounded-full object-cover ring-2 ${isDarkMode ? 'ring-gray-700' : 'ring-gray-100'
+                }`}
+
+            />
+            <input
+              type="text"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder={t('writeComment') || 'Write a comment...'}
+              className={`flex-1 px-4 py-2.5 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDarkMode
+                ? 'bg-gray-700 text-gray-200 placeholder-gray-500'
+                : 'bg-gray-100 text-gray-800 placeholder-gray-500'
+                }`}
+            />
+            <button
+              type="submit"
+              disabled={!newComment.trim() || isSubmitting}
+              className="p-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-full disabled:opacity-50 transition-all hover:shadow-lg hover:shadow-indigo-500/30"
+              aria-label="Send comment"
+            >
+              {isSubmitting ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              )
+                : (
+                  <SendIcon className="w-5 h-5" />
+                )}
+            </button>
+          </div>
+        </form>
+      )}
 
       {/* Comments */}
       <div className="space-y-3">

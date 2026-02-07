@@ -971,8 +971,9 @@ export const getThreadById = asyncHandler(async (req, res) => {
 export const createThread = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
     // content is in req.body
-    const { content, repostId } = req.body;
+    const { content, repostId, communityId } = req.body;
     const parsedRepostId = repostId ? parseInt(repostId) : null;
+    const parsedCommunityId = communityId ? parseInt(communityId) : null;
 
     // Check for uploaded files
     const files = req.files || [];
@@ -992,7 +993,8 @@ export const createThread = asyncHandler(async (req, res) => {
     }
 
     // Sanitize content
-    const trimmedContent = validator.escape(content.trim());
+    // Sanitize content (removed escape to fix encoding issues)
+    const trimmedContent = content.trim();
     if (trimmedContent.length > 1200) {
         return errorResponse(res, 'Content must be 1200 characters or less', 400);
     }
@@ -1035,13 +1037,30 @@ export const createThread = asyncHandler(async (req, res) => {
         rootTargetId = targetThread.repostId || targetThread.id;
     }
 
+    // If posting to a community, verify membership
+    if (parsedCommunityId) {
+        const membership = await prisma.communityMember.findUnique({
+            where: {
+                communityId_userId: {
+                    communityId: parsedCommunityId,
+                    userId
+                }
+            }
+        });
+
+        if (!membership || membership.status !== 'ACTIVE') {
+            return errorResponse(res, 'You must be an active member to post in this community', 403);
+        }
+    }
+
     const fullThread = await prisma.$transaction(async (tx) => {
         // 1. Create the thread
         const thread = await tx.thread.create({
             data: {
                 userId,
                 content: trimmedContent,
-                repostId: rootTargetId
+                repostId: rootTargetId,
+                communityId: parsedCommunityId
             }
         });
 
@@ -1165,7 +1184,8 @@ export const updateThread = asyncHandler(async (req, res) => {
     }
 
     // Sanitize content to prevent XSS attacks
-    const trimmedContent = validator.escape(content.trim());
+    // Sanitize content (removed escape to fix encoding issues)
+    const trimmedContent = content.trim();
     if (trimmedContent.length > 500) {
         return res.status(400).json({ message: 'Content must be 500 characters or less' });
     }
@@ -1287,9 +1307,29 @@ export const deleteThread = asyncHandler(async (req, res) => {
         return res.status(404).json({ message: 'Thread not found' });
     }
 
-    // Check authorization - only thread owner can delete
+    // Check authorization - thread owner or community moderator/admin can delete
     if (existingThread.userId !== userId) {
-        return res.status(403).json({ message: 'You are not authorized to delete this thread' });
+        let authorized = false;
+
+        // Check if thread belongs to a community where user is mod/admin
+        if (existingThread.communityId) {
+            const membership = await prisma.communityMember.findUnique({
+                where: {
+                    communityId_userId: {
+                        communityId: existingThread.communityId,
+                        userId: userId
+                    }
+                }
+            });
+
+            if (membership && (membership.role === 'ADMIN' || membership.role === 'MODERATOR')) {
+                authorized = true;
+            }
+        }
+
+        if (!authorized) {
+            return res.status(403).json({ message: 'You are not authorized to delete this thread' });
+        }
     }
 
     // Delete the thread (cascade will handle media and other relations)

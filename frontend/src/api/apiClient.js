@@ -319,9 +319,12 @@ export const communitiesAPI = {
   // Leave community
   leave: (id) => apiClient.post(`/communities/${id}/leave`),
 
+  // Get current user's membership status (efficient)
+  getMembership: (id) => apiClient.get(`/communities/${id}/membership`),
+
   // Get members
-  getMembers: (id, { page = 1, limit = 20 } = {}) =>
-    apiClient.get(`/communities/${id}/members`, { params: { page, limit } }),
+  getMembers: (id, { page = 1, limit = 20, status = 'ACTIVE' } = {}) =>
+    apiClient.get(`/communities/${id}/members`, { params: { page, limit, status } }),
 
   // Update member role
   updateRole: (communityId, userId, role) =>

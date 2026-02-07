@@ -24,14 +24,31 @@ export const createComment = asyncHandler(async (req, res) => {
         return errorResponse(res, 'Invalid thread ID', 400);
     }
 
-    // Check if thread exists
+    // Check if thread exists and get community info
     const thread = await prisma.thread.findUnique({
         where: { id: threadId },
-        select: { id: true, userId: true }
+        select: { id: true, userId: true, communityId: true }
     });
 
     if (!thread) {
         return errorResponse(res, 'Thread not found', 404);
+    }
+
+    // If thread belongs to a community, verify user is an active member
+    if (thread.communityId) {
+        const membership = await prisma.communityMember.findUnique({
+            where: {
+                communityId_userId: {
+                    communityId: thread.communityId,
+                    userId
+                }
+            },
+            select: { status: true }
+        });
+
+        if (!membership || membership.status !== 'ACTIVE') {
+            return errorResponse(res, 'Only community members can comment on community posts', 403);
+        }
     }
 
     // If parentId provided, validate parent comment

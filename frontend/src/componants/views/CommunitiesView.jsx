@@ -39,6 +39,10 @@ export default function CommunitiesView({ currentUserId }) {
       queryClient.invalidateQueries({ queryKey: ['communities'] });
       queryClient.invalidateQueries({ queryKey: ['my-communities'] });
     },
+    onError: (error) => {
+      const message = error.response?.data?.message || 'Failed to join community';
+      console.error('Join error:', message);
+    }
   });
 
   // Leave mutation
@@ -48,6 +52,10 @@ export default function CommunitiesView({ currentUserId }) {
       queryClient.invalidateQueries({ queryKey: ['communities'] });
       queryClient.invalidateQueries({ queryKey: ['my-communities'] });
     },
+    onError: (error) => {
+      const message = error.response?.data?.message || 'Failed to leave community';
+      console.error('Leave error:', message);
+    }
   });
 
   const handleToggleMembership = (communityId, isMember) => {

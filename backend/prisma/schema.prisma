@@ -279,6 +279,7 @@ model CommunityMember {
 
 enum CommunityRole {
   ADMIN
+  MODERATOR
   MEMBER
 }
 

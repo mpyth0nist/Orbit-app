@@ -45,7 +45,7 @@ export const LanguageProvider = ({ children }) => {
       language: 'Language',
       languageDesc: 'English (US)',
       manageAccount: 'Manage your account preferences',
-      editProfile: 'Edit Profile',
+
       editProfileDesc: 'Update your name, bio, and photo',
       privacy: 'Privacy',
       privacyDesc: 'Manage who can see your content',
@@ -120,10 +120,7 @@ export const LanguageProvider = ({ children }) => {
       decline: 'Decline',
       requestAccepted: 'Request Accepted',
       requestDeclined: 'Request Declined',
-      accept: 'Accept',
-      decline: 'Decline',
-      requestAccepted: 'Request Accepted',
-      requestDeclined: 'Request Declined',
+
 
       // Communities
       discoverCommunities: 'Discover Communities',
@@ -131,7 +128,7 @@ export const LanguageProvider = ({ children }) => {
       all: 'All',
 
       // Actions
-      editProfile: 'Edit Profile',
+
       edit: 'Edit',
       save: 'Save',
       cancel: 'Cancel',
@@ -181,8 +178,7 @@ export const LanguageProvider = ({ children }) => {
       passwordRequirement: 'Must be at least 8 characters long.',
       confirmNewPassword: 'Confirm New Password',
       // Help Center
-      helpCenter: 'Help Center',
-      helpCenterDesc: 'Get help with using Orbit',
+
       helpSearchPlaceholder: 'Search for help, articles, or keywords...',
       helpGettingStarted: 'Getting Started',
       helpHowToCreate: 'How to create your first post',
@@ -243,7 +239,7 @@ export const LanguageProvider = ({ children }) => {
       language: 'Langue',
       languageDesc: 'Français',
       manageAccount: 'Gérez les préférences de votre compte',
-      editProfile: 'Modifier le profil',
+
       editProfileDesc: 'Mettre à jour votre nom, bio et photo',
       privacy: 'Confidentialité',
       privacyDesc: 'Gérer qui peut voir votre contenu',
@@ -325,7 +321,7 @@ export const LanguageProvider = ({ children }) => {
       all: 'Tous',
 
       // Actions
-      editProfile: 'Modifier le profil',
+
       edit: 'Modifier',
       save: 'Enregistrer',
       cancel: 'Annuler',
@@ -375,8 +371,7 @@ export const LanguageProvider = ({ children }) => {
       passwordRequirement: 'Doit comporter au moins 8 caractères.',
       confirmNewPassword: 'Confirmer le nouveau mot de passe',
       // Help Center
-      helpCenter: 'Centre d\'aide',
-      helpCenterDesc: 'Obtenir de l\'aide avec Orbit',
+
       helpSearchPlaceholder: 'Rechercher de l\'aide, des articles ou des mots-clés...',
       helpGettingStarted: 'Commencer',
       helpHowToCreate: 'Comment créer votre premier post',
@@ -437,7 +432,7 @@ export const LanguageProvider = ({ children }) => {
       language: 'اللغة',
       languageDesc: 'العربية',
       manageAccount: 'إدارة تفضيلات حسابك',
-      editProfile: 'تعديل الملف الشخصي',
+
       editProfileDesc: 'تحديث اسمك، سيرتك الذاتية وصورتك',
       privacy: 'الخصوصية',
       privacyDesc: 'إدارة من يمكنه رؤية محتواك',
@@ -519,7 +514,7 @@ export const LanguageProvider = ({ children }) => {
       all: 'الكل',
 
       // Actions
-      editProfile: 'تعديل الملف الشخصي',
+
       edit: 'تعديل',
       save: 'حفظ',
       cancel: 'إلغاء',
@@ -569,8 +564,7 @@ export const LanguageProvider = ({ children }) => {
       passwordRequirement: 'يجب أن لا تقل عن 8 أحرف.',
       confirmNewPassword: 'تأكيد كلمة المرور الجديدة',
       // Help Center
-      helpCenter: 'مركز المساعدة',
-      helpCenterDesc: 'احصل على المساعدة في استخدام Orbit',
+
       helpSearchPlaceholder: 'ابحث عن مساعدة أو مقالات أو كلمات رئيسية...',
       helpGettingStarted: 'البدء',
       helpHowToCreate: 'كيفية إنشاء أول منشور لك',
