@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark, oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -41,16 +41,29 @@ const unescapeHtml = (text) => {
  */
 const ContentRenderer = ({ content, className }) => {
     const { isDarkMode } = useTheme();
+    const maxWords = 40;
+    const [isExpanded, setIsExpanded] = useState(false);
 
     if (!content) return null;
 
     // Unescape HTML entities that might have been sanitized
     const decodedContent = unescapeHtml(content);
 
+    // Check if content needs truncation (before processing code blocks)
+    const words = decodedContent.split(/\s+/);
+    const isOver = words.length > maxWords;
+
+    // Truncate content if needed and not expanded
+    let displayContent = decodedContent;
+    if (isOver && !isExpanded) {
+        const truncatedWords = words.slice(0, maxWords).join(' ');
+        displayContent = truncatedWords + '...';
+    }
+
     // Split content by code blocks
     // Regex captures: 1: language (optional), 2: code content
     // Improved regex handles optional spaces after language tag
-    const parts = decodedContent.split(/```(\w+)?(?:[ ]+)?\n?([\s\S]*?)```/g);
+    const parts = displayContent.split(/```(\w+)?(?:[ ]+)?\n?([\s\S]*?)```/g);
 
     return (
         <div className={`leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} ${className || 'text-[15px]'}`}>
@@ -112,6 +125,22 @@ const ContentRenderer = ({ content, className }) => {
                 }
                 return null;
             })}
+
+            {/* Read More / Read Less Button */}
+            {isOver && (
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setIsExpanded(!isExpanded);
+                    }}
+                    className={`mt-2 text-sm font-medium transition-colors ${isDarkMode
+                            ? 'text-indigo-400 hover:text-indigo-300'
+                            : 'text-indigo-600 hover:text-indigo-700'
+                        }`}
+                >
+                    {isExpanded ? 'Read less' : 'Read more'}
+                </button>
+            )}
         </div>
     );
 };

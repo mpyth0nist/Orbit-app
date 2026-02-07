@@ -36,6 +36,8 @@ export default function PostCard({
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+
+
   // Memoized user/profile data extraction
   const user = post.user || {};
   const profile = user.profile || {};
@@ -63,6 +65,8 @@ export default function PostCard({
 
   // Memoized content
   const content = post.content || post.text || '';
+
+
 
   // Memoized media array with full URLs
   const mediaItems = useMemo(() => {
