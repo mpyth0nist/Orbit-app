@@ -439,7 +439,7 @@ const ProfileView = forwardRef(function ProfileView({
   return (
     <div className="max-w-2xl mx-auto">
       {/* Cover Image */}
-      <div className="relative h-48 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl overflow-hidden">
+      <div className="relative h-48 bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300 rounded-3xl overflow-hidden">
         <div className="absolute inset-0 bg-black/10" />
         <button className="absolute top-4 right-4 p-2 bg-black/30 text-white rounded-full hover:bg-black/50 transition-colors">
           <CameraIcon className="w-5 h-5" />
@@ -463,7 +463,7 @@ const ProfileView = forwardRef(function ProfileView({
         <div className="flex justify-end gap-2 pt-4">
           <button
             onClick={onEditProfile}
-            className="px-5 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-xl transition-all"
+            className="px-5 py-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all"
           >
             {t('editProfile')}
           </button>

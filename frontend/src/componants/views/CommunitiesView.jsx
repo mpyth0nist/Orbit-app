@@ -111,7 +111,7 @@ export default function CommunitiesView({ currentUserEmail }) {
             onClick={() => setActiveCategory(category)}
             className={`px-4 py-2 rounded-full text-sm font-medium capitalize whitespace-nowrap transition-colors ${
               activeCategory === category
-                ? 'bg-indigo-600 text-white'
+                ? 'bg-blue-400 text-white'
                 : isDarkMode 
                   ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                   : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
@@ -125,7 +125,7 @@ export default function CommunitiesView({ currentUserEmail }) {
       {/* Communities Grid */}
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
         </div>
       ) : filteredCommunities.length === 0 ? (
         <div className={`rounded-3xl p-12 text-center ${
@@ -199,7 +199,7 @@ export default function CommunitiesView({ currentUserEmail }) {
                           ? isDarkMode
                             ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-500/30'
+                          : 'bg-blue-500 text-white hover:bg-blue-400 shadow-lg shadow-blue-500/30'
                       }`}
                     >
                       {isMember ? t('following') : t('follow')}

@@ -248,7 +248,7 @@ export default function NotificationsView() {
             key={type}
             onClick={() => setFilter(type)}
             className={`px-4 py-2 rounded-full text-sm font-medium capitalize whitespace-nowrap transition-colors ${filter === type
-              ? 'bg-indigo-600 text-white'
+              ? 'bg-blue-400 text-white'
               : isDarkMode
                 ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'

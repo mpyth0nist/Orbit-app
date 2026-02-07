@@ -36,9 +36,10 @@ export default function Login() {
               style={{ backgroundImage: "url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop')" }}>
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-8 z-20">
                 <div className="text-center">
-                  <h1 className="text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                   <img className='w-94 pl-20' src="./logo/logo-dark.png" alt="logo" />
+                  {/* <h1 className="text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                     Orbit
-                  </h1>
+                  </h1> */}
                   <p className="text-lg lg:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
                     Connect, share, and discover amazing moments with friends around the world.
                   </p>
