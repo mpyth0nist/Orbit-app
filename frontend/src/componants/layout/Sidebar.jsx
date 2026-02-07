@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import logoLight from "../../../logo/logo-light.png";
+import logoDark from "../../../logo/logo-dark.png";
 import {
   FeedIcon,
   SearchIcon,
@@ -19,7 +21,7 @@ const SidebarBtn = ({ icon: Icon, label, active, onClick, badge }) => (
   <button
     onClick={onClick}
     className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group relative ${active
-      ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30'
+      ? 'bg-gradient-to-r from-blue-400 to-blue-400 text-white shadow-lg shadow-blue-500/30'
       : 'text-gray-600 hover:bg-gray-100/80'
       }`}
   >
@@ -67,18 +69,13 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
     <div className={`h-full flex flex-col ${isDarkMode ? 'bg-gray-900' : 'bg-white/80'
       } backdrop-blur-xl`}>
       {/* Logo */}
-      <div className="p-6 pb-4">
+       <div className="p-6 pt-2 pb-0">
         <div className="flex items-center gap-3">
-          <div className="w-11 h-11 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-            <span className="text-white font-bold text-xl">O</span>
-          </div>
-          <div>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-              Orbit
-            </h1>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-400'
-              }`}>Social Connect</p>
-          </div>
+          <img
+            className="w-36 h-19 transition-opacity duration-300"
+            src={isDarkMode ? logoDark : logoLight}
+            alt="logo"
+          />
         </div>
       </div>
 

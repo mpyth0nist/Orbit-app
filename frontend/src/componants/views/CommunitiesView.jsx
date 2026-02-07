@@ -105,7 +105,7 @@ export default function CommunitiesView({ currentUserId }) {
       {/* Communities Grid */}
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+          <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
         </div>
       ) : communities.length === 0 ? (
         <div className={`rounded-3xl p-12 text-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>

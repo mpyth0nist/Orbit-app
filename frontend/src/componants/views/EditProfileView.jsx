@@ -159,7 +159,7 @@ export default function EditProfileView({ user, onBack, onSave }) {
         <button
           onClick={handleSubmit}
           disabled={isSaving}
-          className="px-5 py-2 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-semibold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-xl transition-all disabled:opacity-50 flex items-center gap-2"
+          className="px-5 py-2 bg-gradient-to-r from-blue-500 to-blue-400 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all disabled:opacity-50 flex items-center gap-2"
         >
           {isSaving ? (
             <>
@@ -211,7 +211,7 @@ export default function EditProfileView({ user, onBack, onSave }) {
             />
             {isUploadingPhoto && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+                <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
               </div>
             )}
             <input
@@ -225,7 +225,7 @@ export default function EditProfileView({ user, onBack, onSave }) {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploadingPhoto}
-              className="absolute bottom-0 right-0 p-2.5 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors shadow-lg disabled:opacity-50"
+              className="absolute bottom-0 right-0 p-2.5 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition-colors shadow-lg disabled:opacity-50"
             >
               <CameraIcon className="w-5 h-5" />
             </button>

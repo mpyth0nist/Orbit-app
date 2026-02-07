@@ -140,7 +140,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
           placeholder={`Search ${activeTab}...`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 pr-4 py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-sm"
+          className="w-full pl-12 pr-4 py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all shadow-sm"
           autoFocus
         />
         {searchQuery && (
@@ -162,7 +162,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
             <button
               key={tab.id}
               className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all ${isActive
-                ? 'bg-indigo-600 text-white shadow-md'
+                ? 'bg-blue-400 text-white shadow-md'
                 : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               onClick={() => setActiveTab(tab.id)}
@@ -214,7 +214,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
         {!searchQuery && recentSearches.length > 0 && activeTab === 'users' && (
           <div className="mb-8">
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2 text-gray-900 dark:text-gray-100">
+              <div className="flex items-center gap-2 text-gray-400">
                 <Clock size={20} />
                 <h3 className="text-lg font-bold">Recent Searches</h3>
               </div>
