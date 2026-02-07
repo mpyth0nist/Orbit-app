@@ -67,6 +67,10 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
           const data = await api.search.searchThreads({ q: debouncedQuery, page: 1, limit: 20 });
           setThreadResults(data?.threads || []);
         }
+        //  else if (activeTab === 'hashtags') {
+        //   const data = await api.search.searchHashtags(debouncedQuery);
+        //   setHashtagResults(data || []);
+        // }
       } catch (error) {
         console.error('Search error:', error);
       } finally {
@@ -103,6 +107,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
     { id: 'users', label: 'Users', icon: User },
     { id: 'threads', label: 'Threads', icon: FileText }
   ];
+
 
 
 
@@ -160,7 +165,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
             <p className="text-gray-500 dark:text-gray-400">Searching...</p>
           </div>
         )}
-
 
         {/* Recent Searches (Empty State) */}
         {!searchQuery && recentSearches.length > 0 && activeTab === 'users' && (
@@ -248,7 +252,8 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
               ))
             )}
           </div>
-        )}\n      </div>
+        )}
+      </div>
     </div>
   );
 };
