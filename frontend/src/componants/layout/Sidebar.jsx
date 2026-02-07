@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import logoLight from "../../../logo/logo-light.png";
-import logoDark from "../../../logo/logo-dark.png";
+import logoLight from "../../../logo/logoVL.png";
+import logoDark from "../../../logo/logoVD.png";
 import {
   FeedIcon,
   SearchIcon,
@@ -69,13 +69,14 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
     <div className={`h-full flex flex-col ${isDarkMode ? 'bg-gray-900' : 'bg-white/80'
       } backdrop-blur-xl`}>
       {/* Logo */}
-       <div className="p-6 pt-2 pb-0">
+       <div className="p-6 pb-3">
         <div className="flex items-center gap-3">
           <img
-            className="w-36 h-19 transition-opacity duration-300"
+            className="w-12 h-12 transition-opacity duration-300"
             src={isDarkMode ? logoDark : logoLight}
             alt="logo"
           />
+          <p className={`text-lg font-semibold ${isDarkMode ? 'text-white-800' : 'text-gray-800'}`}>ORBIT</p>
         </div>
       </div>
 

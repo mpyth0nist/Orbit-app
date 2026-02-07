@@ -243,7 +243,7 @@ const ProfileView = forwardRef(function ProfileView({
         if (isLoading) {
           return (
             <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
             </div>
           );
         }
@@ -511,13 +511,13 @@ const ProfileView = forwardRef(function ProfileView({
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-3 text-sm font-semibold capitalize transition-colors relative ${activeTab === tab ? 'text-indigo-600' :
+              className={`flex-1 py-3 text-sm font-semibold capitalize transition-colors relative ${activeTab === tab ? 'text-blue-400' :
                 isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
                 }`}
             >
               {t(tab)}
               {activeTab === tab && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-indigo-600 rounded-full" />
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-blue-400 rounded-full" />
               )}
             </button>
           ))}
