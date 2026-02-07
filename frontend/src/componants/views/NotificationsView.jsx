@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { HeartIcon, ChatBubbleIcon, UserIcon } from '../ui/Icons';
+import { HeartIcon, ChatBubbleIcon, UserIcon, ShareIcon } from '../ui/Icons';
 import api, { getMediaUrl } from '../../api/apiClient';
 import { formatDistanceToNow } from 'date-fns';
 import { Loader2, Trash2, Check, X } from 'lucide-react';
@@ -16,9 +16,11 @@ const NotificationIcon = ({ type }) => {
     NEW_FOLLOW: <UserIcon className="w-4 h-4 text-green-500" />,
     FOLLOW_REQUEST: <UserIcon className="w-4 h-4 text-amber-500" />,
     ACCEPTED_FOLLOW: <Check className="w-4 h-4 text-green-500" />,
+    REPOST: <ShareIcon className="w-4 h-4 text-emerald-500" />,
   };
   return icons[type] || <HeartIcon className="w-4 h-4 text-gray-500" />;
 };
+
 
 // Map notification types to background colors
 const getNotificationBg = (type, isDarkMode) => {
@@ -28,9 +30,11 @@ const getNotificationBg = (type, isDarkMode) => {
     NEW_FOLLOW: isDarkMode ? 'bg-green-900/30' : 'bg-green-100',
     FOLLOW_REQUEST: isDarkMode ? 'bg-amber-900/30' : 'bg-amber-100',
     ACCEPTED_FOLLOW: isDarkMode ? 'bg-green-900/30' : 'bg-green-100',
+    REPOST: isDarkMode ? 'bg-emerald-900/30' : 'bg-emerald-100',
   };
   return colors[type] || (isDarkMode ? 'bg-gray-700' : 'bg-gray-100');
 };
+
 
 // Get notification message based on type
 const getNotificationMessage = (notification, t) => {
@@ -46,21 +50,25 @@ const getNotificationMessage = (notification, t) => {
     NEW_FOLLOW: t('startedFollowingYou') || 'started following you',
     FOLLOW_REQUEST: t('requestedToFollowYou') || 'requested to follow you',
     ACCEPTED_FOLLOW: t('acceptedYourFollowRequest') || 'accepted your follow request',
+    REPOST: t('repostedYourPost') || 'reposted your post',
   };
   return messages[type] || 'interacted with you';
 };
 
 
 
+
 // Map filter to notification type
-const getFilterType = (filter) => {
+const getFilterTypes = (filter) => {
   const filterMap = {
-    'like': 'LIKE',
-    'comment': 'COMMENT',
-    'follow': 'NEW_FOLLOW',
+    'like': ['LIKE'],
+    'comment': ['COMMENT'],
+    'follow': ['NEW_FOLLOW', 'FOLLOW_REQUEST', 'ACCEPTED_FOLLOW'],
+    'repost': ['REPOST'],
   };
-  return filterMap[filter] || null;
+  return filterMap[filter] || [];
 };
+
 
 export default function NotificationsView() {
   const navigate = useNavigate();
@@ -155,13 +163,14 @@ export default function NotificationsView() {
     return [];
   }, [notificationsData]);
 
-  // Filter notifications client-side if filter is specific type
+  // Filter notifications client-side (to be safe, though backend should handle it)
   const filteredNotifications = useMemo(() => {
     if (filter === 'all') return notifications;
-    const filterType = getFilterType(filter);
-    if (!filterType) return notifications;
-    return notifications.filter(n => n.type === filterType);
+    const filterTypes = getFilterTypes(filter);
+    if (!filterTypes.length) return notifications;
+    return notifications.filter(n => filterTypes.includes(n.type));
   }, [notifications, filter]);
+
 
   const unreadCount = unreadData?.count || 0;
 
@@ -243,7 +252,7 @@ export default function NotificationsView() {
 
       {/* Filters */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-        {['all', 'like', 'comment', 'follow'].map((type) => (
+        {['all', 'like', 'comment', 'follow', 'repost'].map((type) => (
           <button
             key={type}
             onClick={() => setFilter(type)}
@@ -257,10 +266,12 @@ export default function NotificationsView() {
             {type === 'all' ? (t('all') || 'All') :
               type === 'like' ? (t('likes') || 'Likes') :
                 type === 'comment' ? (t('comments') || 'Comments') :
-                  (t('follows') || 'Follows')}
+                  type === 'follow' ? (t('follows') || 'Follows') :
+                    (t('reposts') || 'Reposts')}
           </button>
         ))}
       </div>
+
 
       {/* Notifications List */}
       {isLoading ? (
