@@ -8,11 +8,13 @@ import SearchView from '../componants/views/SearchView';
 import Sidebar from '../componants/layout/Sidebar';
 import Header from '../componants/layout/Header';
 import MobileNav from '../componants/layout/MobileNav';
+import { useNavigate } from 'react-router-dom';
 
 export default function Search() {
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
+  const navigate = useNavigate()
 
   // Note: SearchView component handles its own search queries
 
@@ -58,7 +60,7 @@ export default function Search() {
   });
 
   const handlePostClick = (post) => {
-    window.location.href = `/thread/${post.id}`;
+    navigate(`/thread/${post.id}`);
   };
 
   const unreadNotifications = unreadData?.count || 0;
