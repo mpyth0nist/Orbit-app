@@ -2,5 +2,5 @@ node_modules/
 .env
 /generated/prisma
 *.log
-/logs
+logs/
 uploads/

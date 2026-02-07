@@ -848,10 +848,12 @@ export const searchUsers = asyncHandler(async (req, res) => {
     }
 
     const searchLower = searchTerm.toLowerCase();
+    const parts = searchTerm.split(/\s+/).filter(part => part.length > 0);
 
     // Fetch all matching users first (we need to sort in-memory for relevance)
     const searchConditions = {
         OR: [
+            // Exact full string match in any field
             {
                 username: {
                     contains: searchTerm,
@@ -876,6 +878,19 @@ export const searchUsers = asyncHandler(async (req, res) => {
             }
         ]
     };
+
+    // If multiple words, enable "all words must be present somewhere" logic
+    if (parts.length > 1) {
+        searchConditions.OR.push({
+            AND: parts.map(part => ({
+                OR: [
+                    { username: { contains: part, mode: 'insensitive' } },
+                    { profile: { firstName: { contains: part, mode: 'insensitive' } } },
+                    { profile: { lastName: { contains: part, mode: 'insensitive' } } }
+                ]
+            }))
+        });
+    }
 
     const [allUsers, totalCount] = await Promise.all([
         prisma.user.findMany({
