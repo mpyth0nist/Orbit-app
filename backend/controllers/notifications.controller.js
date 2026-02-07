@@ -37,6 +37,14 @@ export const getMyNotifications = asyncHandler(async (req, res) => {
         whereClause.isRead = true;
     } else if (filter === 'unread') {
         whereClause.isRead = false;
+    } else if (filter === 'like') {
+        whereClause.type = 'LIKE';
+    } else if (filter === 'comment') {
+        whereClause.type = 'COMMENT';
+    } else if (filter === 'follow') {
+        whereClause.type = { in: ['NEW_FOLLOW', 'FOLLOW_REQUEST', 'ACCEPTED_FOLLOW'] };
+    } else if (filter === 'repost') {
+        whereClause.type = 'REPOST';
     }
 
     // Add cursor pagination condition

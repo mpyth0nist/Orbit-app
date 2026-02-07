@@ -357,11 +357,11 @@ export const updateNotificationSchema = Joi.object({
  */
 export const notificationQuerySchema = Joi.object({
     filter: Joi.string()
-        .valid('all', 'read', 'unread')
+        .valid('all', 'read', 'unread', 'like', 'comment', 'follow', 'repost')
         .optional()
         .default('all')
         .messages({
-            'any.only': 'Filter must be one of: all, read, unread'
+            'any.only': 'Filter must be one of: all, read, unread, like, comment, follow, repost'
         }),
     cursor: Joi.string().optional(),
     limit: Joi.number().integer().min(1).max(100).optional()
