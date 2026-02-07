@@ -704,6 +704,7 @@ export const getTrendingThreads = asyncHandler(async (req, res) => {
 export const searchThreads = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
     const searchQuery = req.query.q?.trim();
+    console.log(searchQuery)
 
     // Validate search query
     if (!searchQuery || searchQuery.length < 2) {
@@ -739,7 +740,7 @@ export const searchThreads = asyncHandler(async (req, res) => {
         ORDER BY rank DESC, t."created_at" DESC
         LIMIT ${limit}
         OFFSET ${skip}
-    `;
+    `
 
     // Get total count for pagination
     const totalCountResult = await prisma.$queryRaw`
