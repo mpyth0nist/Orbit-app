@@ -43,12 +43,6 @@ export const QUERY_KEYS = {
     // Search
     search: (query) => ['search', query],
     searchUsers: (query) => ['search', 'users', query],
-    searchHashtags: (query) => ['search', 'hashtags', query],
-
-    // Hashtags
-    hashtags: ['hashtags'],
-    hashtagTrending: ['hashtags', 'trending'],
-    hashtagThreads: (tag) => ['hashtags', tag, 'threads'],
 
     // Relationships
     followers: (userId) => ['user', userId, 'followers'],

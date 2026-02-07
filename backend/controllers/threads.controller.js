@@ -12,7 +12,6 @@ import { successResponse, errorResponse, paginatedResponse, cursorPaginatedRespo
 import { prisma, selectPublicUser, selectThreadWithUser } from '../utils/prisma.js';
 import logger from '../utils/logger.js';
 import validator from 'validator';
-import { extractHashtags } from '../utils/hashtagParser.js';
 import { normalizeThread, normalizeThreads } from '../utils/threads.js';
 
 /**
@@ -1096,28 +1095,7 @@ export const createThread = asyncHandler(async (req, res) => {
             }
         }
 
-        // 2. Extract and process hashtags
-        const hashtags = extractHashtags(content); // Use original content, not escaped
-
-        if (hashtags.length > 0) {
-            // Upsert hashtags (create if new, increment use count if exists)
-            for (const tag of hashtags) {
-                const hashtag = await tx.hashtag.upsert({
-                    where: { tag },
-                    create: { tag, useCount: 1 },
-                    update: { useCount: { increment: 1 } }
-                });
-
-                // Link hashtag to thread
-                await tx.$executeRaw`
-                    INSERT INTO "_ThreadHashtags" ("A", "B")
-                    VALUES (${hashtag.id}, ${thread.id})
-                    ON CONFLICT DO NOTHING
-                `;
-            }
-        }
-
-        // 3. Create media records if files exist
+        //2. Create media records if files exist
         if (files.length > 0) {
             const mediaData = files.map(file => ({
                 userId,

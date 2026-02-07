@@ -13,7 +13,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
   const { user: currentUser } = useAuth();
 
   // Tab and Search State
-  const [activeTab, setActiveTab] = useState('users'); // 'users', 'threads', 'hashtags'
+  const [activeTab, setActiveTab] = useState('users'); // 'users', 'threads'
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -23,8 +23,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
   // Results for each tab
   const [userResults, setUserResults] = useState([]);
   const [threadResults, setThreadResults] = useState([]);
-  const [hashtagResults, setHashtagResults] = useState([]);
-  const [trendingHashtags, setTrendingHashtags] = useState([]);
 
   // Recent searches from localStorage
   const [recentSearches, setRecentSearches] = useState([]);
@@ -41,18 +39,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
     }
   }, []);
 
-  // Load trending hashtags on mount
-  useEffect(() => {
-    const fetchTrendingHashtags = async () => {
-      try {
-        const data = await api.hashtags.trending({ limit: 10 });
-        setTrendingHashtags(data || []);
-      } catch (error) {
-        console.error('Error fetching trending hashtags:', error);
-      }
-    };
-    fetchTrendingHashtags();
-  }, []);
+
 
   // Debounce search query
   useEffect(() => {
@@ -67,7 +54,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
     if (!debouncedQuery || debouncedQuery.length < 2) {
       setUserResults([]);
       setThreadResults([]);
-      setHashtagResults([]);
       return;
     }
 
@@ -111,10 +97,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
     navigate(`/thread/${threadId}`);
   };
 
-  const handleHashtagClick = (tag) => {
-    setActiveTab('threads');
-    setSearchQuery(`#${tag}`);
-  };
 
   const clearRecentSearches = () => {
     setRecentSearches([]);
@@ -123,7 +105,7 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
 
   const tabs = [
     { id: 'users', label: 'Users', icon: User },
-    { id: 'threads', label: 'Threads', icon: FileText },
+    { id: 'threads', label: 'Threads', icon: FileText }
   ];
 
 
@@ -271,7 +253,6 @@ const SearchView = ({ onLike, onShare, onBookmark }) => {
             )}
           </div>
         )}
-
       </div>
     </div>
   );

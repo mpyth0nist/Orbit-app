@@ -93,7 +93,6 @@ export default function HelpCenterView({ onBack }) {
             title: t('helpUsingOrbit') || 'Using Orbit',
             icon: Smartphone,
             articles: [
-                { id: 10, title: t('helpHashtags') || 'How to use hashtags' },
                 { id: 11, title: t('helpCommunities') || 'Joining and creating communities' },
                 { id: 12, title: t('helpDirectMessages') || 'Sending direct messages' }
             ]
