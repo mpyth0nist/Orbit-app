@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, HandThumbUpIcon, StarIcon } from '../ui/Icons';
+import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, LinkIcon, HandThumbUpIcon, StarIcon } from '../ui/Icons';
 import api, { getMediaUrl, threadsAPI, usersAPI } from '../../api/apiClient';
 import { format, formatDistanceToNow } from 'date-fns';
 import ContentRenderer from '../ui/ContentRenderer';
@@ -473,6 +473,21 @@ export default function ThreadDetailView({
     setShowOptionsMenu(!showOptionsMenu);
   };
 
+  const handleCopyLink = (e) => {
+    e?.stopPropagation();
+    const link = `${window.location.origin}/thread/${post.id}`;
+    navigator.clipboard.writeText(link).then(() => {
+      toast.success('Link copied to clipboard');
+      setShowOptionsMenu(false);
+    });
+  };
+
+  const handleEdit = (e) => {
+    e?.stopPropagation();
+    setShowOptionsMenu(false);
+    setIsEditing(true);
+  };
+
   const handleDelete = async () => {
     setShowOptionsMenu(false);
     if (window.confirm('Are you sure you want to delete this thread?')) {
@@ -581,9 +596,67 @@ export default function ThreadDetailView({
         >
           <ArrowLeftIcon className="w-6 h-6" />
         </button>
-        <h1 className={`text-xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+        <h1 className={`text-xl font-bold flex-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
           {t('thread') || 'Thread'}
         </h1>
+
+        {/* Options Menu Button */}
+        {isOwnPost && (
+          <div className="relative">
+            <button
+              onClick={handleOptionsClick}
+              className={`p-2 rounded-xl transition-colors ${showOptionsMenu
+                ? isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-700'
+                : isDarkMode
+                  ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              aria-label="Thread options"
+            >
+              <EllipsisHorizontalIcon className="w-6 h-6" />
+            </button>
+
+            {/* Options Dropdown */}
+            {showOptionsMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={(e) => { e.stopPropagation(); setShowOptionsMenu(false); }}
+                />
+                <div
+                  className={`absolute right-0 top-12 w-48 rounded-2xl shadow-xl border overflow-hidden z-20 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                    }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    onClick={handleCopyLink}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                      }`}
+                  >
+                    <LinkIcon className="w-4 h-4 text-gray-500" />
+                    Copy Link
+                  </button>
+                  <button
+                    onClick={handleEdit}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                      }`}
+                  >
+                    <PencilIcon className="w-4 h-4 text-indigo-500" />
+                    Edit Thread
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-red-50 text-red-500'
+                      }`}
+                  >
+                    <TrashIcon className="w-4 h-4" />
+                    Delete Thread
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Edit Modal */}
