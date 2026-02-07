@@ -166,6 +166,19 @@ export const updateProfilePictureSchema = Joi.object({
         })
 });
 
+/**
+ * Update profile banner validation schema
+ */
+export const updateProfileBannerSchema = Joi.object({
+    coverUrl: Joi.string()
+        .uri()
+        .required()
+        .messages({
+            'string.uri': 'Please provide a valid URL',
+            'any.required': 'Cover URL is required'
+        })
+});
+
 // ============================================================================
 // Thread Validation Schemas
 // ============================================================================
@@ -467,6 +480,7 @@ export const validateLogin = validate(loginSchema);
 export const validateUpdateUser = validate(updateUserSchema);
 export const validateUpdateProfile = validate(updateProfileSchema);
 export const validateUpdateProfilePicture = validate(updateProfilePictureSchema);
+export const validateUpdateProfileBanner = validate(updateProfileBannerSchema);
 export const validateCreateThread = validate(createThreadSchema);
 export const validateUpdateThread = validate(updateThreadSchema);
 export const validateCreateComment = validate(createCommentSchema);

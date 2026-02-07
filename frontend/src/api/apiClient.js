@@ -183,6 +183,15 @@ export const mediaAPI = {
     });
   },
 
+  // Upload profile banner (single)
+  uploadProfileBanner: (file) => {
+    const formData = new FormData();
+    formData.append('profileBanner', file);
+    return apiClient.post('/media/profile-banner', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
   // Delete media
   delete: (id) => apiClient.delete(`/media/${id}`),
 };
