@@ -205,6 +205,7 @@ function App() {
               </Routes>
             </AuthProvider>
           </Router>
+          <Toaster />
         </ThemeProvider>
       </LanguageProvider>
     </QueryClientProvider>

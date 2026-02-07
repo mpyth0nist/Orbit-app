@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import { EyeIcon, EyeSlashIcon } from '../componants/ui/Icons';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -67,6 +68,9 @@ export default function Register() {
 
       if (!success) {
         setError('Registration failed. Please try again.');
+        toast.error('Registration failed. Please try again.');
+      } else {
+        toast.success('Registration successful! Welcome to Orbit.');
       }
     } catch (err) {
       // Extract error message from backend
@@ -76,8 +80,10 @@ export default function Register() {
       if (errors && errors.length > 0) {
         // Show first validation error
         setError(errors[0].message);
+        toast.error(errors[0].message);
       } else {
         setError(errorMessage);
+        toast.error(errorMessage);
       }
     }
   };
@@ -98,10 +104,10 @@ export default function Register() {
               style={{ backgroundImage: "url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop')" }}>
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-8 z-20">
                 <div className="text-center">
-                  <img className='w-94 pl-20' src="./logo/logo-dark.png" alt="logo" />
-                  {/* <h1 className="text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                  <img className='w-72 pl-35 pb-3' src="./logo/logoVD.png" alt="logo" />
+                  <h1 className="text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                     Join Orbit
-                  </h1> */}
+                  </h1> 
                   <p className="text-lg lg:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
                     Start your journey with us and connect with amazing people around the world.
                   </p>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import { EyeIcon, EyeSlashIcon } from '../componants/ui/Icons';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -17,6 +18,9 @@ export default function Login() {
     const success = await login(email, password);
     if (!success) {
       setError('Invalid email or password');
+      toast.error('Invalid email or password');
+    } else {
+      toast.success('Welcome back!');
     }
   };
 
@@ -36,10 +40,10 @@ export default function Login() {
               style={{ backgroundImage: "url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=600&fit=crop')" }}>
               <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-8 z-20">
                 <div className="text-center">
-                   <img className='w-94 pl-20' src="./logo/logo-dark.png" alt="logo" />
-                  {/* <h1 className="text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                  <img className='w-72 pl-35 pb-3' src="./logo/logoVD.png" alt="logo" />
+                  <h1 className="text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                     Orbit
-                  </h1> */}
+                  </h1> 
                   <p className="text-lg lg:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
                     Connect, share, and discover amazing moments with friends around the world.
                   </p>

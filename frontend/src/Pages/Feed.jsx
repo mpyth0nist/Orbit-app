@@ -17,7 +17,7 @@ export default function Feed() {
   const { user } = useAuth();
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
-  const { ref, InView } = useInView();
+  const { ref, inView } = useInView();
 
   // State for active feed tab
   const [activeFeedTab, setActiveFeedTab] = React.useState('following');
@@ -44,13 +44,13 @@ export default function Feed() {
 
   // Load more when scrolling to bottom
   useEffect(() => {
-    if (InView && hasNextPage) {
+    if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [InView, hasNextPage, fetchNextPage]);
+  }, [inView, hasNextPage, fetchNextPage]);
 
   // Flatten pages into a single array of posts, filtering out any undefined/null items
-  const posts = data?.pages.flatMap((page) => page).filter(Boolean) || [];
+  const posts = data?.pages.flatMap((page) => Array.isArray(page) ? page : []).filter(Boolean) || [];
 
   // Fetch notifications count
   const { data: notificationsData } = useQuery({
@@ -222,6 +222,7 @@ export default function Feed() {
             onComment={handlePostClick}
             onShare={(post) => repostThreadMutation.mutate(post)}
             onBookmark={(post) => bookmarkThreadMutation.mutate(post)}
+            currentTab={activeFeedTab}
           />
 
           {/* Infinite scroll loader */}

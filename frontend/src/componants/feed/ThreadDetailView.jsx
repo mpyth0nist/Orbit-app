@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon } from '../ui/Icons';
+import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, LinkIcon, HandThumbUpIcon, StarIcon } from '../ui/Icons';
 import api, { getMediaUrl, threadsAPI, usersAPI } from '../../api/apiClient';
 import { format, formatDistanceToNow } from 'date-fns';
 import ContentRenderer from '../ui/ContentRenderer';
@@ -9,6 +9,7 @@ import EditThreadModal from './EditThreadModal';
 import { Loader2 } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import TierBadge from '../ui/TierBadge';
 
 /**
  * ThreadDetailView - Stylish detailed view of a single thread/post
@@ -120,6 +121,7 @@ export default function ThreadDetailView({
       const newCommentData = response?.data || response;
       setComments([newCommentData, ...comments]);
       setNewComment('');
+      toast.success('Comment posted successfully');
     } catch (error) {
       console.error('Failed to post comment:', error);
       // Show user-friendly message for 403 (non-member trying to comment)
@@ -161,6 +163,7 @@ export default function ThreadDetailView({
     const [replies, setReplies] = useState([]);
     const [isLoadingReplies, setIsLoadingReplies] = useState(false);
     const [replyCount, setReplyCount] = useState(comment._count?.comments || 0);
+    const [helpType, setHelpType] = useState(comment.helpType);
 
     const commentAuthor = getCommentAuthor(comment);
     const commentTime = comment.createdAt || comment.created_date;
@@ -185,6 +188,7 @@ export default function ThreadDetailView({
         // Revert on failure
         setIsLiked(!newIsLiked);
         setLikesCount(prev => newIsLiked ? prev - 1 : prev + 1);
+        toast.error('Failed to like comment');
       }
     };
 
@@ -210,6 +214,7 @@ export default function ThreadDetailView({
         setReplyContent('');
         setIsReplying(false);
         if (!showReplies) fetchReplies(); // Auto-open replies if not open
+        toast.success('Reply posted successfully');
       } catch (error) {
         console.error('Failed to reply:', error);
         // Show user-friendly message for 403 (non-member trying to reply)
@@ -242,6 +247,24 @@ export default function ThreadDetailView({
       }
     };
 
+    const handleMarkHelpful = async (type) => {
+      try {
+        const newHelpType = helpType === type ? null : type; // Toggle off if same
+        const response = await api.comments.toggleHelpful(comment.id, newHelpType);
+        const updatedHelpType = response?.data?.helpType ?? response?.helpType ?? newHelpType;
+        setHelpType(updatedHelpType);
+
+        if (updatedHelpType) {
+          toast.success(`Marked as ${updatedHelpType === 'BIG_HELP' ? 'Big Help' : 'Helpful'}`);
+        } else {
+          toast.success('Rating removed');
+        }
+      } catch (error) {
+        console.error('Failed to mark helpful:', error);
+        toast.error('Failed to update help rating');
+      }
+    };
+
     const isDeep = depth >= 2;
 
     // Wrapper for the entire comment block (content + replies)
@@ -267,6 +290,11 @@ export default function ThreadDetailView({
                 <span className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
                   {commentAuthor.name}
                 </span>
+
+                {post?.threadType === 'HELP' && (
+                  <TierBadge points={comment.user?.profile?.points || 0} />
+                )}
+
                 <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                   @{commentAuthor.username}
                 </span>
@@ -330,6 +358,42 @@ export default function ThreadDetailView({
                     }
                   </button>
                 )}
+
+                {/* Help Rating Buttons (Thread Author Only) */}
+                {post?.threadType === 'HELP' && user?.id === post.userId && comment.user?.id !== user?.id && (
+                  <div className="flex items-center gap-1 ml-auto">
+                    <button
+                      onClick={() => handleMarkHelpful('HELPFUL')}
+                      className={`p-1.5 rounded-lg transition-colors ${helpType === 'HELPFUL'
+                        ? 'text-teal-600 bg-teal-50 ring-1 ring-teal-200'
+                        : 'text-gray-400 hover:text-teal-600 hover:bg-teal-50'
+                        }`}
+                      title="Mark as Helpful (+1 Point)"
+                    >
+                      <HandThumbUpIcon className="w-5 h-5" filled={helpType === 'HELPFUL'} />
+                    </button>
+                    <button
+                      onClick={() => handleMarkHelpful('BIG_HELP')}
+                      className={`p-1.5 rounded-lg transition-colors ${helpType === 'BIG_HELP'
+                        ? 'text-yellow-500 bg-yellow-50 ring-1 ring-yellow-200'
+                        : 'text-gray-400 hover:text-yellow-500 hover:bg-yellow-50'
+                        }`}
+                      title="Mark as Big Help (+2 Points)"
+                    >
+                      <StarIcon className="w-5 h-5" filled={helpType === 'BIG_HELP'} />
+                    </button>
+                  </div>
+                )}
+
+                {/* Help Badge (Visible to Everyone if Marked) */}
+                {helpType && (user?.id !== post.userId || comment.user?.id === user?.id) && (
+                  <div className={`ml-auto flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${helpType === 'BIG_HELP' ? 'bg-yellow-100 text-yellow-700' : 'bg-teal-100 text-teal-700'
+                    }`}>
+                    {helpType === 'BIG_HELP' ? <StarIcon className="w-3 h-3" filled /> : <HandThumbUpIcon className="w-3 h-3" filled />}
+                    {helpType === 'BIG_HELP' ? 'Big Help' : 'Helpful'}
+                  </div>
+                )}
+
               </div>
 
               {/* Reply Input */}
@@ -409,14 +473,31 @@ export default function ThreadDetailView({
     setShowOptionsMenu(!showOptionsMenu);
   };
 
+  const handleCopyLink = (e) => {
+    e?.stopPropagation();
+    const link = `${window.location.origin}/thread/${post.id}`;
+    navigator.clipboard.writeText(link).then(() => {
+      toast.success('Link copied to clipboard');
+      setShowOptionsMenu(false);
+    });
+  };
+
+  const handleEdit = (e) => {
+    e?.stopPropagation();
+    setShowOptionsMenu(false);
+    setIsEditing(true);
+  };
+
   const handleDelete = async () => {
     setShowOptionsMenu(false);
     if (window.confirm('Are you sure you want to delete this thread?')) {
       try {
         await threadsAPI.delete(post.id);
+        toast.success('Thread deleted successfully');
         navigate(-1); // Go back after delete
       } catch (error) {
         console.error('Failed to delete thread:', error);
+        toast.error('Failed to delete thread');
       }
     }
   };
@@ -438,9 +519,11 @@ export default function ThreadDetailView({
     setIsBookmarked(newVal);
     try {
       await threadsAPI.toggleSave(post.id);
+      toast.success(newVal ? 'Thread saved' : 'Thread unsaved');
     } catch (error) {
       console.error('Failed to toggle bookmark:', error);
       setIsBookmarked(!newVal);
+      toast.error('Failed to update bookmark');
     }
   };
 
@@ -513,9 +596,67 @@ export default function ThreadDetailView({
         >
           <ArrowLeftIcon className="w-6 h-6" />
         </button>
-        <h1 className={`text-xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+        <h1 className={`text-xl font-bold flex-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
           {t('thread') || 'Thread'}
         </h1>
+
+        {/* Options Menu Button */}
+        {isOwnPost && (
+          <div className="relative">
+            <button
+              onClick={handleOptionsClick}
+              className={`p-2 rounded-xl transition-colors ${showOptionsMenu
+                ? isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-700'
+                : isDarkMode
+                  ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              aria-label="Thread options"
+            >
+              <EllipsisHorizontalIcon className="w-6 h-6" />
+            </button>
+
+            {/* Options Dropdown */}
+            {showOptionsMenu && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={(e) => { e.stopPropagation(); setShowOptionsMenu(false); }}
+                />
+                <div
+                  className={`absolute right-0 top-12 w-48 rounded-2xl shadow-xl border overflow-hidden z-20 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                    }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    onClick={handleCopyLink}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                      }`}
+                  >
+                    <LinkIcon className="w-4 h-4 text-gray-500" />
+                    Copy Link
+                  </button>
+                  <button
+                    onClick={handleEdit}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                      }`}
+                  >
+                    <PencilIcon className="w-4 h-4 text-indigo-500" />
+                    Edit Thread
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-red-400' : 'hover:bg-red-50 text-red-500'
+                      }`}
+                  >
+                    <TrashIcon className="w-4 h-4" />
+                    Delete Thread
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Edit Modal */}

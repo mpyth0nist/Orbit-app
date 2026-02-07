@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api/apiClient';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../contexts/AuthContext';
+import { toast } from 'sonner';
 
 import Sidebar from '../componants/layout/Sidebar';
 import Header from '../componants/layout/Header';
@@ -78,7 +79,11 @@ export default function Home() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
+      toast.success('Post created successfully');
     },
+    onError: (error) => {
+      toast.error('Failed to create post');
+    }
   });
 
   // Like post mutation
@@ -90,6 +95,33 @@ export default function Home() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
+    onError: () => {
+      toast.error('Failed to like post');
+    }
+  });
+
+  // Bookmark mutation
+  const bookmarkMutation = useMutation({
+    mutationFn: (post) => api.threads.toggleSave(post.id),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      toast.success('Bookmark updated');
+    },
+    onError: () => {
+      toast.error('Failed to update bookmark');
+    }
+  });
+
+  // Repost mutation
+  const repostMutation = useMutation({
+    mutationFn: (post) => api.threads.repost(post.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      toast.success('Post reposted!');
+    },
+    onError: () => {
+      toast.error('Failed to repost');
+    }
   });
 
   const handlePostClick = (post) => {
@@ -124,6 +156,8 @@ export default function Home() {
             onPostClick={handlePostClick}
             onLike={(post) => likePostMutation.mutate(post)}
             onComment={handlePostClick}
+            onBookmark={(post) => bookmarkMutation.mutate(post)}
+            onShare={(post) => repostMutation.mutate(post)}
           />
         );
       case 'create':
@@ -164,6 +198,8 @@ export default function Home() {
             currentUserEmail={user?.email}
             onPostClick={handlePostClick}
             onLike={(post) => likePostMutation.mutate(post)}
+            onBookmark={(post) => bookmarkMutation.mutate(post)}
+            onShare={(post) => repostMutation.mutate(post)}
           />
         );
       case 'notifications':

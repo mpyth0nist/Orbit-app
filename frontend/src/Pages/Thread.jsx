@@ -67,6 +67,7 @@ export default function Thread() {
       if (context?.previousPost) {
         queryClient.setQueryData(['thread', id], context.previousPost);
       }
+      toast.error('Failed to like post');
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['thread', id] });
@@ -78,8 +79,12 @@ export default function Thread() {
     mutationFn: (post) => apiClient.threads.repost(post.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['thread', id] });
+      toast.success('Post reposted!');
       // navigate('/'); // Optional: redirect to home to see the new repost
     },
+    onError: (error) => {
+      toast.error('Failed to repost');
+    }
   });
 
   // Check if thread belongs to a community and fetch membership

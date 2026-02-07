@@ -2,7 +2,9 @@ import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRe
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { CogIcon, CheckBadgeIcon, CameraIcon, ImageIcon, HeartIcon } from '../ui/Icons';
+import TierBadge from '../ui/TierBadge';
 import PostCard from '../feed/PostCard';
 import FollowersModal from '../ui/FollowersModal';
 import api, { usersAPI, getMediaUrl } from '../../api/apiClient';
@@ -39,8 +41,36 @@ const ProfileView = forwardRef(function ProfileView({
   const { t } = useLanguage();
   const { isDarkMode } = useTheme();
   const queryClient = useQueryClient();
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, setUser: setAuthUser } = useAuth();
   const isOwnProfile = currentUser?.id === user?.id;
+  const bannerInputRef = React.useRef(null);
+  const [isUploadingBanner, setIsUploadingBanner] = useState(false);
+
+  const handleBannerUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('File size must be less than 10MB');
+      return;
+    }
+
+    setIsUploadingBanner(true);
+    try {
+      const response = await api.media.uploadProfileBanner(file);
+      const newCoverUrl = response?.coverUrl;
+
+      if (newCoverUrl) {
+        setAuthUser(prev => ({ ...prev, coverUrl: newCoverUrl }));
+        toast.success('Cover photo updated');
+      }
+    } catch (error) {
+      console.error('Failed to upload banner:', error);
+      toast.error('Failed to update cover photo');
+    } finally {
+      setIsUploadingBanner(false);
+    }
+  };
 
   // State for optimistic updates on userPosts (received as prop, but we track changes locally)
   const [localUserPosts, setLocalUserPosts] = useState(userPosts);
@@ -88,6 +118,7 @@ const ProfileView = forwardRef(function ProfileView({
           ? { ...p, isLiked: !p.isLiked, likesCount: p.isLiked ? (p.likesCount || 0) + 1 : (p.likesCount || 1) - 1 }
           : p
       ));
+      toast.error('Failed to like post');
     },
   });
 
@@ -98,7 +129,11 @@ const ProfileView = forwardRef(function ProfileView({
       // Refresh posts and stats
       loadUserStats();
       queryClient.invalidateQueries({ queryKey: ['userPosts', user?.id] });
+      toast.success('Post reposted!');
     },
+    onError: () => {
+      toast.error('Failed to repost');
+    }
   });
 
   const handleRepost = (post) => {
@@ -128,6 +163,10 @@ const ProfileView = forwardRef(function ProfileView({
       );
       setLocalUserPosts(prev => updatePosts(prev));
       setLikedPosts(prev => updatePosts(prev));
+      toast.error('Failed to update bookmark');
+    },
+    onSuccess: (data, variables) => {
+      toast.success('Bookmark updated');
     }
   });
 
@@ -439,11 +478,33 @@ const ProfileView = forwardRef(function ProfileView({
   return (
     <div className="max-w-2xl mx-auto">
       {/* Cover Image */}
-      <div className="relative h-48 bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300 rounded-3xl overflow-hidden">
-        <div className="absolute inset-0 bg-black/10" />
-        <button className="absolute top-4 right-4 p-2 bg-black/30 text-white rounded-full hover:bg-black/50 transition-colors">
-          <CameraIcon className="w-5 h-5" />
-        </button>
+      {/* Cover Image */}
+      <div className="relative h-48 bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300 rounded-3xl overflow-hidden group">
+        {user?.coverUrl ? (
+          <img src={getMediaUrl(user.coverUrl)} alt="Cover" className="w-full h-full object-cover" />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300" />
+        )}
+        <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:opacity-100" />
+
+        {isOwnProfile && (
+          <>
+            <button
+              onClick={() => bannerInputRef.current?.click()}
+              className="absolute top-4 right-4 p-2 bg-black/30 text-white rounded-full hover:bg-black/50 transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50"
+              disabled={isUploadingBanner}
+            >
+              {isUploadingBanner ? <Loader2 className="w-5 h-5 animate-spin" /> : <CameraIcon className="w-5 h-5" />}
+            </button>
+            <input
+              type="file"
+              ref={bannerInputRef}
+              className="hidden"
+              accept="image/*"
+              onChange={handleBannerUpload}
+            />
+          </>
+        )}
       </div>
 
       {/* Profile Info */}
@@ -480,6 +541,7 @@ const ProfileView = forwardRef(function ProfileView({
           <div className="flex items-center gap-2">
             <h1 className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{`${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User'}</h1>
             {user?.verified && <CheckBadgeIcon className="w-6 h-6 text-indigo-500" />}
+            <TierBadge points={user?.points || 0} />
           </div>
           <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
             @{user?.username || user?.email?.split('@')[0]}

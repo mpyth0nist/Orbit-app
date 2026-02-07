@@ -94,7 +94,9 @@ export const getMyInfo = asyncHandler(async (req, res) => {
         firstName: user.profile?.firstName,
         lastName: user.profile?.lastName,
         bio: user.profile?.bio,
-        photoUrl: user.profile?.photoUrl
+        photoUrl: user.profile?.photoUrl,
+        coverUrl: user.profile?.coverUrl,
+        points: user.profile?.points
     }, 'User information retrieved successfully');
 });
 
@@ -763,6 +765,25 @@ export const updateProfilePicture = asyncHandler(async (req, res) => {
     logger.info('Profile picture updated', { userId });
 
     return successResponse(res, { profile: updatedProfile }, 'Profile picture updated successfully');
+});
+
+/**
+ * @desc    Update user profile banner
+ * @route   PATCH /api/user/profile/banner
+ * @access  Private
+ */
+export const updateProfileBanner = asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+    const { coverUrl } = req.body;
+
+    const updatedProfile = await prisma.profile.update({
+        where: { userId },
+        data: { coverUrl }
+    });
+
+    logger.info('Profile banner updated', { userId });
+
+    return successResponse(res, { profile: updatedProfile }, 'Profile banner updated successfully');
 });
 
 /**

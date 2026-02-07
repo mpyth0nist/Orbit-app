@@ -206,6 +206,25 @@ export const createCommentNotification = async (commenterId, threadId, commentId
 };
 
 /**
+ * Create a helpful notification
+ * 
+ * @param {number} actorId - User who marked the comment as helpful
+ * @param {number} receiverId - User who received the point
+ * @param {number} commentId - ID of the helpful comment
+ * 
+ * @returns {Promise<Notification|null>} Created notification or null
+ */
+export const createHelpfulNotification = async (actorId, receiverId, commentId) => {
+    return createNotification({
+        actorId,
+        receiverId,
+        type: 'HELP_MARK',
+        entityId: commentId,
+        entityType: 'COMMENT'
+    });
+};
+
+/**
  * Delete a notification based on criteria
  * 
  * Used when an action is undone (unlike, unfollow, reject follow request).

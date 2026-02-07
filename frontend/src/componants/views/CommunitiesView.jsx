@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { SearchIcon, UsersIcon } from '../ui/Icons';
 import { communitiesAPI } from '../../api/apiClient';
 import { Loader2, X, Plus } from 'lucide-react';
@@ -38,10 +39,12 @@ export default function CommunitiesView({ currentUserId }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communities'] });
       queryClient.invalidateQueries({ queryKey: ['my-communities'] });
+      toast.success(`You joined the community`);
     },
     onError: (error) => {
       const message = error.response?.data?.message || 'Failed to join community';
       console.error('Join error:', message);
+      toast.error(message);
     }
   });
 
@@ -51,10 +54,12 @@ export default function CommunitiesView({ currentUserId }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['communities'] });
       queryClient.invalidateQueries({ queryKey: ['my-communities'] });
+      toast.success(`You left the community`);
     },
     onError: (error) => {
       const message = error.response?.data?.message || 'Failed to leave community';
       console.error('Leave error:', message);
+      toast.error(message);
     }
   });
 

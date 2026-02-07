@@ -37,19 +37,23 @@ model Profile {
   userId    Int      @unique @map("user_id")
   bio       String?
   photoUrl  String?  @map("photo_url") @db.VarChar(255)
+  coverUrl  String?  @map("cover_url") @db.VarChar(255)
   firstName String   @map("first_name") @db.VarChar(100)
   lastName  String   @map("last_name") @db.VarChar(100)
+  points    Int      @default(0)
   updatedAt DateTime @updatedAt @map("updated_at")
   gender    Gender   @default(MALE)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([points(sort: Desc)])
 }
 
 model Thread {
   id             Int                      @id @default(autoincrement())
   userId         Int                      @map("user_id")
   content        String
+  threadType     ThreadType               @default(NORMAL) @map("thread_type")
   createdAt      DateTime                 @default(now()) @map("created_at")
   commentsCount  Int                      @default(0) @map("comments_count")
   likesCount     Int                      @default(0) @map("likes_count")
@@ -94,6 +98,7 @@ model Comment {
   thread     Thread     @relation(fields: [threadId], references: [id], onDelete: Cascade)
   user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   reactions  Reaction[]
+  helpType   HelpType?  @map("help_type")
 
   @@index([threadId])
   @@index([userId])
@@ -207,6 +212,14 @@ model SavedThreads {
   @@map("saved_threads")
 }
 
+model Tier {
+  id        Int    @id @default(autoincrement())
+  tier      String @db.VarChar(20)
+  minPoints Int    @map("min_points")
+
+  @@map("tiers")
+}
+
 enum FollowStatus {
   ACCEPTED
   REFUSED
@@ -220,6 +233,7 @@ enum NotificationType {
   LIKE
   FOLLOW_REQUEST
   REPOST
+  HELP_MARK
 }
 
 enum MediaType {
@@ -241,6 +255,16 @@ enum EntityType {
 enum Gender {
   MALE
   FEMALE
+}
+
+enum ThreadType {
+  NORMAL
+  HELP
+}
+
+enum HelpType {
+  HELPFUL
+  BIG_HELP
 }
 
 model Community {

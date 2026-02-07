@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         // Determine destination based on fieldname
         let destination = THREADS_DIR;
-        if (file.fieldname === 'profilePicture') {
+        if (file.fieldname === 'profilePicture' || file.fieldname === 'profileBanner') {
             destination = PROFILES_DIR;
         } else if (file.fieldname === 'communityBanner') {
             destination = COMMUNITIES_DIR;
@@ -108,6 +108,24 @@ export const uploadCommunityBanner = multer({
         files: 1
     }
 }).single('communityBanner');
+
+// Profile banner upload
+export const uploadProfileBanner = multer({
+    storage,
+    fileFilter: (req, file, cb) => {
+        // Only allow images for banners
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        if (allowedTypes.includes(file.mimetype)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type. Only images (JPEG, PNG, GIF, WebP) are allowed for banners'), false);
+        }
+    },
+    limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB for banners
+        files: 1
+    }
+}).single('profileBanner');
 
 // Thread media upload (multiple files)
 export const uploadThreadMedia = multer({

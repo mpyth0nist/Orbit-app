@@ -24,6 +24,7 @@ import {
     getMyMedia,
     updateProfile,
     updateProfilePicture,
+    updateProfileBanner,
     getPendingFollowRequests,
     searchUsers,
     getUserStats,
@@ -36,6 +37,7 @@ import {
     validateUpdateUser,
     validateUpdateProfile,
     validateUpdateProfilePicture,
+    validateUpdateProfileBanner,
     validatePagination,
     validateSearchQuery
 } from "../middleware/validation.js";
@@ -104,6 +106,13 @@ router.patch("/profile", protect, validateUpdateProfile, updateProfile);
  * @access  Private
  */
 router.patch("/profile/picture", protect, validateUpdateProfilePicture, updateProfilePicture);
+
+/**
+ * @route   PATCH /api/user/profile/banner
+ * @desc    Update profile banner
+ * @access  Private
+ */
+router.patch("/profile/banner", protect, validateUpdateProfileBanner, updateProfileBanner);
 
 // ============================================================================
 // Threads

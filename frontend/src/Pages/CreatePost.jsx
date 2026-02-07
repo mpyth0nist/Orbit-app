@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -42,8 +43,13 @@ export default function CreatePost() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] });
       // Navigate to feed after successful post
+      toast.success('Post created successfully');
       navigate('/');
     },
+    onError: (error) => {
+      console.error('Create post error:', error);
+      toast.error(error.response?.data?.message || 'Failed to create post');
+    }
   });
 
   const handlePost = async (postData) => {

@@ -166,6 +166,19 @@ export const updateProfilePictureSchema = Joi.object({
         })
 });
 
+/**
+ * Update profile banner validation schema
+ */
+export const updateProfileBannerSchema = Joi.object({
+    coverUrl: Joi.string()
+        .uri()
+        .required()
+        .messages({
+            'string.uri': 'Please provide a valid URL',
+            'any.required': 'Cover URL is required'
+        })
+});
+
 // ============================================================================
 // Thread Validation Schemas
 // ============================================================================
@@ -205,8 +218,14 @@ export const createThreadSchema = Joi.object({
         .try(Joi.number(), Joi.string())
         .optional()
         .messages({
-            'number.base': 'Community ID must be a number',
             'string.base': 'Community ID must be a valid ID'
+        }),
+
+    threadType: Joi.string()
+        .valid('NORMAL', 'HELP')
+        .optional()
+        .messages({
+            'any.only': 'Thread type must be either NORMAL or HELP'
         })
 });
 
@@ -461,6 +480,7 @@ export const validateLogin = validate(loginSchema);
 export const validateUpdateUser = validate(updateUserSchema);
 export const validateUpdateProfile = validate(updateProfileSchema);
 export const validateUpdateProfilePicture = validate(updateProfilePictureSchema);
+export const validateUpdateProfileBanner = validate(updateProfileBannerSchema);
 export const validateCreateThread = validate(createThreadSchema);
 export const validateUpdateThread = validate(updateThreadSchema);
 export const validateCreateComment = validate(createCommentSchema);

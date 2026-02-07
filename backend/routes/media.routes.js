@@ -10,12 +10,14 @@ import express from 'express';
 import {
     uploadThreadMedia as uploadThreadMediaController,
     uploadProfilePicture as uploadProfilePictureController,
+    uploadProfileBanner as uploadProfileBannerController,
     deleteMedia
 } from '../controllers/media.controller.js';
 import protect from '../middleware/protect.js';
 import {
     uploadThreadMedia,
     uploadProfilePicture,
+    uploadProfileBanner,
     handleUploadError
 } from '../middleware/upload.js';
 import { validateIdParam } from '../middleware/validation.js';
@@ -56,6 +58,20 @@ router.post(
     uploadProfilePicture,
     handleUploadError,
     uploadProfilePictureController
+);
+
+/**
+ * @route   POST /api/media/profile-banner
+ * @desc    Upload/update profile banner
+ * @access  Private
+ * @body    profileBanner - Single image file (max 10MB)
+ */
+router.post(
+    '/profile-banner',
+    protect,
+    uploadProfileBanner,
+    handleUploadError,
+    uploadProfileBannerController
 );
 
 /**

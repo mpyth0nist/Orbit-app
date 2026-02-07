@@ -146,6 +146,9 @@ export const commentsAPI = {
   // Update comment
   update: (id, data) => apiClient.patch(`/comments/${id}`, data),
 
+  // Toggle helpful (HELPFUL or BIG_HELP)
+  toggleHelpful: (id, helpType) => apiClient.post(`/comments/${id}/helpful`, { helpType }),
+
   // Delete comment
   delete: (id) => apiClient.delete(`/comments/${id}`),
 };
@@ -176,6 +179,15 @@ export const mediaAPI = {
     const formData = new FormData();
     formData.append('profilePicture', file);
     return apiClient.post('/media/profile-picture', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+
+  // Upload profile banner (single)
+  uploadProfileBanner: (file) => {
+    const formData = new FormData();
+    formData.append('profileBanner', file);
+    return apiClient.post('/media/profile-banner', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },

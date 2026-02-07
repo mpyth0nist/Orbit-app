@@ -971,7 +971,7 @@ export const getThreadById = asyncHandler(async (req, res) => {
 export const createThread = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
     // content is in req.body
-    const { content, repostId, communityId } = req.body;
+    const { content, repostId, communityId, threadType } = req.body;
     const parsedRepostId = repostId ? parseInt(repostId) : null;
     const parsedCommunityId = communityId ? parseInt(communityId) : null;
 
@@ -1060,7 +1060,8 @@ export const createThread = asyncHandler(async (req, res) => {
                 userId,
                 content: trimmedContent,
                 repostId: rootTargetId,
-                communityId: parsedCommunityId
+                communityId: parsedCommunityId,
+                threadType: threadType || 'NORMAL'
             }
         });
 

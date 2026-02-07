@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
 import { toast } from 'sonner';
-import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon } from '../ui/Icons';
+import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, LinkIcon } from '../ui/Icons';
 import { getMediaUrl, threadsAPI } from '../../api/apiClient';
 import ContentRenderer from '../ui/ContentRenderer';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -36,6 +36,8 @@ export default function PostCard({
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
+
+
   // Memoized user/profile data extraction
   const user = post.user || {};
   const profile = user.profile || {};
@@ -63,6 +65,8 @@ export default function PostCard({
 
   // Memoized content
   const content = post.content || post.text || '';
+
+
 
   // Memoized media array with full URLs
   const mediaItems = useMemo(() => {
@@ -157,15 +161,84 @@ export default function PostCard({
   const handleDelete = useCallback(async (e) => {
     e.stopPropagation();
     if (window.confirm('Are you sure you want to delete this post?')) {
+      setShowOptionsMenu(false);
+
+      // Optimistically remove from all caches
+      const previousCaches = new Map();
+
+      const removeThreadFromCache = (queryKey) => {
+        const oldData = queryClient.getQueryData(queryKey);
+        if (!oldData) return;
+
+        // Store previous data for rollback
+        previousCaches.set(JSON.stringify(queryKey), oldData);
+
+        queryClient.setQueryData(queryKey, (old) => {
+          if (!old) return old;
+
+          // Handle infinite query structure (pages array)
+          if (old.pages && Array.isArray(old.pages)) {
+            return {
+              ...old,
+              pages: old.pages.map(page =>
+                Array.isArray(page) ? page.filter(thread => thread.id !== post.id) : page
+              ),
+            };
+          }
+
+          // Handle paginated data structure
+          if (old.data && Array.isArray(old.data)) {
+            return {
+              ...old,
+              data: old.data.filter(thread => thread.id !== post.id),
+            };
+          }
+
+          // Handle simple array structure
+          if (Array.isArray(old)) {
+            return old.filter(thread => thread.id !== post.id);
+          }
+
+          return old;
+        });
+      };
+
+      // Remove from all query caches that might contain this thread
+      queryClient.getQueryCache().findAll().forEach((query) => {
+        const queryKey = query.queryKey;
+
+        // Update if it's a threads query (Feed, Profile, Communities, etc.)
+        if (queryKey[0] === 'threads' ||
+          queryKey[0] === 'community' && queryKey[2] === 'threads' ||
+          queryKey[0] === 'user' && queryKey.includes('posts')) {
+          removeThreadFromCache(queryKey);
+        }
+      });
+
       try {
         await threadsAPI.delete(post.id);
         onDelete?.(post.id);
-        setShowOptionsMenu(false);
+        toast.success('Post deleted successfully');
       } catch (error) {
         console.error('Failed to delete post:', error);
+        toast.error('Failed to delete post');
+
+        // Rollback all cache updates
+        previousCaches.forEach((data, key) => {
+          queryClient.setQueryData(JSON.parse(key), data);
+        });
       }
     }
-  }, [post.id, onDelete]);
+  }, [post.id, onDelete, queryClient]);
+
+  const handleCopyLink = useCallback((e) => {
+    e.stopPropagation();
+    const link = `${window.location.origin}/thread/${post.id}`;
+    navigator.clipboard.writeText(link).then(() => {
+      toast.success('Link copied to clipboard');
+      setShowOptionsMenu(false);
+    });
+  }, [post.id]);
 
   const handleEditResult = useCallback((updatedThread) => {
     // Call parent's onUpdate if provided
@@ -178,6 +251,18 @@ export default function PostCard({
     const updateThreadInCache = (queryKey) => {
       queryClient.setQueryData(queryKey, (old) => {
         if (!old) return old;
+
+        // Handle infinite query structure (pages array)
+        if (old.pages && Array.isArray(old.pages)) {
+          return {
+            ...old,
+            pages: old.pages.map(page =>
+              Array.isArray(page)
+                ? page.map(thread => thread.id === updatedThread.id ? updatedThread : thread)
+                : page
+            ),
+          };
+        }
 
         // Handle paginated data structure
         if (old.data && Array.isArray(old.data)) {
@@ -385,7 +470,15 @@ export default function PostCard({
                 }`}
               onClick={(e) => e.stopPropagation()}
             >
-              {isOwnPost ? (
+              <button
+                onClick={handleCopyLink}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                  }`}
+              >
+                <LinkIcon className="w-4 h-4 text-gray-500" />
+                Copy Link
+              </button>
+              {isOwnPost && (
                 <>
                   <button
                     onClick={handleEdit}
@@ -404,10 +497,6 @@ export default function PostCard({
                     Delete Thread
                   </button>
                 </>
-              ) : (
-                <div className={`px-4 py-3 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  No options available
-                </div>
               )}
             </div>
           </>

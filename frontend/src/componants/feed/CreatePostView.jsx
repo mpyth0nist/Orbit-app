@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { ArrowLeftIcon, PhotoIcon, XMarkIcon, GlobeIcon, CodeBracketIcon } from '../ui/Icons';
+import { ArrowLeftIcon, PhotoIcon, XMarkIcon, GlobeIcon, CodeBracketIcon, RubberDuckIcon } from '../ui/Icons';
 import api, { getMediaUrl } from '../../api/apiClient';
 import { Loader2 } from 'lucide-react';
 import ContentRenderer from '../ui/ContentRenderer';
@@ -9,6 +9,7 @@ export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoa
   const [content, setContent] = useState('');
   const [files, setFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
+  const [threadType, setThreadType] = useState('NORMAL');
 
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
@@ -128,6 +129,8 @@ export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoa
       if (quotedPost) {
         formData.append('repostId', quotedPost.id);
       }
+
+      formData.append('threadType', threadType);
 
 
       if (onPost) {
@@ -298,6 +301,19 @@ export default function CreatePostView({ onBack, onPost, user, quotedPost, isLoa
               type="button"
             >
               <CodeBracketIcon className="w-6 h-6" />
+            </button>
+
+            <button
+              onClick={() => setThreadType(prev => prev === 'NORMAL' ? 'HELP' : 'NORMAL')}
+              className={`p-2.5 rounded-xl transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${threadType === 'HELP'
+                  ? 'text-yellow-600 bg-yellow-50 hover:bg-yellow-100 ring-2 ring-yellow-200'
+                  : 'text-gray-500 hover:text-yellow-600 hover:bg-yellow-50'
+                }`}
+              title={threadType === 'HELP' ? "Help Request (Points Enabled)" : "Ask for Help"}
+              disabled={isLoading}
+              type="button"
+            >
+              <RubberDuckIcon className="w-6 h-6" />
             </button>
           </div>
 
