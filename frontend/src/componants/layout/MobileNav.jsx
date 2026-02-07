@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FeedIcon, SearchIcon, PlusIcon, BellIcon, UserIcon } from '../ui/Icons';
+import { FeedIcon, SearchIcon, PlusIcon, UsersIcon, UserIcon } from '../ui/Icons';
 
 const MobileNavBtn = ({ icon: Icon, active, onClick, badge, isCreate }) => (
   <button
@@ -60,10 +60,10 @@ export default function MobileNav({ activeTab, setActiveTab, unreadNotifications
           onClick={() => handleNavigation('/create', 'create')}
         />
         <MobileNavBtn
-          icon={BellIcon}
-          active={activeTab === 'notifications'}
+          icon={UsersIcon}
+          active={activeTab === 'communities'}
           badge={unreadNotifications}
-          onClick={() => handleNavigation('/notifications', 'notifications')}
+          onClick={() => handleNavigation('/communities', 'communities')}
         />
         <MobileNavBtn
           icon={UserIcon}

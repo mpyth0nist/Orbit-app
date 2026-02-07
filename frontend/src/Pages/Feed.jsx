@@ -10,6 +10,7 @@ import Sidebar from '../componants/layout/Sidebar';
 import Header from '../componants/layout/Header';
 import MobileNav from '../componants/layout/MobileNav';
 import QuickCreatePost from '../componants/feed/QuickCreatePost';
+import { XMarkIcon } from '../componants/ui/Icons';
 
 
 export default function Feed() {
@@ -21,6 +22,7 @@ export default function Feed() {
 
   // State for active feed tab
   const [activeFeedTab, setActiveFeedTab] = React.useState('following');
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = React.useState(false);
 
   // Fetch posts with infinite scroll
   const {
@@ -173,9 +175,38 @@ export default function Feed() {
         />
       </aside>
 
+      {/* Mobile Sidebar Overlay */}
+      {isMobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => setIsMobileSidebarOpen(false)}
+          />
+          <div className={`fixed inset-y-0 left-0 w-80 shadow-2xl ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
+            <button
+              onClick={() => setIsMobileSidebarOpen(false)}
+              className={`absolute top-4 right-4 p-2 rounded-xl ${isDarkMode ? 'text-gray-400 hover:bg-gray-800' : 'text-gray-500 hover:bg-gray-100'}`}
+            >
+              <XMarkIcon className="w-6 h-6" />
+            </button>
+            <Sidebar
+              activeTab="feed"
+              unreadNotifications={unreadNotifications}
+              onClose={() => setIsMobileSidebarOpen(false)}
+              user={user}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="lg:pl-72">
         {/* Header */}
+        <Header
+          onMenuClick={() => setIsMobileSidebarOpen(true)}
+          unreadNotifications={unreadNotifications}
+          user={user}
+        />
 
 
         {/* Page Content */}
