@@ -1,125 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import { SearchIcon, UsersIcon, CheckBadgeIcon } from '../ui/Icons';
-import api from '../../api/apiClient';
-import { Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { SearchIcon, UsersIcon } from '../ui/Icons';
+import { communitiesAPI } from '../../api/apiClient';
+import { Loader2, X, Plus } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
+import { getMediaUrl } from '../../api/apiClient';
 
-export default function CommunitiesView({ currentUserEmail }) {
-  const [communities, setCommunities] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function CommunitiesView({ currentUserId }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('all');
-  const { t, isDarkMode } = useLanguage();
-  const { isDarkMode: themeDarkMode } = useTheme();
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const { t } = useLanguage();
+  const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const categories = ['all', 'Technology', 'Design', 'Gaming', 'Music', 'Sports', 'Art'];
+  // Fetch communities
+  const { data: communitiesData, isLoading } = useQuery({
+    queryKey: ['communities', searchQuery],
+    queryFn: () => communitiesAPI.getAll({ search: searchQuery || undefined }),
+    staleTime: 30000,
+  });
 
-  useEffect(() => {
-    loadCommunities();
-  }, []);
+  // Fetch user's communities  
+  const { data: myCommunities } = useQuery({
+    queryKey: ['my-communities'],
+    queryFn: () => communitiesAPI.getMy(),
+  });
 
-  const loadCommunities = async () => {
-    setIsLoading(true);
-    try {
-      // Try to load real communities
-      const data = await []; // TODO: Replace with api.communities.getAll() when endpoint is ready
-      
-      // If no communities, use sample data
-      if (!data?.length) {
-        setCommunities([
-          { id: '1', name: 'Tech Innovators', description: t('discoverCommunities'), cover_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400', icon: '🚀', members_count: 12500, category: 'Technology', member_emails: [] },
-          { id: '2', name: 'Design Masters', description: 'A community for UI/UX designers and creatives', cover_image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400', icon: '🎨', members_count: 8400, category: 'Design', member_emails: [] },
-          { id: '3', name: 'Gaming Zone', description: 'Connect with gamers worldwide', cover_image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400', icon: '🎮', members_count: 25600, category: 'Gaming', member_emails: [] },
-          { id: '4', name: 'Music Lovers', description: 'Share and discover new music', cover_image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400', icon: '🎵', members_count: 15200, category: 'Music', member_emails: [] },
-          { id: '5', name: 'Fitness & Health', description: 'Tips, motivation, and workout routines', cover_image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400', icon: '💪', members_count: 9800, category: 'Sports', member_emails: [] },
-          { id: '6', name: 'Art Gallery', description: 'Showcase your artwork and get inspired', cover_image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400', icon: '🖼️', members_count: 6700, category: 'Art', member_emails: [] },
-        ]);
-      } else {
-        setCommunities(data);
-      }
-    } catch (error) {
-      console.error('Failed to load communities:', error);
-      // Set sample communities on error
-      setCommunities([
-        { id: '1', name: 'Tech Innovators', description: t('discoverCommunities'), cover_image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400', icon: '🚀', members_count: 12500, category: 'Technology', member_emails: [] },
-      ]);
-    } finally {
-      setIsLoading(false);
+  const communities = communitiesData || [];
+  const myComIds = new Set((myCommunities || []).map(c => c.id));
+
+  // Join mutation
+  const joinMutation = useMutation({
+    mutationFn: (id) => communitiesAPI.join(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communities'] });
+      queryClient.invalidateQueries({ queryKey: ['my-communities'] });
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message || 'Failed to join community';
+      console.error('Join error:', message);
+    }
+  });
+
+  // Leave mutation
+  const leaveMutation = useMutation({
+    mutationFn: (id) => communitiesAPI.leave(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['communities'] });
+      queryClient.invalidateQueries({ queryKey: ['my-communities'] });
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message || 'Failed to leave community';
+      console.error('Leave error:', message);
+    }
+  });
+
+  const handleToggleMembership = (communityId, isMember) => {
+    if (isMember) {
+      leaveMutation.mutate(communityId);
+    } else {
+      joinMutation.mutate(communityId);
     }
   };
-
-  const handleJoin = async (communityId) => {
-    setCommunities(communities.map(c => {
-      if (c.id === communityId) {
-        const isMember = c.member_emails?.includes(currentUserEmail);
-        return {
-          ...c,
-          members_count: isMember ? c.members_count - 1 : c.members_count + 1,
-          member_emails: isMember 
-            ? c.member_emails.filter(e => e !== currentUserEmail)
-            : [...(c.member_emails || []), currentUserEmail]
-        };
-      }
-      return c;
-    }));
-  };
-
-  const filteredCommunities = communities.filter(c => {
-    const matchesSearch = !searchQuery || 
-      c.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = activeCategory === 'all' || c.category === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
 
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className={`text-2xl font-bold mb-2 ${
-          isDarkMode ? 'text-gray-100' : 'text-gray-900'
-        }`}>{t('communities')}</h1>
-        <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
-          {t('discoverCommunities')}
-        </p>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className={`text-2xl font-bold mb-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+            {t('communities') || 'Communities'}
+          </h1>
+          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
+            {t('discoverCommunities') || 'Discover and join communities'}
+          </p>
+        </div>
+        <button
+          onClick={() => setShowCreateModal(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors font-medium"
+        >
+          <Plus className="w-5 h-5" />
+          <span className="hidden sm:inline">Create</span>
+        </button>
       </div>
 
       {/* Search */}
       <div className="relative mb-6">
-        <SearchIcon className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${
-          isDarkMode ? 'text-gray-400' : 'text-gray-400'
-        }`} />
+        <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={t('searchPlaceholder')}
-          className={`w-full pl-12 pr-4 py-3 rounded-2xl text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm ${
-            isDarkMode 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-white border-gray-200'
-          }`}
+          placeholder="Search communities..."
+          className={`w-full pl-12 pr-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDarkMode
+            ? 'bg-gray-800 text-gray-100 border-gray-700 placeholder-gray-500'
+            : 'bg-white text-gray-800 border-gray-200 placeholder-gray-400'
+            } border`}
         />
-      </div>
-
-      {/* Categories */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setActiveCategory(category)}
-            className={`px-4 py-2 rounded-full text-sm font-medium capitalize whitespace-nowrap transition-colors ${
-              activeCategory === category
-                ? 'bg-blue-400 text-white'
-                : isDarkMode 
-                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
-            }`}
-          >
-            {category === 'all' ? t('all') : t(category)}
-          </button>
-        ))}
       </div>
 
       {/* Communities Grid */}
@@ -127,82 +107,71 @@ export default function CommunitiesView({ currentUserEmail }) {
         <div className="flex justify-center py-12">
           <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
         </div>
-      ) : filteredCommunities.length === 0 ? (
-        <div className={`rounded-3xl p-12 text-center ${
-          isDarkMode ? 'bg-gray-800 text-gray-200' : 'bg-white text-gray-600'
-        }`}>
-          <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${
-            isDarkMode ? 'bg-gray-700' : 'bg-gray-100'
-          }`}>
-            <UsersIcon className={`w-8 h-8 ${
-              isDarkMode ? 'text-gray-500' : 'text-gray-400'
-            }`} />
+      ) : communities.length === 0 ? (
+        <div className={`rounded-3xl p-12 text-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'
+            }`}>
+            <UsersIcon className={`w-8 h-8 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
           </div>
-          <h3 className={`text-lg font-semibold mb-1 ${
-            isDarkMode ? 'text-gray-100' : 'text-gray-900'
-          }`}>{t('noResults')}</h3>
-          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
-            {t('loading')}...
+          <h3 className={`text-lg font-semibold mb-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+            No communities yet
+          </h3>
+          <p className={`mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+            Be the first to create one!
           </p>
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700"
+          >
+            Create Community
+          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filteredCommunities.map((community) => {
-            const isMember = community.member_emails?.includes(currentUserEmail);
-            
+          {communities.map((community) => {
+            const isMember = myComIds.has(community.id) || community.isMember;
+
             return (
               <div
                 key={community.id}
-                className={`bg-white rounded-3xl overflow-hidden shadow-sm border hover:shadow-md transition-all ${
-                  isDarkMode ? 'border-gray-700' : 'border-gray-100'
-                }`}
+                className={`rounded-2xl overflow-hidden shadow-sm border hover:shadow-md transition-all cursor-pointer ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                  }`}
+                onClick={() => navigate(`/communities/${community.id}`)}
               >
                 {/* Cover */}
-                <div className="relative h-32">
-                  <img
-                    src={community.cover_image || 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400'}
-                    alt={community.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  <div className="absolute bottom-3 left-4 flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-2xl shadow-lg">
-                      {community.icon || '🌟'}
-                    </div>
-                    <div className="text-white">
-                      <div className="flex items-center gap-1">
-                        <h3 className="font-bold">{community.name}</h3>
-                        <CheckBadgeIcon className="w-4 h-4 text-indigo-400" />
-                      </div>
-                      <p className="text-xs text-white/80">{community.members_count?.toLocaleString()} {t('followers')}</p>
-                    </div>
-                  </div>
+                <div className="relative h-24 bg-gradient-to-r from-indigo-500 to-purple-600">
+                  {community.photoUrl && (
+                    <img src={getMediaUrl(community.photoUrl)} alt="" className="w-full h-full object-cover" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                 </div>
 
                 {/* Content */}
                 <div className="p-4">
-                  <p className={`text-sm mb-4 line-clamp-2 ${
-                    isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
-                    {community.description}
+                  <h3 className={`font-bold text-lg mb-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+                    {community.name}
+                  </h3>
+                  <p className={`text-sm mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    {community.description || 'No description'}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className={`text-xs ${
-                      isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                    } bg-gray-100 px-3 py-1 rounded-full`}>
-                      {community.category}
+                    <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                      {community.membersCount || community._count?.members || 0} members
                     </span>
                     <button
-                      onClick={() => handleJoin(community.id)}
-                      className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${
-                        isMember
-                          ? isDarkMode
-                            ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          : 'bg-blue-500 text-white hover:bg-blue-400 shadow-lg shadow-blue-500/30'
-                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleToggleMembership(community.id, isMember);
+                      }}
+                      disabled={joinMutation.isPending || leaveMutation.isPending}
+                      className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${isMember
+                        ? isDarkMode
+                          ? 'bg-gray-700 text-gray-300 hover:bg-red-600 hover:text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-red-100 hover:text-red-600'
+                        : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                        }`}
                     >
-                      {isMember ? t('following') : t('follow')}
+                      {isMember ? 'Leave' : 'Join'}
                     </button>
                   </div>
                 </div>
@@ -211,6 +180,123 @@ export default function CommunitiesView({ currentUserEmail }) {
           })}
         </div>
       )}
+
+      {/* Create Modal */}
+      {showCreateModal && (
+        <CreateCommunityModal
+          onClose={() => setShowCreateModal(false)}
+          isDarkMode={isDarkMode}
+        />
+      )}
+    </div>
+  );
+}
+
+function CreateCommunityModal({ onClose, isDarkMode }) {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const createMutation = useMutation({
+    mutationFn: (data) => communitiesAPI.create(data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['communities'] });
+      queryClient.invalidateQueries({ queryKey: ['my-communities'] });
+      onClose();
+      if (data?.id) {
+        navigate(`/communities/${data.id}`);
+      }
+    },
+    onError: (err) => {
+      setError(err.response?.data?.message || 'Failed to create community');
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      setError('Name is required');
+      return;
+    }
+    createMutation.mutate({ name: name.trim(), description: description.trim() });
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className={`w-full max-w-md rounded-2xl p-6 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className={`text-xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+            Create Community
+          </h2>
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          <div className="mb-4">
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Name *
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g., Tech Enthusiasts"
+              maxLength={100}
+              className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isDarkMode
+                ? 'bg-gray-700 border-gray-600 text-gray-100'
+                : 'bg-white border-gray-300 text-gray-900'
+                }`}
+            />
+          </div>
+
+          <div className="mb-6">
+            <label className={`block text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="What's this community about?"
+              maxLength={500}
+              rows={3}
+              className={`w-full px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none ${isDarkMode
+                ? 'bg-gray-700 border-gray-600 text-gray-100'
+                : 'bg-white border-gray-300 text-gray-900'
+                }`}
+            />
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className={`flex-1 py-2 rounded-lg font-medium ${isDarkMode
+                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={createMutation.isPending}
+              className="flex-1 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50"
+            >
+              {createMutation.isPending ? 'Creating...' : 'Create'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

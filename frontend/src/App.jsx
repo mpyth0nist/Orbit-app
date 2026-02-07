@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import './App.css'
 import Login from './Pages/Login'
 import Register from './Pages/Register'
@@ -9,13 +9,16 @@ import Thread from './Pages/Thread'
 import Search from './Pages/Search'
 import Notifications from './Pages/Notifications'
 import Communities from './Pages/Communities'
+import CommunityDetail from './Pages/CommunityDetail'
 import Profile from './Pages/Profile'
 import Settings from './Pages/Settings'
 import UserProfile from './Pages/UserProfile'
+import ErrorBoundary from './componants/common/ErrorBoundary'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { Toaster } from "@/components/ui/sonner"
 
 const queryClient = new QueryClient();
 
@@ -122,7 +125,9 @@ function App() {
                   path="/thread/:id"
                   element={
                     <ProtectedRoute>
-                      <Thread />
+                      <ErrorBoundary>
+                        <Thread />
+                      </ErrorBoundary>
                     </ProtectedRoute>
                   }
                 />
@@ -147,6 +152,16 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <Communities />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/communities/:id"
+                  element={
+                    <ProtectedRoute>
+                      <ErrorBoundary>
+                        <CommunityDetail />
+                      </ErrorBoundary>
                     </ProtectedRoute>
                   }
                 />

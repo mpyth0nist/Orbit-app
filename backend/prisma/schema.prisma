@@ -8,23 +8,25 @@ datasource db {
 }
 
 model User {
-  id                    Int            @id @default(autoincrement())
-  username              String         @unique @db.VarChar(255)
-  email                 String         @unique @db.VarChar(100)
-  passwordHash          String         @map("password_hash")
-  createdAt             DateTime       @default(now()) @map("created_at")
-  type                  AccountType    @default(PUBLIC)
-  updatedAt             DateTime       @default(now()) @updatedAt @map("updated_at")
+  id                    Int               @id @default(autoincrement())
+  username              String            @unique @db.VarChar(255)
+  email                 String            @unique @db.VarChar(100)
+  passwordHash          String            @map("password_hash")
+  createdAt             DateTime          @default(now()) @map("created_at")
+  type                  AccountType       @default(PUBLIC)
+  updatedAt             DateTime          @default(now()) @updatedAt @map("updated_at")
   comments              Comment[]
-  followers             Follow[]       @relation("UserFollowers")
-  following             Follow[]       @relation("UserFollowing")
+  followers             Follow[]          @relation("UserFollowers")
+  following             Follow[]          @relation("UserFollowing")
   media                 Media[]
-  notificationsSent     Notification[] @relation("NotificationActor")
-  notificationsReceived Notification[] @relation("NotificationReceiver")
+  notificationsSent     Notification[]    @relation("NotificationActor")
+  notificationsReceived Notification[]    @relation("NotificationReceiver")
   profile               Profile?
   reactions             Reaction[]
   threads               Thread[]
   savedThreads          SavedThreads[]
+  communitiesCreated    Community[]       @relation("CommunityCreator")
+  communityMemberships  CommunityMember[]
 
   @@index([email])
   @@index([username])
@@ -56,6 +58,9 @@ model Thread {
   parentThread   Thread?                  @relation("ThreadReplies", fields: [parentId], references: [id], onDelete: Cascade)
   repostId       Int?                     @map("repost_id")
   repostedThread Thread?                  @relation("ThreadReposts", fields: [repostId], references: [id], onDelete: Cascade)
+  communityId    Int?                     @map("community_id")
+  community      Community?               @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  isPinned       Boolean                  @default(false) @map("is_pinned")
   search_vector  Unsupported("tsvector")?
   comments       Comment[]
   media          Media[]
@@ -70,6 +75,8 @@ model Thread {
   @@index([userId])
   @@index([createdAt(sort: Desc)])
   @@index([userId, createdAt(sort: Desc)])
+  @@index([communityId])
+  @@index([communityId, isPinned])
   @@index([search_vector], map: "thread_search_idx", type: Gin)
 }
 
@@ -234,4 +241,49 @@ enum EntityType {
 enum Gender {
   MALE
   FEMALE
+}
+
+model Community {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(100)
+  description String?  @db.VarChar(500)
+  photoUrl    String?  @map("photo_url") @db.VarChar(255)
+  creatorId   Int      @map("creator_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  creator User              @relation("CommunityCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  members CommunityMember[]
+  threads Thread[]
+
+  @@index([name])
+  @@index([creatorId])
+}
+
+model CommunityMember {
+  id          Int           @id @default(autoincrement())
+  communityId Int           @map("community_id")
+  userId      Int           @map("user_id")
+  role        CommunityRole @default(MEMBER)
+  status      MemberStatus  @default(ACTIVE)
+  joinedAt    DateTime      @default(now()) @map("joined_at")
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([communityId, userId])
+  @@index([communityId])
+  @@index([userId])
+  @@index([communityId, status])
+}
+
+enum CommunityRole {
+  ADMIN
+  MODERATOR
+  MEMBER
+}
+
+enum MemberStatus {
+  ACTIVE
+  BANNED
 }

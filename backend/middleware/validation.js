@@ -199,6 +199,14 @@ export const createThreadSchema = Joi.object({
         .messages({
             'number.base': 'Repost ID must be a number',
             'string.base': 'Repost ID must be a valid ID'
+        }),
+
+    communityId: Joi.alternatives()
+        .try(Joi.number(), Joi.string())
+        .optional()
+        .messages({
+            'number.base': 'Community ID must be a number',
+            'string.base': 'Community ID must be a valid ID'
         })
 });
 
@@ -368,6 +376,80 @@ export const notificationQuerySchema = Joi.object({
 });
 
 // ============================================================================
+// Community Validation Schemas
+// ============================================================================
+
+/**
+ * Create community validation schema
+ */
+export const createCommunitySchema = Joi.object({
+    name: Joi.string()
+        .min(3)
+        .max(100)
+        .trim()
+        .required()
+        .messages({
+            'string.min': 'Community name must be at least 3 characters',
+            'string.max': 'Community name cannot exceed 100 characters',
+            'any.required': 'Community name is required'
+        }),
+
+    description: Joi.string()
+        .max(500)
+        .trim()
+        .allow('', null)
+        .optional()
+        .messages({
+            'string.max': 'Description cannot exceed 500 characters'
+        })
+});
+
+/**
+ * Update community validation schema
+ */
+export const updateCommunitySchema = Joi.object({
+    name: Joi.string()
+        .min(3)
+        .max(100)
+        .trim()
+        .optional()
+        .messages({
+            'string.min': 'Community name must be at least 3 characters',
+            'string.max': 'Community name cannot exceed 100 characters'
+        }),
+
+    description: Joi.string()
+        .max(500)
+        .trim()
+        .allow('', null)
+        .optional()
+        .messages({
+            'string.max': 'Description cannot exceed 500 characters'
+        }),
+
+    photoUrl: Joi.string()
+        .uri()
+        .allow('', null)
+        .optional()
+        .messages({
+            'string.uri': 'Photo URL must be a valid URL'
+        })
+}).min(1); // At least one field required
+
+/**
+ * Update member role validation schema
+ */
+export const updateMemberRoleSchema = Joi.object({
+    role: Joi.string()
+        .valid('ADMIN', 'MODERATOR', 'MEMBER')
+        .required()
+        .messages({
+            'any.only': 'Role must be either ADMIN or MEMBER',
+            'any.required': 'Role is required'
+        })
+});
+
+// ============================================================================
 // Middleware Exports
 // ============================================================================
 
@@ -389,3 +471,6 @@ export const validateSearchQuery = validate(searchQuerySchema, 'query');
 export const validateSearchThreads = validate(searchThreadsSchema, 'query');
 export const validateUpdateNotification = validate(updateNotificationSchema);
 export const validateNotificationQuery = validate(notificationQuerySchema, 'query');
+export const validateCreateCommunity = validate(createCommunitySchema);
+export const validateUpdateCommunity = validate(updateCommunitySchema);
+export const validateUpdateMemberRole = validate(updateMemberRoleSchema);

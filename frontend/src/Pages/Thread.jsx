@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import apiClient from '../api/apiClient';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -8,6 +9,7 @@ import ThreadDetailView from '../componants/feed/ThreadDetailView';
 import Sidebar from '../componants/layout/Sidebar';
 import Header from '../componants/layout/Header';
 import MobileNav from '../componants/layout/MobileNav';
+import QUERY_KEYS from '../constants/queryKeys';
 
 export default function Thread() {
   const { id } = useParams();
@@ -18,7 +20,7 @@ export default function Thread() {
 
   // Fetch specific post
   const { data: post, isLoading: postLoading } = useQuery({
-    queryKey: ['thread', id],
+    queryKey: QUERY_KEYS.thread(id),
     queryFn: () => apiClient.threads.getById(id),
     enabled: !!id,
     retry: false,
@@ -26,7 +28,7 @@ export default function Thread() {
 
   // Fetch notifications count
   const { data: notificationsData } = useQuery({
-    queryKey: ['notifications-unread-count'],
+    queryKey: QUERY_KEYS.notificationsUnreadCount,
     queryFn: () => apiClient.notifications.getUnreadCount(),
     enabled: !!user,
   });
@@ -78,6 +80,30 @@ export default function Thread() {
       queryClient.invalidateQueries({ queryKey: ['thread', id] });
       // navigate('/'); // Optional: redirect to home to see the new repost
     },
+  });
+
+  // Check if thread belongs to a community and fetch membership
+  const communityId = post?.communityId;
+  const { data: membershipData } = useQuery({
+    queryKey: QUERY_KEYS.communityMembership(communityId, user?.id),
+    queryFn: () => apiClient.communities.getMembership(communityId),
+    enabled: !!communityId && !!user?.id,
+  });
+
+  const isMember = membershipData?.isMember || false;
+
+  // Join community mutation
+  const joinMutation = useMutation({
+    mutationFn: () => apiClient.communities.join(communityId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.communityMembership(communityId, user?.id) });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.community(communityId) });
+      toast.success('Successfully joined community');
+    },
+    onError: (error) => {
+      const message = error.response?.data?.message || 'Failed to join community';
+      toast.error(message);
+    }
   });
 
   const handleLike = (post) => {
@@ -134,6 +160,9 @@ export default function Thread() {
             onBack={() => navigate(-1)}
             onLike={handleLike}
             onShare={(post) => repostMutation.mutate(post)}
+            communityId={communityId}
+            isCommunityMember={communityId ? isMember : true}
+            onJoinCommunity={communityId && !isMember ? () => joinMutation.mutate() : null}
           />
         </main>
       </div>

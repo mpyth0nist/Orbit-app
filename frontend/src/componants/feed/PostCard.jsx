@@ -1,6 +1,8 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
+import { toast } from 'sonner';
 import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon } from '../ui/Icons';
 import { getMediaUrl, threadsAPI } from '../../api/apiClient';
 import ContentRenderer from '../ui/ContentRenderer';
@@ -25,9 +27,11 @@ export default function PostCard({
   isLiked = false,
   isBookmarked = false,
   isOwnPost = false,
+  canComment = true, // New prop: whether user can comment (for community posts)
 }) {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [showRepostMenu, setShowRepostMenu] = useState(false);
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -99,69 +103,118 @@ export default function PostCard({
 
   const isVerified = user.verified || post.author_verified;
 
-  // Event handlers with stopPropagation
-  const handleLike = (e) => {
+  // Event handlers with stopPropagation (memoized with useCallback)
+  const handleLike = useCallback((e) => {
     e.stopPropagation();
     onLike?.(post);
-  };
+  }, [onLike, post]);
 
-  const handleComment = (e) => {
+  const handleComment = useCallback((e) => {
     e.stopPropagation();
     onComment?.(post);
-  };
+  }, [onComment, post]);
 
-  const handleShare = (e) => {
+  const handleShare = useCallback((e) => {
     e.stopPropagation();
-    setShowRepostMenu(!showRepostMenu);
-  };
+    setShowRepostMenu(prev => !prev);
+  }, []);
 
-  const handleRepost = (e) => {
+  const handleRepost = useCallback((e) => {
     e.stopPropagation();
     setShowRepostMenu(false);
     onShare?.(post);
-  };
+  }, [onShare, post]);
 
-  const handleQuote = (e) => {
+  const handleQuote = useCallback((e) => {
     e.stopPropagation();
     setShowRepostMenu(false);
     navigate(`/create?quoteId=${post.id}`);
-  };
+  }, [navigate, post.id]);
 
-  const handleOriginalPostClick = (e) => {
+  const handleOriginalPostClick = useCallback((e) => {
     e.stopPropagation();
     if (post.originalPost) {
       navigate(`/thread/${post.originalPost.id}`);
     }
-  };
+  }, [navigate, post.originalPost]);
 
-  const handleBookmark = (e) => {
+  const handleBookmark = useCallback((e) => {
     e.stopPropagation();
     onBookmark?.(post);
-  };
+  }, [onBookmark, post]);
 
-  const handleOptionsClick = (e) => {
+  const handleOptionsClick = useCallback((e) => {
     e.stopPropagation();
-    setShowOptionsMenu(!showOptionsMenu);
-  };
+    setShowOptionsMenu(prev => !prev);
+  }, []);
 
-  const handleEditResult = (updatedThread) => {
-    if (onUpdate) onUpdate(updatedThread);
-    // If no callback, logic to update local state is handled by parent or query cache invalidation should occur
-  };
-
-  const handleDelete = async (e) => {
+  const handleEdit = useCallback((e) => {
     e.stopPropagation();
     setShowOptionsMenu(false);
+    setIsEditing(true);
+  }, []);
 
-    if (window.confirm('Are you sure you want to delete this thread?')) {
+  const handleDelete = useCallback(async (e) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this post?')) {
       try {
         await threadsAPI.delete(post.id);
-        if (onDelete) onDelete(post.id);
+        onDelete?.(post.id);
+        setShowOptionsMenu(false);
       } catch (error) {
-        console.error('Failed to delete thread:', error);
+        console.error('Failed to delete post:', error);
       }
     }
-  };
+  }, [post.id, onDelete]);
+
+  const handleEditResult = useCallback((updatedThread) => {
+    // Call parent's onUpdate if provided
+    if (onUpdate) {
+      onUpdate(updatedThread);
+    }
+
+    // Update all possible query caches where this thread might exist
+    // This ensures the update shows everywhere without refresh
+    const updateThreadInCache = (queryKey) => {
+      queryClient.setQueryData(queryKey, (old) => {
+        if (!old) return old;
+
+        // Handle paginated data structure
+        if (old.data && Array.isArray(old.data)) {
+          return {
+            ...old,
+            data: old.data.map(thread =>
+              thread.id === updatedThread.id ? updatedThread : thread
+            ),
+          };
+        }
+
+        // Handle simple array structure
+        if (Array.isArray(old)) {
+          return old.map(thread =>
+            thread.id === updatedThread.id ? updatedThread : thread
+          );
+        }
+
+        return old;
+      });
+    };
+
+    // Update all query caches that might contain this thread
+    queryClient.getQueryCache().findAll().forEach((query) => {
+      const queryKey = query.queryKey;
+
+      // Update if it's a threads query
+      if (queryKey[0] === 'threads' ||
+        queryKey[0] === 'community' && queryKey[2] === 'threads' ||
+        queryKey[0] === 'user' && queryKey.includes('posts')) {
+        updateThreadInCache(queryKey);
+      }
+    });
+
+    toast.success('Post updated successfully');
+    setIsEditing(false);
+  }, [onUpdate, queryClient]);
 
   // Render media gallery (supports 1-4 images)
   const renderMedia = () => {
@@ -306,16 +359,19 @@ export default function PostCard({
             </div>
           </div>
         </div>
-        <button
-          onClick={handleOptionsClick}
-          className={`p-2 rounded-xl transition-colors ${isDarkMode
-            ? 'text-gray-500 hover:text-gray-300 hover:bg-gray-700'
-            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
-            }`}
-          aria-label="Post options"
-        >
-          <EllipsisHorizontalIcon className="w-5 h-5" />
-        </button>
+
+        {isOwnPost ? (
+          <button
+            onClick={handleOptionsClick}
+            className={`p-2 rounded-xl transition-colors ${isDarkMode
+              ? 'text-gray-500 hover:text-gray-300 hover:bg-gray-700'
+              : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+              }`}
+            aria-label="Post options"
+          >
+            <EllipsisHorizontalIcon className="w-5 h-5" />
+          </button>
+        ) : null}
 
         {/* Options Menu */}
         {showOptionsMenu && (
@@ -332,11 +388,7 @@ export default function PostCard({
               {isOwnPost ? (
                 <>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowOptionsMenu(false);
-                      setIsEditing(true);
-                    }}
+                    onClick={handleEdit}
                     className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
                       }`}
                   >
@@ -406,17 +458,27 @@ export default function PostCard({
             <span className="text-sm font-medium">{likesCount}</span>
           </button>
 
-          <button
-            onClick={handleComment}
-            className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 ${isDarkMode
-              ? 'text-gray-500 hover:text-indigo-400 hover:bg-indigo-500/10'
-              : 'text-gray-500 hover:text-indigo-500 hover:bg-indigo-50'
-              }`}
-            aria-label="Comment on post"
-          >
-            <ChatBubbleIcon className="w-5 h-5" />
-            <span className="text-sm font-medium">{commentsCount}</span>
-          </button>
+          {canComment ? (
+            <button
+              onClick={handleComment}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 ${isDarkMode
+                ? 'text-gray-500 hover:text-indigo-400 hover:bg-indigo-500/10'
+                : 'text-gray-500 hover:text-indigo-500 hover:bg-indigo-50'
+                }`}
+              aria-label="Comment on post"
+            >
+              <ChatBubbleIcon className="w-5 h-5" />
+              <span className="text-sm font-medium">{commentsCount}</span>
+            </button>
+          ) : (
+            <div
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`}
+              title="Join the community to comment"
+            >
+              <ChatBubbleIcon className="w-5 h-5" />
+              <span className="text-sm font-medium">{commentsCount}</span>
+            </div>
+          )}
 
           <div className="relative">
             <button
@@ -537,4 +599,6 @@ PostCard.propTypes = {
   isBookmarked: PropTypes.bool,
   /** Whether the current user is the author of this post */
   isOwnPost: PropTypes.bool,
+  /** Whether the current user can comment on this post */
+  canComment: PropTypes.bool,
 };

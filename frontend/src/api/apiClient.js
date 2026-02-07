@@ -91,6 +91,7 @@ export const threadsAPI = {
   // Create thread (supports both JSON and FormData)
   create: (data) => {
     // If FormData, axios will auto-set Content-Type with boundary
+    console.log("data", data.communityId)
     if (data instanceof FormData) {
       return apiClient.post('/threads', data, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -283,6 +284,74 @@ export const searchAPI = {
   searchHashtags: (query) => hashtagsAPI.search({ q: query, limit: 20 })
 };
 
+// Communities API
+export const communitiesAPI = {
+  // Get all communities
+  getAll: ({ page = 1, limit = 20, search } = {}) =>
+    apiClient.get('/communities', { params: { page, limit, search } }),
+
+  // Get user's communities
+  getMy: () => apiClient.get('/communities/my'),
+
+  // Get single community
+  getById: (id) => apiClient.get(`/communities/${id}`),
+
+  // Create community
+  create: (data) => apiClient.post('/communities', data),
+
+  // Update community
+  update: (id, data) => apiClient.patch(`/communities/${id}`, data),
+
+  // Delete community
+  delete: (id) => apiClient.delete(`/communities/${id}`),
+
+  // Get community threads
+  getThreads: (id, { page = 1, limit = 20 } = {}) =>
+    apiClient.get(`/communities/${id}/threads`, { params: { page, limit } }),
+
+  // Pin/unpin thread
+  togglePin: (communityId, threadId) =>
+    apiClient.post(`/communities/${communityId}/threads/${threadId}/pin`),
+
+  // Join community
+  join: (id) => apiClient.post(`/communities/${id}/join`),
+
+  // Leave community
+  leave: (id) => apiClient.post(`/communities/${id}/leave`),
+
+  // Get current user's membership status (efficient)
+  getMembership: (id) => apiClient.get(`/communities/${id}/membership`),
+
+  // Get members
+  getMembers: (id, { page = 1, limit = 20, status = 'ACTIVE' } = {}) =>
+    apiClient.get(`/communities/${id}/members`, { params: { page, limit, status } }),
+
+  // Update member role
+  updateRole: (communityId, userId, role) =>
+    apiClient.patch(`/communities/${communityId}/members/${userId}/role`, { role }),
+
+  // Kick member
+  kick: (communityId, userId) =>
+    apiClient.delete(`/communities/${communityId}/members/${userId}`),
+
+  // Ban member
+  ban: (communityId, userId) =>
+    apiClient.post(`/communities/${communityId}/members/${userId}/ban`),
+
+  // Unban member
+  unban: (communityId, userId) =>
+    apiClient.delete(`/communities/${communityId}/members/${userId}/ban`),
+
+  // Upload banner
+  uploadBanner: (id, file) => {
+    const formData = new FormData();
+    formData.append('communityBanner', file);
+    return apiClient.post(`/communities/${id}/banner`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
+};
+
 // Files API (Legacy wrapper for Media API)
 export const filesAPI = {
   upload: (file) => mediaAPI.uploadProfilePicture(file), // Default to profile pic for now
@@ -300,4 +369,5 @@ export default {
   files: filesAPI,
   search: searchAPI,
   hashtags: hashtagsAPI,
+  communities: communitiesAPI,
 };
