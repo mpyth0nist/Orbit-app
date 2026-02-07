@@ -205,8 +205,14 @@ export const createThreadSchema = Joi.object({
         .try(Joi.number(), Joi.string())
         .optional()
         .messages({
-            'number.base': 'Community ID must be a number',
             'string.base': 'Community ID must be a valid ID'
+        }),
+
+    threadType: Joi.string()
+        .valid('NORMAL', 'HELP')
+        .optional()
+        .messages({
+            'any.only': 'Thread type must be either NORMAL or HELP'
         })
 });
 

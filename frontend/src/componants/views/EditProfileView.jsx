@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { toast } from 'sonner';
 import { ArrowLeftIcon, CameraIcon } from '../ui/Icons';
 import { usersAPI, mediaAPI, getMediaUrl } from '../../api/apiClient';
 import { Loader2, Check, AlertCircle } from 'lucide-react';
@@ -35,12 +36,12 @@ export default function EditProfileView({ user, onBack, onSave }) {
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        setError('Please select an image file');
+        toast.error('Please select an image file');
         return;
       }
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setError('Image must be less than 5MB');
+        toast.error('Image must be less than 5MB');
         return;
       }
 
@@ -123,7 +124,7 @@ export default function EditProfileView({ user, onBack, onSave }) {
         ...(newPhotoUrl && { photoUrl: newPhotoUrl })
       };
 
-      setSuccessMessage('Profile updated successfully!');
+      toast.success('Profile updated successfully!');
       setAvatarFile(null); // Clear pending file
 
       // Notify parent after short delay to show success
@@ -133,7 +134,8 @@ export default function EditProfileView({ user, onBack, onSave }) {
       }, 500);
 
     } catch (err) {
-      setError(err.message || 'Failed to update profile');
+      console.error(err);
+      toast.error(err.message || 'Failed to update profile');
     } finally {
       setIsSaving(false);
     }
@@ -166,34 +168,11 @@ export default function EditProfileView({ user, onBack, onSave }) {
               <Loader2 className="w-4 h-4 animate-spin" />
               {t('saving') || 'Saving...'}
             </>
-          ) : successMessage ? (
-            <>
-              <Check className="w-4 h-4" />
-              {t('saved') || 'Saved!'}
-            </>
           ) : (
             t('save') || 'Save'
           )}
         </button>
       </div>
-
-      {/* Error Message */}
-      {error && (
-        <div className={`mb-4 p-3 rounded-xl flex items-center gap-2 ${isDarkMode ? 'bg-red-900/30 text-red-300' : 'bg-red-50 text-red-600'
-          }`}>
-          <AlertCircle className="w-5 h-5 flex-shrink-0" />
-          <p className="text-sm">{error}</p>
-        </div>
-      )}
-
-      {/* Success Message */}
-      {successMessage && (
-        <div className={`mb-4 p-3 rounded-xl flex items-center gap-2 ${isDarkMode ? 'bg-green-900/30 text-green-300' : 'bg-green-50 text-green-600'
-          }`}>
-          <Check className="w-5 h-5 flex-shrink-0" />
-          <p className="text-sm">{successMessage}</p>
-        </div>
-      )}
 
       {/* Form */}
       <form onSubmit={handleSubmit} className={`rounded-3xl p-6 shadow-sm border ${isDarkMode

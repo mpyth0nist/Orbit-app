@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
 import { toast } from 'sonner';
-import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon } from '../ui/Icons';
+import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, LinkIcon } from '../ui/Icons';
 import { getMediaUrl, threadsAPI } from '../../api/apiClient';
 import ContentRenderer from '../ui/ContentRenderer';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -161,11 +161,22 @@ export default function PostCard({
         await threadsAPI.delete(post.id);
         onDelete?.(post.id);
         setShowOptionsMenu(false);
+        toast.success('Post deleted successfully');
       } catch (error) {
         console.error('Failed to delete post:', error);
+        toast.error('Failed to delete post');
       }
     }
   }, [post.id, onDelete]);
+
+  const handleCopyLink = useCallback((e) => {
+    e.stopPropagation();
+    const link = `${window.location.origin}/thread/${post.id}`;
+    navigator.clipboard.writeText(link).then(() => {
+      toast.success('Link copied to clipboard');
+      setShowOptionsMenu(false);
+    });
+  }, [post.id]);
 
   const handleEditResult = useCallback((updatedThread) => {
     // Call parent's onUpdate if provided
@@ -385,7 +396,15 @@ export default function PostCard({
                 }`}
               onClick={(e) => e.stopPropagation()}
             >
-              {isOwnPost ? (
+              <button
+                onClick={handleCopyLink}
+                className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-200' : 'hover:bg-gray-50 text-gray-700'
+                  }`}
+              >
+                <LinkIcon className="w-4 h-4 text-gray-500" />
+                Copy Link
+              </button>
+              {isOwnPost && (
                 <>
                   <button
                     onClick={handleEdit}
@@ -404,10 +423,6 @@ export default function PostCard({
                     Delete Thread
                   </button>
                 </>
-              ) : (
-                <div className={`px-4 py-3 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  No options available
-                </div>
               )}
             </div>
           </>

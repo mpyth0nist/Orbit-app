@@ -5,7 +5,8 @@ import {
     getCommentReplies,
     getComment,
     updateComment,
-    deleteComment
+    deleteComment,
+    toggleHelpful
 } from '../controllers/comments.controller.js';
 import protect from '../middleware/protect.js';
 import {
@@ -84,5 +85,14 @@ router.patch('/:id', protect, validateIdParam, validateUpdateComment, updateComm
  * @example DELETE /api/comments/1
  */
 router.delete('/:id', protect, validateIdParam, deleteComment);
+
+/**
+ * @route   POST /api/comments/:id/helpful
+ * @desc    Toggle helpful status of a comment
+ * @access  Private (Thread Author only)
+ * @param   id - Comment ID
+ * @body    helpType - 'HELPFUL', 'BIG_HELP', or null
+ */
+router.post('/:id/helpful', protect, validateIdParam, toggleHelpful);
 
 export default router;

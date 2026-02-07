@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { ArrowLeftIcon, CheckBadgeIcon, UserIcon, LockClosedIcon, CameraIcon, ImageIcon, HeartIcon } from '../ui/Icons';
+import TierBadge from '../ui/TierBadge';
 import FollowersModal from '../ui/FollowersModal';
 import PostCard from '../feed/PostCard';
 import api, { getMediaUrl } from '../../api/apiClient';
@@ -542,6 +543,7 @@ export default function UserProfileView({
                             {displayName}
                         </h1>
                         {user?.verified && <CheckBadgeIcon className="w-6 h-6 text-indigo-500" />}
+                        <TierBadge points={user?.profile?.points || 0} />
                         {user?.type === 'PRIVATE' && (
                             <LockClosedIcon className={`w-5 h-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'
                                 }`} />
