@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api';
-const MEDIA_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_URL || 'http://localhost:8080';
 
 /**
  * Builds a full URL for media files (profile pictures, thread media, etc.)
