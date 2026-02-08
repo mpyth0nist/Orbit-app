@@ -70,7 +70,10 @@ export default function Register() {
         toast.success('Registration successful! Welcome to Orbit.');
       }
     } catch (err) {
-      // Extract error message from backend
+      console.log("FULL REGISTER ERROR:", err);
+      console.log("ERR RESPONSE:", err.response);
+      console.log("ERR DATA:", err.response?.data);
+
       // err.response.data.message comes from backend ErrorResponse
       const errorMessage = err?.response?.data?.message || err?.message || 'Registration failed. Please try again.';
       const errors = err?.response?.data?.errors;
