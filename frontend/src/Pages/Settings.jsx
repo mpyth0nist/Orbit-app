@@ -30,14 +30,8 @@ export default function Settings() {
   });
 
   const handleUserUpdate = async (data) => {
-    // Update user in context
+    // Update user in context - backend update is handled by EditProfileView
     setUser({ ...user, ...data });
-    // Update user in backend
-    try {
-      await apiClient.users.update(user.id, data);
-    } catch (error) {
-      console.error('Failed to update user:', error);
-    }
     setIsEditingProfile(false);
   };
 

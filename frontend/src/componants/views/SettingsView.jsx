@@ -124,18 +124,21 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
 
   // Get display name from user data
   const displayName = React.useMemo(() => {
-    if (user?.profile?.firstName || user?.profile?.lastName) {
-      return `${user.profile.firstName || ''} ${user.profile.lastName || ''}`.trim();
+    const firstName = user?.firstName || user?.profile?.firstName;
+    const lastName = user?.lastName || user?.profile?.lastName;
+
+    if (firstName || lastName) {
+      return `${firstName || ''} ${lastName || ''}`.trim();
     }
     return user?.username || 'User';
-  }, [user?.profile?.firstName, user?.profile?.lastName, user?.username]);
+  }, [user?.firstName, user?.lastName, user?.profile?.firstName, user?.profile?.lastName, user?.username]);
 
   // Get avatar URL
   const avatarUrl = React.useMemo(() => {
-    const photoUrl = getMediaUrl(user?.profile?.photoUrl);
+    const photoUrl = getMediaUrl(user?.photoUrl || user?.profile?.photoUrl);
     if (photoUrl) return photoUrl;
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=6366f1&color=fff`;
-  }, [user?.profile?.photoUrl, displayName]);
+  }, [user?.photoUrl, user?.profile?.photoUrl, displayName]);
 
   return (
     <>
@@ -217,7 +220,7 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
         <SettingsSection title={t('account') || 'Account'} isDarkMode={isDarkMode}>
           <SettingsItem
             icon={UserIcon}
-            label={t('editProfile')}
+            label={t('Edit Profile')}
             description={t('editProfileDesc') || 'Update your name, bio, and photo'}
             onClick={onEditProfile}
             isDarkMode={isDarkMode}
@@ -234,7 +237,7 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
           <SettingsItem
             icon={() => <span className="text-lg">🔐</span>}
             label={t('security')}
-            description={t('securityDesc') || 'Password, two-factor authentication'}
+            description={t('securityDesc') || 'Change your password'}
             onClick={() => {
               if (onEditSecurity) onEditSecurity();
             }}

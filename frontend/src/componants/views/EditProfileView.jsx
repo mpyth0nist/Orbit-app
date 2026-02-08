@@ -8,6 +8,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 
 export default function EditProfileView({ user, onBack, onSave }) {
   const [formData, setFormData] = useState({
+    username: user?.username || '',
     firstName: user?.firstName || user?.profile?.firstName || '',
     lastName: user?.lastName || user?.profile?.lastName || '',
     bio: user?.bio || user?.profile?.bio || '',
@@ -27,7 +28,7 @@ export default function EditProfileView({ user, onBack, onSave }) {
 
   // Get display name for avatar fallback
   const getDisplayName = () => {
-    return `${formData.firstName} ${formData.lastName}`.trim() || 'User';
+    return `${formData.firstName} ${formData.lastName}`.trim() || formData.username || 'User';
   };
 
   // Handle avatar file selection
@@ -75,7 +76,7 @@ export default function EditProfileView({ user, onBack, onSave }) {
     }
   };
 
-  // Update profile info
+  // Update profile info (firstName, lastName, bio)
   const updateProfileInfo = async () => {
     try {
       const response = await usersAPI.updateProfile({
@@ -87,6 +88,20 @@ export default function EditProfileView({ user, onBack, onSave }) {
     } catch (err) {
       console.error('Failed to update profile:', err);
       throw new Error(err.response?.data?.message || 'Failed to update profile');
+    }
+  };
+
+  // Update user info (username)
+  const updateUserInfo = async () => {
+    if (formData.username.trim() === user.username) return null;
+    try {
+      const response = await usersAPI.updateMe({
+        username: formData.username.trim()
+      });
+      return response?.user || response?.data?.user;
+    } catch (err) {
+      console.error('Failed to update username:', err);
+      throw new Error(err.response?.data?.message || 'Failed to update username');
     }
   };
 
@@ -105,12 +120,16 @@ export default function EditProfileView({ user, onBack, onSave }) {
         newPhotoUrl = await uploadProfilePicture();
       }
 
-      // Update profile info
+      // Update profile info (bio, name)
       await updateProfileInfo();
+
+      // Update user info (username)
+      await updateUserInfo();
 
       // Build updated user data for parent callback
       const updatedData = {
         ...user,
+        username: formData.username.trim(),
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
         bio: formData.bio.trim(),
@@ -220,6 +239,25 @@ export default function EditProfileView({ user, onBack, onSave }) {
 
         {/* Fields */}
         <div className="space-y-5">
+          {/* Username */}
+          <div>
+            <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
+              }`}>
+              {t('username') || 'Username'}
+            </label>
+            <input
+              type="text"
+              value={formData.username}
+              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all ${isDarkMode
+                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500'
+                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
+                }`}
+              placeholder={t('usernamePlaceholder') || 'Your username'}
+              maxLength={30}
+            />
+          </div>
+
           {/* First Name */}
           <div>
             <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'
