@@ -237,7 +237,7 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
           <SettingsItem
             icon={() => <span className="text-lg">🔐</span>}
             label={t('security')}
-            description={t('securityDesc') || 'Change your password'}
+            description={""}
             onClick={() => {
               if (onEditSecurity) onEditSecurity();
             }}
