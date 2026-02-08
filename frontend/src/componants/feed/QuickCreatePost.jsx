@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import { PhotoIcon, CodeBracketIcon, XMarkIcon, SendIcon } from '../ui/Icons';
+import { PhotoIcon, CodeBracketIcon, XMarkIcon, SendIcon, RubberDuckIcon } from '../ui/Icons';
 import { getMediaUrl } from '../../api/apiClient';
 import apiClient from '../../api/apiClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ export default function QuickCreatePost() {
     const queryClient = useQueryClient();
     const [isExpanded, setIsExpanded] = useState(false);
     const [content, setContent] = useState('');
+    const [threadType, setThreadType] = useState('NORMAL');
     const [files, setFiles] = useState([]);
     const [previews, setPreviews] = useState([]);
     const fileInputRef = useRef(null);
@@ -24,6 +25,7 @@ export default function QuickCreatePost() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['threads'] });
             setContent('');
+            setThreadType('NORMAL');
             setFiles([]);
             setPreviews([]);
             setIsExpanded(false);
@@ -57,6 +59,7 @@ export default function QuickCreatePost() {
 
         const formData = new FormData();
         formData.append('content', content.trim());
+        formData.append('threadType', threadType);
         files.forEach(file => formData.append('media', file));
 
         createPostMutation.mutate(formData);
@@ -169,6 +172,16 @@ export default function QuickCreatePost() {
                                 title="Add Code"
                             >
                                 <CodeBracketIcon className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={() => setThreadType(prev => prev === 'NORMAL' ? 'HELP' : 'NORMAL')}
+                                className={`p-2 rounded-xl transition-colors ${threadType === 'HELP'
+                                    ? 'text-yellow-600 bg-yellow-50 hover:bg-yellow-100 dark:bg-yellow-500/20 dark:text-yellow-400'
+                                    : 'text-gray-500 hover:text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-500/10'
+                                    }`}
+                                title={threadType === 'HELP' ? "Help Request (Points Enabled)" : "Ask for Help"}
+                            >
+                                <RubberDuckIcon className="w-5 h-5" />
                             </button>
                         </div>
 
