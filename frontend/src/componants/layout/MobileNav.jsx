@@ -9,12 +9,12 @@ const MobileNavBtn = ({ icon: Icon, active, onClick, badge, isCreate }) => (
       isCreate 
         ? '' 
         : active 
-          ? 'text-indigo-600' 
+          ? 'text-blue-400' 
           : 'text-gray-400 hover:text-gray-600'
     }`}
   >
     {isCreate ? (
-      <div className="w-12 h-12 -mt-6 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+      <div className="w-12 h-12 -mt-6 bg-gradient-to-r from-blue-400 to-blue-400 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
         <Icon className="w-6 h-6 text-white" />
       </div>
     ) : (
@@ -26,7 +26,7 @@ const MobileNavBtn = ({ icon: Icon, active, onClick, badge, isCreate }) => (
           </span>
         )}
         {active && (
-          <div className="w-1 h-1 mt-1 bg-indigo-600 rounded-full" />
+          <div className="w-1 h-1 mt-1 bg-blue-400 rounded-full" />
         )}
       </>
     )}

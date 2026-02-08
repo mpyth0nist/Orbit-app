@@ -43,9 +43,11 @@ export const AuthProvider = ({ children }) => {
   };
 
   const initializeGoogleSignIn = () => {
-    if (window.google) {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    if (window.google && clientId && clientId !== 'YOUR_GOOGLE_CLIENT_ID') {
       window.google.accounts.id.initialize({
-        client_id: 'YOUR_GOOGLE_CLIENT_ID', // TODO: Move to env variable
+        client_id: clientId,
         callback: handleGoogleSignIn,
         auto_select: false,
       });
@@ -54,6 +56,11 @@ export const AuthProvider = ({ children }) => {
 
   const handleGoogleSignIn = async (response) => {
     try {
+      if (!response || !response.credential) {
+        console.error('Google sign-in: No credential received');
+        return;
+      }
+
       const payload = JSON.parse(atob(response.credential.split('.')[1]));
 
       const userData = {
@@ -114,6 +121,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   const loginWithGoogle = async () => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    if (!clientId) {
+      // Google OAuth not configured - show coming soon message
+      if (typeof window !== 'undefined') {
+        import('sonner').then(({ toast }) => {
+          toast.info('Google Sign-In coming soon! Please use email login for now.');
+        }).catch(() => {
+          alert('Google Sign-In coming soon! Please use email login for now.');
+        });
+      }
+      return;
+    }
+
     try {
       if (window.google) {
         window.google.accounts.id.prompt((response) => {
@@ -121,9 +142,16 @@ export const AuthProvider = ({ children }) => {
             handleGoogleSignIn(response);
           }
         });
+      } else {
+        import('sonner').then(({ toast }) => {
+          toast.error('Google Sign-In library not loaded.');
+        });
       }
     } catch (error) {
       console.error('Google sign-in error:', error);
+      import('sonner').then(({ toast }) => {
+        toast.error('Failed to sign in with Google. Please try again.');
+      });
     }
   };
 

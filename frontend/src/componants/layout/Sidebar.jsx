@@ -71,7 +71,7 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
     <div className={`h-full flex flex-col ${isDarkMode ? 'bg-gray-900' : 'bg-white/80'
       } backdrop-blur-xl`}>
       {/* Logo */}
-       <div className="p-6 pt-4 pb-3.5">
+      <div className="p-6 pt-4 pb-3.5">
         <div className="flex items-center gap-3">
           <img
             className="w-12 h-12 transition-opacity duration-300"
@@ -96,8 +96,8 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
         ))}
       </nav>
 
-      {/* Create Post Button */}
-      <div className="px-4 pb-4">
+      {/* Create Post Button - Hidden on mobile */}
+      <div className="hidden lg:block px-4 pb-4">
         <SidebarBtn
           icon={PlusIcon}
           label={t('createPost')}
@@ -106,8 +106,8 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
         />
       </div>
 
-      {/* User Section */}
-      <div className={`p-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200/50'
+      {/* User Section - Hidden on mobile */}
+      <div className={`hidden lg:block p-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200/50'
         }`}>
         <div className="flex items-center gap-3 justify-between">
           <div className="flex items-center gap-3 min-w-0">
