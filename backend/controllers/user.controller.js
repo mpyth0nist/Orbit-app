@@ -107,13 +107,14 @@ export const getMyInfo = asyncHandler(async (req, res) => {
  */
 export const updateMyInfo = asyncHandler(async (req, res) => {
     const userId = req.user.userId;
-    const { email, username, type } = req.body;
+    const { email, username, type, notificationsEnabled } = req.body;
 
     // Build update data object with only provided fields
     const updateData = {};
     if (email !== undefined) updateData.email = email;
     if (username !== undefined) updateData.username = username;
     if (type !== undefined) updateData.type = type;
+    if (notificationsEnabled !== undefined) updateData.notificationsEnabled = notificationsEnabled;
 
     const user = await prisma.user.update({
         where: { id: userId },
@@ -124,7 +125,8 @@ export const updateMyInfo = asyncHandler(async (req, res) => {
     logger.info('User account updated', {
         userId,
         username: user.username,
-        typeChanged: type !== undefined
+        typeChanged: type !== undefined,
+        notificationsChanged: notificationsEnabled !== undefined
     });
 
     return successResponse(res, { user }, 'User account updated successfully');

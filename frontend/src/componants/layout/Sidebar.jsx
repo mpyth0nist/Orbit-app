@@ -45,7 +45,7 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
   const navItems = [
     { id: 'feed', icon: FeedIcon, label: t('feed'), path: '/' },
     { id: 'search', icon: SearchIcon, label: t('search'), path: '/search' },
-    { id: 'notifications', icon: BellIcon, label: t('notifications'), badge: unreadNotifications, path: '/notifications' },
+    { id: 'notifications', icon: BellIcon, label: t('notifications'), badge: user?.notificationsEnabled ? unreadNotifications : 0, path: '/notifications' },
     { id: 'communities', icon: UsersIcon, label: t('communities'), path: '/communities' },
     { id: 'profile', icon: UserIcon, label: t('profile'), path: '/profile' },
     { id: 'settings', icon: CogIcon, label: t('settings'), path: '/settings' },

@@ -63,10 +63,10 @@ const SettingsItem = ({ icon: Icon, label, description, onClick, danger, toggle,
 );
 
 export default function SettingsView({ user, onEditProfile, onEditSecurity, onHelpCenter, onFeedback }) {
-  const [notifications, setNotifications] = React.useState(true);
+  const [notifications, setNotifications] = React.useState(user?.notificationsEnabled ?? true);
   const { isDarkMode, toggleTheme } = useTheme();
   const { language, changeLanguage, t } = useLanguage();
-  const { logout } = useAuth();
+  const { logout, setUser } = useAuth();
   const [privateAccount, setPrivateAccount] = React.useState(user?.type === 'PRIVATE');
   const [isSavingPrivacy, setIsSavingPrivacy] = React.useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = React.useState(false);
@@ -90,13 +90,35 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
     setPrivateAccount(newValue); // Optimistic update
     setIsSavingPrivacy(true);
 
+    // Update global state immediately
+    const newType = newValue ? 'PRIVATE' : 'PUBLIC';
+    setUser(prev => ({ ...prev, type: newType }));
+
     try {
-      await api.users.updateMe({ type: newValue ? 'PRIVATE' : 'PUBLIC' });
+      await api.users.updateMe({ type: newType });
     } catch (error) {
       console.error('Failed to update privacy setting:', error);
-      setPrivateAccount(!newValue); // Rollback on error
+      setPrivateAccount(!newValue); // Rollback local on error
+      setUser(prev => ({ ...prev, type: !newValue ? 'PRIVATE' : 'PUBLIC' })); // Rollback global
     } finally {
       setIsSavingPrivacy(false);
+    }
+  };
+
+  // Toggle notifications and persist to backend
+  const handleNotificationsToggle = async () => {
+    const newValue = !notifications;
+    setNotifications(newValue); // Optimistic update
+
+    // Update global state immediately
+    setUser(prev => ({ ...prev, notificationsEnabled: newValue }));
+
+    try {
+      await api.users.updateMe({ notificationsEnabled: newValue });
+    } catch (error) {
+      console.error('Failed to update notification setting:', error);
+      setNotifications(!newValue); // Rollback local state on error
+      setUser(prev => ({ ...prev, notificationsEnabled: !newValue })); // Rollback global state
     }
   };
 
@@ -228,7 +250,7 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
             description={t('notificationsDesc') || 'Push, email, and in-app notifications'}
             toggle
             checked={notifications}
-            onClick={() => setNotifications(!notifications)}
+            onClick={handleNotificationsToggle}
             isDarkMode={isDarkMode}
           />
           <SettingsItem

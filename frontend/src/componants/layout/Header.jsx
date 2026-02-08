@@ -18,7 +18,7 @@ export default function Header({
   const { isDarkMode: themeDarkMode } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
-  const showBadge = unreadNotifications > 0 && location.pathname !== '/notifications';
+  const showBadge = user?.notificationsEnabled && unreadNotifications > 0 && location.pathname !== '/notifications';
 
   return (
     <header className={`sticky top-0 z-40 backdrop-blur-xl border-b ${isDarkMode ? 'bg-gray-900/80 border-gray-700' : 'bg-blue/80 border-gray-100'}`}>

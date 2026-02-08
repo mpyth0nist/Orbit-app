@@ -48,6 +48,7 @@ export const selectUser = {
     username: true,
     email: true,
     type: true,
+    notificationsEnabled: true,
     createdAt: true,
     updatedAt: true,
     profile: {
