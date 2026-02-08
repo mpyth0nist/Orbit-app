@@ -31,6 +31,25 @@ export default function HelpCenterView({ onBack }) {
                 6. Click **"Post"** to share it with the world!
             `
         },
+        2: {
+            title: t('helpSettingProfile') || 'Setting up your profile',
+            content: `
+                1. Navigate to your **Profile** page via the sidebar.
+                2. Click the **"Edit Profile"** button.
+                3. Upload a **Profile Picture** and **Banner** to personalize your look.
+                4. Add a **Bio** to introduce yourself to the community.
+                5. Review your information and click **"Save"**.
+            `
+        },
+        4: {
+            title: t('helpAccountPrivacy') || 'Managing account privacy',
+            content: `
+                1. Go to **Settings** > **Account**.
+                2. Toggle **"Private Account"** on or off.
+                - **Public**: Anyone can see your posts and follow you.
+                - **Private**: Only approved followers can see your posts. You must approve follow requests.
+            `
+        },
         5: {
             title: t('helpChangePassword') || 'How to change your password',
             content: `
@@ -40,6 +59,66 @@ export default function HelpCenterView({ onBack }) {
                 4. Type your **New Password** (minimum 8 characters).
                 5. Confirm the new password and click **"Update Password"**.
                 6. You'll see a success message and be redirected back.
+            `
+        },
+        6: {
+            title: t('helpReporting') || 'Reporting inappropriate content',
+            content: `
+                Help us keep Orbit safe:
+                1. Click the **"..." (Options)** menu on any post or comment.
+                2. Select **"Report"**.
+                3. Choose the reason for reporting (e.g., spam, harassment).
+                4. Submit the report. Our team will review it shortly.
+            `
+        },
+        7: {
+            title: t('helpEditInfo') || 'Updating your personal info',
+            content: `
+                1. Go to **Settings** > **Account**.
+                2. Click **"Edit Profile"**.
+                3. Update your **First Name**, **Last Name**, **Username**, or **Bio**.
+                4. Click **"Save"** to apply changes.
+            `
+        },
+        8: {
+            title: t('helpNotifications') || 'Configuring notifications',
+            content: `
+                1. Go to **Settings** > **Preferences**.
+                2. Find **"Notifications"**.
+                3. Toggle the switch to Enable or Disable push and in-app notifications.
+            `
+        },
+        9: {
+            title: t('helpDeactivation') || 'Account deactivation',
+            content: `
+                Currently, you can log out of your account to take a break:
+                1. Go to **Settings** > **Danger Zone**.
+                2. Click **"Log Out"**.
+                
+                *To permanently delete your account, please contact support.*
+            `
+        },
+        11: {
+            title: t('helpCommunities') || 'Joining and creating communities',
+            content: `
+                **Joining Communities:**
+                1. Click **"Communities"** in the sidebar.
+                2. Browse or search for topics you love.
+                3. Click **"Join"** on any community card.
+
+                **Creating Communities:**
+                1. Go to the **Communities** tab.
+                2. Click the **"Create Community"** button (if available for your account tier).
+                3. Fill in the name, description, and upload a banner.
+            `
+        },
+        12: {
+            title: t('helpDirectMessages') || 'Sending direct messages',
+            content: `
+                **Coming Soon!**
+                
+                Direct messaging is currently under development. Stay tuned for updates!
+                In the meantime, you can interact with other users via **Comments** and **Replies** on threads.
             `
         },
         'sidebar-guide': {
