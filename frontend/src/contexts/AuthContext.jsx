@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }) => {
       return false;
     } catch (error) {
       console.error('Login failed:', error);
-      return false;
+      throw error;
     }
   };
 
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
       return false;
     } catch (error) {
       console.error('Registration failed:', error);
-      return false;
+      throw error;
     }
   };
 

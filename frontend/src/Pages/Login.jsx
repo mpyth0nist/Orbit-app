@@ -15,12 +15,18 @@ export default function Login() {
     e.preventDefault();
     setError('');
 
-    const success = await login(email, password);
-    if (!success) {
-      setError('Invalid email or password');
-      toast.error('Invalid email or password');
-    } else {
-      toast.success('Welcome back!');
+    try {
+      const success = await login(email, password);
+      if (!success) {
+        setError('Invalid email or password');
+        toast.error('Invalid email or password');
+      } else {
+        toast.success('Welcome back!');
+      }
+    } catch (err) {
+      const errorMessage = err?.response?.data?.message || err?.message || 'Login failed';
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
   };
 
