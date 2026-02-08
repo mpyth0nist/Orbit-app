@@ -23,8 +23,8 @@ export default function Settings() {
   const { isDarkMode } = useTheme();
 
   // Fetch notifications count
-  const { data: notifications = [] } = useQuery({
-    queryKey: ['notifications', user?.email],
+  const { data: unreadData } = useQuery({
+    queryKey: ['notifications-unread-count'],
     queryFn: () => apiClient.notifications.getUnreadCount(),
     enabled: !!user?.email,
   });
@@ -35,7 +35,7 @@ export default function Settings() {
     setIsEditingProfile(false);
   };
 
-  const unreadNotifications = notifications?.length || 0;
+  const unreadNotifications = unreadData?.count || 0;
 
   return (
     <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50/50'
