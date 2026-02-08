@@ -30,6 +30,8 @@ import { httpLogger } from './utils/logger.js';
 import logger from './utils/logger.js';
 import { disconnectPrisma } from './utils/prisma.js';
 
+import path from 'path';
+
 const app = express();
 const port = process.env.PORT || 3000;
 
