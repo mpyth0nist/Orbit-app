@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import PropTypes from 'prop-types';
 import { toast } from 'sonner';
-import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, LinkIcon } from '../ui/Icons';
+import { HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, LinkIcon, RubberDuckIcon } from '../ui/Icons';
 import { getMediaUrl, threadsAPI } from '../../api/apiClient';
 import ContentRenderer from '../ui/ContentRenderer';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -432,6 +432,9 @@ export default function PostCard({
                 }`}>{displayName}</span>
               {isVerified && (
                 <CheckBadgeIcon className="w-5 h-5 text-indigo-500 flex-shrink-0" aria-label="Verified account" />
+              )}
+              {post.threadType === 'HELP' && (
+                <RubberDuckIcon className="w-5 h-5 flex-shrink-0" aria-label="Rubber Duck Thread" />
               )}
             </div>
             <div className={`flex items-center gap-2 text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'

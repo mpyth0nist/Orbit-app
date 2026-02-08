@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, LinkIcon, HandThumbUpIcon, StarIcon } from '../ui/Icons';
+import { ArrowLeftIcon, HeartIcon, ChatBubbleIcon, ShareIcon, BookmarkIcon, CheckBadgeIcon, SendIcon, EllipsisHorizontalIcon, TrashIcon, PencilIcon, LinkIcon, HandThumbUpIcon, StarIcon, RubberDuckIcon } from '../ui/Icons';
 import api, { getMediaUrl, threadsAPI, usersAPI } from '../../api/apiClient';
 import { format, formatDistanceToNow } from 'date-fns';
 import ContentRenderer from '../ui/ContentRenderer';
@@ -786,6 +786,9 @@ export default function ThreadDetailView({
               </span>
               {author.verified && (
                 <CheckBadgeIcon className="w-5 h-5 text-indigo-500" />
+              )}
+              {post.threadType === 'HELP' && (
+                <RubberDuckIcon className="w-6 h-6" aria-label="Rubber Duck Thread" />
               )}
             </div>
             <span className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
