@@ -45,7 +45,7 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
   const navItems = [
     { id: 'feed', icon: FeedIcon, label: t('feed'), path: '/' },
     { id: 'search', icon: SearchIcon, label: t('search'), path: '/search' },
-    { id: 'notifications', icon: BellIcon, label: t('notifications'), badge: unreadNotifications, path: '/notifications' },
+    { id: 'notifications', icon: BellIcon, label: t('notifications'), badge: user?.notificationsEnabled ? unreadNotifications : 0, path: '/notifications' },
     { id: 'communities', icon: UsersIcon, label: t('communities'), path: '/communities' },
     { id: 'profile', icon: UserIcon, label: t('profile'), path: '/profile' },
     { id: 'settings', icon: CogIcon, label: t('settings'), path: '/settings' },
@@ -71,7 +71,7 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
     <div className={`h-full flex flex-col ${isDarkMode ? 'bg-gray-900' : 'bg-white/80'
       } backdrop-blur-xl`}>
       {/* Logo */}
-       <div className="p-6 pt-4 pb-3.5">
+      <div className="p-6 pt-4 pb-3.5">
         <div className="flex items-center gap-3">
           <img
             className="w-12 h-12 transition-opacity duration-300"

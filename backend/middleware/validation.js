@@ -141,7 +141,8 @@ export const loginSchema = Joi.object({
 export const updateUserSchema = Joi.object({
     username: Joi.string().alphanum().min(3).max(30).trim().lowercase().optional(),
     email: Joi.string().email().trim().lowercase().optional(),
-    type: Joi.string().valid('PUBLIC', 'PRIVATE').optional()
+    type: Joi.string().valid('PUBLIC', 'PRIVATE').optional(),
+    notificationsEnabled: Joi.boolean().optional()
 }).min(1); // At least one field required
 
 /**
