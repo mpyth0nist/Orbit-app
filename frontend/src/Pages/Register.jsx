@@ -66,21 +66,19 @@ export default function Register() {
         password: formData.password
       });
 
-      if (!success) {
-        setError('Registration failed. Please try again.');
-        toast.error('Registration failed. Please try again.');
-      } else {
+      if (success) {
         toast.success('Registration successful! Welcome to Orbit.');
       }
     } catch (err) {
       // Extract error message from backend
+      // err.response.data.message comes from backend ErrorResponse
       const errorMessage = err?.response?.data?.message || err?.message || 'Registration failed. Please try again.';
       const errors = err?.response?.data?.errors;
 
-      if (errors && errors.length > 0) {
-        // Show first validation error
-        setError(errors[0].message);
-        toast.error(errors[0].message);
+      if (errors && Array.isArray(errors) && errors.length > 0) {
+        // Show first validation error if array provided
+        setError(errors[0].message || errors[0]);
+        toast.error(errors[0].message || errors[0]);
       } else {
         setError(errorMessage);
         toast.error(errorMessage);
