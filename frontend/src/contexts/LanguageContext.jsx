@@ -251,6 +251,8 @@ export const LanguageProvider = ({ children }) => {
       copyLink: 'Copy Link',
       editThread: 'Edit Thread',
       deleteThread: 'Delete Thread',
+      writeComment: 'Add to the discussion...',
+      noComments: 'No comments yet. Be the first to start the conversation!',
 
       // Toasts & Alerts
       commentPosted: 'Comment posted successfully',
@@ -495,6 +497,8 @@ export const LanguageProvider = ({ children }) => {
       copyLink: 'Copier le lien',
       editThread: 'Modifier le fil',
       deleteThread: 'Supprimer le fil',
+      writeComment: 'Ajouter à la discussion...',
+      noComments: 'Aucun commentaire pour l\'instant. Soyez le premier à participer !',
 
       // Toasts & Alerts
       commentPosted: 'Commentaire publié avec succès',
@@ -739,6 +743,8 @@ export const LanguageProvider = ({ children }) => {
       copyLink: 'نسخ الرابط',
       editThread: 'تعديل المحادثة',
       deleteThread: 'حذف المحادثة',
+      writeComment: 'أضف إلى المناقشة...',
+      noComments: 'لا توجد تعليقات بعد. كن أول من يبدأ المحادثة!',
 
       // Toasts & Alerts
       commentPosted: 'تم نشر التعليق بنجاح',
