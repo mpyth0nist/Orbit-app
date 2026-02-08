@@ -22,5 +22,6 @@ dist-ssr
 *.njsproj
 
 .env
+.env.production
 *.sln
 *.sw?

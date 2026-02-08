@@ -70,9 +70,6 @@ export default function Register() {
         toast.success('Registration successful! Welcome to Orbit.');
       }
     } catch (err) {
-      console.log("FULL REGISTER ERROR:", err);
-      console.log("ERR RESPONSE:", err.response);
-      console.log("ERR DATA:", err.response?.data);
 
       // err.response.data.message comes from backend ErrorResponse
       const errorMessage = err?.response?.data?.message || err?.message || 'Registration failed. Please try again.';
@@ -199,7 +196,7 @@ export default function Register() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700focus:border-transparent"
+                    className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 focus:border-transparent"
                     placeholder="email"
                     required
                   />
