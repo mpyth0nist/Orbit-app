@@ -43,7 +43,7 @@ export default function Login() {
                   <img className='w-73 pl-38 pb-2' src="./logo/logoVD.png" alt="logo" />
                   <h1 className="text-3xl lg:text-4xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                     Orbit
-                  </h1> 
+                  </h1>
                   <p className="text-lg lg:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
                     Connect, share, and discover amazing moments with friends around the world.
                   </p>
@@ -91,7 +91,7 @@ export default function Login() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-3 border text-gray-700 border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-3 py-3 border text-gray-300 border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="email"
                     required
                   />

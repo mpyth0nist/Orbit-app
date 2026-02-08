@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import apiClient from '../../api/apiClient';
 import { ArrowLeftIcon } from '../ui/Icons';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -27,8 +28,7 @@ export default function FeedbackView({ onBack }) {
         setError(null);
 
         try {
-            // Mock API call - in a real app, this would send to a database or email service
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await apiClient.feedback.create(formData);
 
             console.log('Feedback submitted:', formData);
             setIsSubmitted(true);
@@ -120,10 +120,10 @@ export default function FeedbackView({ onBack }) {
                                     type="button"
                                     onClick={() => setFormData({ ...formData, type })}
                                     className={`py-3 px-4 rounded-xl border text-sm font-medium capitalize transition-all ${formData.type === type
-                                            ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
-                                            : isDarkMode
-                                                ? 'bg-gray-700 border-gray-600 text-gray-300 hover:border-gray-500'
-                                                : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
+                                        ? 'bg-indigo-600 border-indigo-600 text-white shadow-md'
+                                        : isDarkMode
+                                            ? 'bg-gray-700 border-gray-600 text-gray-300 hover:border-gray-500'
+                                            : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-300'
                                         }`}
                                 >
                                     {t(`feedback_${type}`) || type}
@@ -147,8 +147,8 @@ export default function FeedbackView({ onBack }) {
                                 >
                                     <Star
                                         className={`w-8 h-8 ${star <= formData.rating
-                                                ? 'fill-amber-400 text-amber-400'
-                                                : isDarkMode ? 'text-gray-600' : 'text-gray-200'
+                                            ? 'fill-amber-400 text-amber-400'
+                                            : isDarkMode ? 'text-gray-600' : 'text-gray-200'
                                             }`}
                                     />
                                 </button>
@@ -166,8 +166,8 @@ export default function FeedbackView({ onBack }) {
                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                             placeholder={t('feedbackPlaceholder') || "Tell us what's on your mind..."}
                             className={`w-full min-h-[150px] p-4 rounded-2xl border resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all ${isDarkMode
-                                    ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500'
-                                    : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
+                                ? 'bg-gray-700 border-gray-600 text-gray-100 placeholder-gray-500'
+                                : 'bg-gray-50 border-gray-200 text-gray-900 placeholder-gray-400'
                                 }`}
                         />
                     </div>

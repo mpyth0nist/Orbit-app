@@ -107,7 +107,7 @@ export default function Register() {
                   <img className='w-73 pl-38 pb-3' src="./logo/logoVD.png" alt="logo" />
                   <h1 className="text-2xl lg:text-3xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                     Join Orbit
-                  </h1> 
+                  </h1>
                   <p className="text-lg lg:text-xl text-blue-100 max-w-md mx-auto leading-relaxed">
                     Start your journey with us and connect with amazing people around the world.
                   </p>
@@ -157,7 +157,7 @@ export default function Register() {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="first name"
                       required
                     />
@@ -176,7 +176,7 @@ export default function Register() {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="last name"
                       required
                     />
@@ -198,7 +198,7 @@ export default function Register() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700focus:border-transparent"
                     placeholder="email"
                     required
                   />
@@ -219,7 +219,7 @@ export default function Register() {
                     name="handle"
                     value={formData.handle}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-3 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-3 py-3 border border-blue-200 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="username"
                     required
                   />
@@ -241,7 +241,7 @@ export default function Register() {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-10 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-10 py-3 border border-blue-200 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="••••••••"
                     required
                   />
@@ -274,7 +274,7 @@ export default function Register() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-10 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="block w-full pl-10 pr-10 py-3 border border-blue-200 text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="••••••••"
                     required
                   />

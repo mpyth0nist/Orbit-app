@@ -280,6 +280,11 @@ export const authAPI = {
   },
 };
 
+// Feedback API
+export const feedbackAPI = {
+  create: (data) => apiClient.post('/feedback', data),
+};
+
 
 // Search API
 export const searchAPI = {
@@ -373,4 +378,5 @@ export default {
   files: filesAPI,
   search: searchAPI,
   communities: communitiesAPI,
+  feedback: feedbackAPI,
 };

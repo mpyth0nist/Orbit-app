@@ -21,6 +21,7 @@ import commentRoutes from './routes/comments.routes.js';
 import reactionRoutes from './routes/reactions.routes.js';
 import mediaRoutes from './routes/media.routes.js';
 import communityRoutes from './routes/communities.routes.js';
+import feedbackRoutes from './routes/feedback.routes.js';
 
 // Middleware
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -100,6 +101,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/reactions', reactionRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/communities', communityRoutes);
+app.use('/api/feedback', feedbackRoutes);
 app.use('/api/threads/:threadId/comments', commentRoutes);  // Thread comments
 app.use('/api/comments', commentRoutes);  // Comment operations
 
