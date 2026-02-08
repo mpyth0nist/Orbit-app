@@ -220,7 +220,7 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
         <SettingsSection title={t('account') || 'Account'} isDarkMode={isDarkMode}>
           <SettingsItem
             icon={UserIcon}
-            label={t('Edit Profile')}
+            label={t('editProfile')}
             description={t('editProfileDesc') || 'Update your name, bio, and photo'}
             onClick={onEditProfile}
             isDarkMode={isDarkMode}
@@ -237,7 +237,7 @@ export default function SettingsView({ user, onEditProfile, onEditSecurity, onHe
           <SettingsItem
             icon={() => <span className="text-lg">🔐</span>}
             label={t('security')}
-            description={""}
+            description={t('securityDesc')}
             onClick={() => {
               if (onEditSecurity) onEditSecurity();
             }}

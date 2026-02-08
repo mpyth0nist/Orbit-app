@@ -183,6 +183,12 @@ export const LanguageProvider = ({ children }) => {
       newPassword: 'New Password',
       passwordRequirement: 'Must be at least 8 characters long.',
       confirmNewPassword: 'Confirm New Password',
+      confirmNewPassword: 'Confirm New Password',
+      saving: 'Saving...',
+      usernamePlaceholder: 'Your username',
+      firstNamePlaceholder: 'Your first name',
+      lastNamePlaceholder: 'Your last name',
+      securityDesc: 'Manage your password and security settings',
       // Help Center
 
       helpSearchPlaceholder: 'Search for help, articles, or keywords...',
@@ -383,6 +389,12 @@ export const LanguageProvider = ({ children }) => {
       newPassword: 'Nouveau mot de passe',
       passwordRequirement: 'Doit comporter au moins 8 caractères.',
       confirmNewPassword: 'Confirmer le nouveau mot de passe',
+      confirmNewPassword: 'Confirmer le nouveau mot de passe',
+      saving: 'Enregistrement...',
+      usernamePlaceholder: "Votre nom d'utilisateur",
+      firstNamePlaceholder: 'Votre prénom',
+      lastNamePlaceholder: 'Votre nom',
+      securityDesc: 'Gérer votre mot de passe et vos paramètres de sécurité',
       // Help Center
 
       helpSearchPlaceholder: 'Rechercher de l\'aide, des articles ou des mots-clés...',
@@ -585,6 +597,12 @@ export const LanguageProvider = ({ children }) => {
       newPassword: 'كلمة المرور الجديدة',
       passwordRequirement: 'يجب أن لا تقل عن 8 أحرف.',
       confirmNewPassword: 'تأكيد كلمة المرور الجديدة',
+      confirmNewPassword: 'تأكيد كلمة المرور الجديدة',
+      saving: 'جاري الحفظ...',
+      usernamePlaceholder: 'اسم المستخدم الخاص بك',
+      firstNamePlaceholder: 'الاسم الأول',
+      lastNamePlaceholder: 'اسم العائلة',
+      securityDesc: 'إدارة كلمة المرور وإعدادات الأمان الخاصة بك',
       // Help Center
 
       helpSearchPlaceholder: 'ابحث عن مساعدة أو مقالات أو كلمات رئيسية...',
