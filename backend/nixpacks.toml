@@ -3,9 +3,11 @@ nixPkgs = ["nodejs"]
 
 [phases.install]
 cmds = ["npm install"]
+env = { DATABASE_URL = "postgresql://dummy:dummy@localhost:5432/dummy" }
 
 [phases.build]
 cmds = ["npm run build"]
+env = { DATABASE_URL = "postgresql://dummy:dummy@localhost:5432/dummy" }
 
 [start]
 cmd = "npm start"
