@@ -121,14 +121,14 @@ export default function ThreadDetailView({
       const newCommentData = response?.data || response;
       setComments([newCommentData, ...comments]);
       setNewComment('');
-      toast.success('Comment posted successfully');
+      toast.success(t('commentPosted'));
     } catch (error) {
       console.error('Failed to post comment:', error);
       // Show user-friendly message for 403 (non-member trying to comment)
       if (error.response?.status === 403) {
-        toast.error(error.response?.data?.message || 'You must be a community member to comment on this post');
+        toast.error(error.response?.data?.message || t('communityMemberRequired'));
       } else {
-        toast.error('Failed to post comment. Please try again.');
+        toast.error(t('commentPostError'));
       }
     } finally {
       setIsSubmitting(false);
@@ -216,13 +216,13 @@ export default function ThreadDetailView({
         setReplyContent('');
         setIsReplying(false);
         if (!showReplies) fetchReplies();
-        toast.success('Reply posted successfully');
+        toast.success(t('replyPosted'));
       } catch (error) {
         console.error('Failed to reply:', error);
         if (error.response?.status === 403) {
-          toast.error(error.response?.data?.message || 'You must be a community member to comment on this post');
+          toast.error(error.response?.data?.message || t('communityMemberRequired'));
         } else {
-          toast.error('Failed to post reply. Please try again.');
+          toast.error(t('replyPostError'));
         }
       } finally {
         setIsSubmittingReply(false);
@@ -256,13 +256,13 @@ export default function ThreadDetailView({
         setHelpType(updatedHelpType);
 
         if (updatedHelpType) {
-          toast.success(`Marked as ${updatedHelpType === 'BIG_HELP' ? 'Big Help' : 'Helpful'}`);
+          toast.success(`${t('markedAs')} ${updatedHelpType === 'BIG_HELP' ? t('bigHelp') : t('helpful')}`);
         } else {
-          toast.success('Rating removed');
+          toast.success(t('ratingRemoved'));
         }
       } catch (error) {
         console.error('Failed to mark helpful:', error);
-        toast.error('Failed to update help rating');
+        toast.error(t('ratingUpdateError'));
       }
     };
 
@@ -282,7 +282,7 @@ export default function ThreadDetailView({
     const handleDeleteClick = async (e) => {
       e.stopPropagation();
       setShowOptionsMenu(false);
-      if (window.confirm('Are you sure you want to delete this comment?')) {
+      if (window.confirm(t('confirmDeleteComment'))) {
         try {
           await api.comments.delete(comment.id);
           // Remove comment from local state
@@ -305,14 +305,14 @@ export default function ThreadDetailView({
             // Wait, CommentItem is recursive.
             // We need to pass a callback to remove from parent list.
             // Let's hide it visually for now or trigger reload.
-            toast.success('Comment deleted');
+            toast.success(t('commentDeleted'));
             // To properly delete, we should likely refetch or update parent state.
             // Creating a simple "isDeleted" state to hide it.
             setIsDeleted(true);
           }
         } catch (error) {
           console.error('Failed to delete comment:', error);
-          toast.error('Failed to delete comment');
+          toast.error(t('commentDeleteError'));
         }
       }
     };
@@ -329,10 +329,10 @@ export default function ThreadDetailView({
         await api.comments.update(comment.id, { content: editContent.trim() });
         setCurrentContent(editContent.trim());
         setIsEditing(false);
-        toast.success('Comment updated');
+        toast.success(t('commentUpdated'));
       } catch (error) {
         console.error('Failed to update comment:', error);
-        toast.error('Failed to update comment');
+        toast.error(t('commentUpdateError'));
       } finally {
         setIsUpdating(false);
       }
@@ -361,13 +361,13 @@ export default function ThreadDetailView({
                   {shouldShowTag && parentAuthor && (
                     <span className={`flex items-center gap-1 text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                       <span>·</span>
-                      <span className={isDarkMode ? 'text-gray-400' : 'text-gray-400'}>{t('replyingTo') || 'Replying to'}</span>
+                      <span className={isDarkMode ? 'text-gray-400' : 'text-gray-400'}>{t('replyingTo')}</span>
                       <span className="text-indigo-500 font-medium">@{parentAuthor.username}</span>
                     </span>
                   )}
                   <span className={isDarkMode ? 'text-gray-600' : 'text-gray-400'}>·</span>
                   <span className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                    {commentTime ? formatDistanceToNow(new Date(commentTime), { addSuffix: true }) : 'Just now'}
+                    {commentTime ? formatDistanceToNow(new Date(commentTime), { addSuffix: true }) : t('justNow')}
                   </span>
                 </div>
 
@@ -430,7 +430,7 @@ export default function ThreadDetailView({
                       disabled={!editContent.trim() || isUpdating}
                       className="px-3 py-1.5 text-xs font-medium bg-indigo-600 text-white rounded-lg disabled:opacity-50"
                     >
-                      {isUpdating ? 'Saving...' : 'Save'}
+                      {isUpdating ? t('saving') : t('save')}
                     </button>
                   </div>
                 </form>
@@ -454,7 +454,7 @@ export default function ThreadDetailView({
                     className={`flex items-center gap-1 text-sm transition-colors ${isDarkMode ? 'text-gray-500 hover:text-indigo-400' : 'text-gray-500 hover:text-indigo-500'}`}
                   >
                     <ChatBubbleIcon className="w-4 h-4" />
-                    {t('reply') || 'Reply'}
+                    {t('reply')}
                   </button>
                 )}
 
@@ -463,7 +463,7 @@ export default function ThreadDetailView({
                     onClick={fetchReplies}
                     className={`text-sm font-medium ${isDarkMode ? 'text-indigo-400 hover:text-indigo-300' : 'text-indigo-600 hover:text-indigo-700'}`}
                   >
-                    {showReplies ? (t('hideReplies') || 'Hide Replies') : `${t('viewReplies') || 'View'} ${replyCount} ${t('replies') || 'Replies'}`}
+                    {showReplies ? t('hideReplies') : `${t('viewReplies')} ${replyCount} ${t('replies')}`}
                   </button>
                 )}
 
@@ -472,14 +472,14 @@ export default function ThreadDetailView({
                     <button
                       onClick={() => handleMarkHelpful('HELPFUL')}
                       className={`p-1.5 rounded-lg transition-colors ${helpType === 'HELPFUL' ? 'text-teal-600 bg-teal-50 ring-1 ring-teal-200' : 'text-gray-400 hover:text-teal-600 hover:bg-teal-50'}`}
-                      title="Mark as Helpful (+1 Point)"
+                      title={t('markHelpful')}
                     >
                       <HandThumbUpIcon className="w-5 h-5" filled={helpType === 'HELPFUL'} />
                     </button>
                     <button
                       onClick={() => handleMarkHelpful('BIG_HELP')}
                       className={`p-1.5 rounded-lg transition-colors ${helpType === 'BIG_HELP' ? 'text-yellow-500 bg-yellow-50 ring-1 ring-yellow-200' : 'text-gray-400 hover:text-yellow-500 hover:bg-yellow-50'}`}
-                      title="Mark as Big Help (+2 Points)"
+                      title={t('markBigHelp')}
                     >
                       <StarIcon className="w-5 h-5" filled={helpType === 'BIG_HELP'} />
                     </button>
@@ -489,7 +489,7 @@ export default function ThreadDetailView({
                 {helpType && (user?.id !== post.userId || comment.user?.id === user?.id) && (
                   <div className={`ml-auto flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${helpType === 'BIG_HELP' ? 'bg-yellow-100 text-yellow-700' : 'bg-teal-100 text-teal-700'}`}>
                     {helpType === 'BIG_HELP' ? <StarIcon className="w-3 h-3" filled /> : <HandThumbUpIcon className="w-3 h-3" filled />}
-                    {helpType === 'BIG_HELP' ? 'Big Help' : 'Helpful'}
+                    {helpType === 'BIG_HELP' ? t('bigHelp') : t('helpful')}
                   </div>
                 )}
               </div>
@@ -501,7 +501,7 @@ export default function ThreadDetailView({
                     type="text"
                     value={replyContent}
                     onChange={(e) => setReplyContent(e.target.value)}
-                    placeholder={t('writeReply') || "Write a reply..."}
+                    placeholder={t('writeReply')}
                     autoFocus
                     className={`flex-1 px-3 py-2 text-sm rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 ${isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-800'}`}
                   />
@@ -568,7 +568,7 @@ export default function ThreadDetailView({
     e?.stopPropagation();
     const link = `${window.location.origin}/thread/${post.id}`;
     navigator.clipboard.writeText(link).then(() => {
-      toast.success('Link copied to clipboard');
+      toast.success(t('linkCopied'));
       setShowOptionsMenu(false);
     });
   };
@@ -581,14 +581,14 @@ export default function ThreadDetailView({
 
   const handleDelete = async () => {
     setShowOptionsMenu(false);
-    if (window.confirm('Are you sure you want to delete this thread?')) {
+    if (window.confirm(t('confirmDeleteThread'))) {
       try {
         await threadsAPI.delete(post.id);
-        toast.success('Thread deleted successfully');
+        toast.success(t('threadDeleted'));
         navigate(-1); // Go back after delete
       } catch (error) {
         console.error('Failed to delete thread:', error);
-        toast.error('Failed to delete thread');
+        toast.error(t('threadDeleteError'));
       }
     }
   };
@@ -610,11 +610,11 @@ export default function ThreadDetailView({
     setIsBookmarked(newVal);
     try {
       await threadsAPI.toggleSave(post.id);
-      toast.success(newVal ? 'Thread saved' : 'Thread unsaved');
+      toast.success(newVal ? t('threadSaved') : t('threadUnsaved'));
     } catch (error) {
       console.error('Failed to toggle bookmark:', error);
       setIsBookmarked(!newVal);
-      toast.error('Failed to update bookmark');
+      toast.error(t('bookmarkUpdateError'));
     }
   };
 
@@ -688,7 +688,7 @@ export default function ThreadDetailView({
           <ArrowLeftIcon className="w-6 h-6" />
         </button>
         <h1 className={`text-xl font-bold flex-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-          {t('thread') || 'Thread'}
+          {t('thread')}
         </h1>
 
         {/* Options Menu Button */}
@@ -725,7 +725,7 @@ export default function ThreadDetailView({
                       }`}
                   >
                     <LinkIcon className="w-4 h-4 text-gray-500" />
-                    Copy Link
+                    {t('copyLink')}
                   </button>
                   <button
                     onClick={handleEdit}
@@ -733,7 +733,7 @@ export default function ThreadDetailView({
                       }`}
                   >
                     <PencilIcon className="w-4 h-4 text-indigo-500" />
-                    Edit Thread
+                    {t('editThread')}
                   </button>
                   <button
                     onClick={handleDelete}
@@ -741,7 +741,7 @@ export default function ThreadDetailView({
                       }`}
                   >
                     <TrashIcon className="w-4 h-4" />
-                    Delete Thread
+                    {t('deleteThread')}
                   </button>
                 </div>
               </>

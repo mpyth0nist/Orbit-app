@@ -51,7 +51,15 @@ app.use(helmet({
 // CORS - Configure allowed origins
 const allowedOrigins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(',')
-    : [process.env.FRONTEND_URL, 'http://localhost:3000', 'http://localhost:5173', 'http://localhost:4173'];
+    : [
+        process.env.FRONTEND_URL,
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://localhost:4173',
+        'https://www.orbitdev.online',
+        'https://orbitdev.online',
+        'https://api.orbitdev.online'
+    ];
 
 app.use(cors({
     origin: (origin, callback) => {
