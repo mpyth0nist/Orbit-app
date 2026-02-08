@@ -27,6 +27,7 @@ model User {
   savedThreads          SavedThreads[]
   communitiesCreated    Community[]       @relation("CommunityCreator")
   communityMemberships  CommunityMember[]
+  feedbacks             Feedback[]
 
   @@index([email])
   @@index([username])
@@ -285,4 +286,18 @@ enum CommunityRole {
 enum MemberStatus {
   ACTIVE
   BANNED
+}
+
+model Feedback {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  type      String   @db.VarChar(50)
+  message   String   @db.Text
+  rating    Int
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@map("feedbacks")
 }
