@@ -91,6 +91,7 @@ export const getMyInfo = asyncHandler(async (req, res) => {
         username: user.username,
         email: user.email,
         type: user.type,
+        notificationsEnabled: user.notificationsEnabled,
         firstName: user.profile?.firstName,
         lastName: user.profile?.lastName,
         bio: user.profile?.bio,
