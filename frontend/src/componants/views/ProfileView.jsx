@@ -496,7 +496,7 @@ const ProfileView = forwardRef(function ProfileView({
     <div className="max-w-2xl mx-auto">
       {/* Cover Image */}
       {/* Cover Image */}
-      <div className="relative h-48 bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300 rounded-3xl overflow-hidden group">
+      <div className="relative h-32 md:h-48 bg-gradient-to-br from-blue-500 via-blue-400 to-blue-300 rounded-3xl overflow-hidden group">
         {user?.coverUrl ? (
           <img src={getMediaUrl(user.coverUrl)} alt="Cover" className="w-full h-full object-cover" />
         ) : (
@@ -527,12 +527,12 @@ const ProfileView = forwardRef(function ProfileView({
       {/* Profile Info */}
       <div className="relative px-6 pb-6">
         {/* Avatar */}
-        <div className="absolute -top-16 left-6">
+        <div className="absolute -top-12 md:-top-16 left-6">
           <div className="relative">
             <img
               src={getMediaUrl(user?.photoUrl) || `https://ui-avatars.com/api/?name=${encodeURIComponent(`${user?.firstName || ''} ${user?.lastName || ''}`.trim() || 'User')}&background=6366f1&color=fff&size=128`}
               alt={`${user?.firstName || ''} ${user?.lastName || ''}`.trim()}
-              className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-xl"
+              className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-white shadow-xl"
             />
           </div>
         </div>
@@ -569,7 +569,7 @@ const ProfileView = forwardRef(function ProfileView({
         </div>
 
         {/* Stats */}
-        <div className={`flex items-center gap-8 mt-6 py-4 border-y ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
+        <div className={`flex items-center gap-4 md:gap-8 mt-6 py-4 border-y ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
           <div className="text-center">
             <p className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{stats.posts}</p>
             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('posts')}</p>
