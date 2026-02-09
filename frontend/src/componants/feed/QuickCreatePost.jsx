@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { PhotoIcon, CodeBracketIcon, XMarkIcon, SendIcon, RubberDuckIcon } from '../ui/Icons';
@@ -11,6 +12,7 @@ import { Loader2 } from 'lucide-react';
 export default function QuickCreatePost() {
     const { user } = useAuth();
     const { isDarkMode } = useTheme();
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [isExpanded, setIsExpanded] = useState(false);
     const [content, setContent] = useState('');
@@ -77,8 +79,8 @@ export default function QuickCreatePost() {
         const after = text.substring(end);
 
         const codeBlock = selected
-            ? `\`\`\`javascript\n${selected}\n\`\`\``
-            : "```javascript\n// Your code here\n```";
+            ? `\`\`\`\n${selected}\n\`\`\``
+            : "```\n// Your code here\n```";
 
         const newContent = `${before}${codeBlock}${after}`;
         setContent(newContent);
@@ -101,8 +103,10 @@ export default function QuickCreatePost() {
             } ${isExpanded ? 'ring-1 ring-blue-500/20' : ''}`}>
             <div className="flex gap-4">
                 {/* User Avatar */}
-                <div className={`w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ${!userPhoto && 'bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-sm'
-                    }`}>
+                <div
+                    onClick={() => navigate(`/profile/${user?.id}`)}
+                    className={`w-10 h-10 rounded-full overflow-hidden flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity ${!userPhoto && 'bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-sm'
+                        }`}>
                     {userPhoto ? (
                         <img
                             src={getMediaUrl(userPhoto)}
