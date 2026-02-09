@@ -350,7 +350,15 @@ export default function ThreadDetailView({
       <div className={wrapperClass}>
         <div className={contentClasses}>
           <div className="flex items-start gap-3">
-            <img src={commentAuthor.avatar} alt={commentAuthor.name} className="w-10 h-10 rounded-full object-cover" />
+            <img
+              src={commentAuthor.avatar}
+              alt={commentAuthor.name}
+              className="w-10 h-10 rounded-full object-cover cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/profile/${comment.user?.id || comment.userId}`);
+              }}
+            />
             <div className="flex-1 min-w-0">
               {/* Header: Name, Verified, Time, Options */}
               <div className="flex items-center justify-between">

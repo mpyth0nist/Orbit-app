@@ -110,7 +110,10 @@ export default function Sidebar({ activeTab, setActiveTab, unreadNotifications, 
       <div className={`hidden lg:block p-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200/50'
         }`}>
         <div className="flex items-center gap-3 justify-between">
-          <div className="flex items-center gap-3 min-w-0">
+          <div
+            className="flex items-center gap-3 min-w-0 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => navigate('/profile')}
+          >
             <div className={`flex-shrink-0 w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-400 rounded-full flex items-center justify-center text-white font-semibold shadow-lg overflow-hidden`}>
               {user?.photoUrl ? (
                 <img src={getMediaUrl(user.photoUrl)} alt={user.firstName} className="w-full h-full object-cover" />

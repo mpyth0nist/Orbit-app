@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { CogIcon, CheckBadgeIcon, CameraIcon, ImageIcon, HeartIcon } from '../ui/Icons';
+import { CogIcon, CheckBadgeIcon, CameraIcon, ImageIcon, HeartIcon, LockClosedIcon } from '../ui/Icons';
 import TierBadge from '../ui/TierBadge';
 import PostCard from '../feed/PostCard';
 import FollowersModal from '../ui/FollowersModal';
@@ -273,6 +273,23 @@ const ProfileView = forwardRef(function ProfileView({
       return (
         <div className={`text-center py-12 ${isDarkMode ? 'text-red-400' : 'text-red-500'}`}>
           <p>{tabError}</p>
+        </div>
+      );
+    }
+
+    // Check for private account
+    if (!isOwnProfile && user?.isPrivate && !user?.isFollowing) {
+      return (
+        <div className={`text-center py-12 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+          <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+            <LockClosedIcon className={`w-8 h-8 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+          </div>
+          <h3 className={`text-lg font-semibold mb-1 ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+            {t('privateAccount')}
+          </h3>
+          <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>
+            {t('privateAccountMessage')}
+          </p>
         </div>
       );
     }
@@ -557,11 +574,25 @@ const ProfileView = forwardRef(function ProfileView({
             <p className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{stats.posts}</p>
             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('posts')}</p>
           </div>
-          <div className="text-center cursor-pointer hover:opacity-70 transition-opacity" onClick={() => setModalType('followers')}>
+          <div
+            className={`text-center transition-opacity ${(!isOwnProfile && user?.isPrivate && !user?.isFollowing) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:opacity-70'}`}
+            onClick={() => {
+              if (isOwnProfile || !user?.isPrivate || user?.isFollowing) {
+                setModalType('followers');
+              }
+            }}
+          >
             <p className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} ${isLoadingStats ? 'animate-pulse' : ''}`}>{stats.followers.toLocaleString()}</p>
             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('followers')}</p>
           </div>
-          <div className="text-center cursor-pointer hover:opacity-70 transition-opacity" onClick={() => setModalType('following')}>
+          <div
+            className={`text-center transition-opacity ${(!isOwnProfile && user?.isPrivate && !user?.isFollowing) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:opacity-70'}`}
+            onClick={() => {
+              if (isOwnProfile || !user?.isPrivate || user?.isFollowing) {
+                setModalType('following');
+              }
+            }}
+          >
             <p className={`text-2xl font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} ${isLoadingStats ? 'animate-pulse' : ''}`}>{stats.following.toLocaleString()}</p>
             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{t('following')}</p>
           </div>
@@ -597,7 +628,7 @@ const ProfileView = forwardRef(function ProfileView({
         onClose={() => setModalType(null)}
         targetUserId={currentUser?.id}
         type={modalType || 'followers'}
-        onUserClick={(u) => navigate(`/user/${u.id}`)}
+        onUserClick={(u) => navigate(`/profile/${u.id}`)}
       />
     </div>
   );
